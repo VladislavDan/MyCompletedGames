@@ -1,0 +1,52 @@
+.game-container {
+
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.game-container__image {
+
+    height: 100px;
+    width: 100px;
+    border: 2px #996b5b;
+}
+
+.games-container__information {
+
+    flex-direction: column;
+    flex: 1;
+}
+
+.games-container__information__name {
+
+    margin: 10px;
+    font-size: 20px;
+}
+
+.games-container__information__console {
+
+    margin: 10px;
+}
+
+.games-container__information__isTogether {
+
+    margin: 10px;
+}
+
+.games-container__cooperative-information {
+
+}
+
+.games-container__cooperative-information__image-coop {
+
+    height: 50px;
+    width: 50px;
+    background-color: #5c687c;
+}
+
+.games-container__cooperative-information__image-single {
+
+    height: 50px;
+    width: 50px;
+    background-color: #ed7368;
+}

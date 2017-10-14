@@ -4,6 +4,9 @@
 
 <StackLayout class="games-list-container" orientation="vertical">
     <SearchBar class="games-list-container__search-bar" hint="Search game"></SearchBar>
-    <ListView class="games-list-container__games-list">
+    <ListView class="games-list-container__games-list" [items]="games">
+        <ng-template let-item="item">
+            <games-list-item [game]="item"></games-list-item>
+        </ng-template>
     </ListView>
 </StackLayout>

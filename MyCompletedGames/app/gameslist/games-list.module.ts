@@ -4,6 +4,7 @@ import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 import {GamesListRoutingModule} from "./games-list-routing.module";
 import {GamesListComponent} from "./games-list.component";
 import {GamesService} from "../services/GamesService";
+import {GamesListItemComponent} from "../gameslistitem/games-list-item.component";
 
 @NgModule({
     imports: [
@@ -11,7 +12,8 @@ import {GamesService} from "../services/GamesService";
         GamesListRoutingModule
     ],
     declarations: [
-        GamesListComponent
+        GamesListComponent,
+        GamesListItemComponent
     ],
     providers: [GamesService],
     schemas: [

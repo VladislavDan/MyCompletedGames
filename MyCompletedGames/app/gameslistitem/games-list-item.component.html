@@ -1,0 +1,13 @@
+<FlexboxLayout class="game-container">
+    <Image class="game-container__image" [src]="game.image"></Image>
+    <FlexboxLayout class="games-container__information">
+        <Label class="games-container__information__name" [text]="game.name"></Label>
+        <Label class="games-container__information__console" [text]="game.console"></Label>
+    </FlexboxLayout>
+    <FlexboxLayout class="games-container__cooperative-information">
+        <Image class="games-container__cooperative-information__image-coop" *ngIf="!game.isTogether"
+               src="res://person"></Image>
+        <Image class="games-container__cooperative-information__image-single" *ngIf="game.isTogether"
+               src="res://people"></Image>
+    </FlexboxLayout>
+</FlexboxLayout>

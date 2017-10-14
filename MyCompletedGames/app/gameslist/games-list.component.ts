@@ -1,8 +1,9 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {GamesService} from "../services/GamesService";
+import {Game} from "../common/Game";
 
 @Component({
-    selector: "GamesList",
+    selector: "games-list",
     moduleId: module.id,
     providers: [GamesService],
     templateUrl: "./games-list.component.html",
@@ -10,14 +11,17 @@ import {GamesService} from "../services/GamesService";
 })
 export class GamesListComponent implements OnInit {
 
+    @Input()
+    public games: Game[];
+
     constructor(private gamesService: GamesService) {
     }
 
     ngOnInit(): void {
 
-        GamesService.getGames().subscribe(
-            (data) => {
-                console.log(data);
+        this.gamesService.getGames().subscribe(
+            (games) => {
+                this.games = games;
             },
             (error) => {
                 console.log(error);
