@@ -1,3 +1,4 @@
 /MyCompletedGames/node_modules/
 /MyCompletedGames/platforms/
-*.js
+/MyCompletedGames/*.js
+/MockServer/node_modules/
