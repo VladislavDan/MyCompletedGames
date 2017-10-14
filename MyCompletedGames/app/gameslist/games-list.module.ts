@@ -1,20 +1,20 @@
 import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 
-import {HomeRoutingModule} from "./home-routing.module";
-import {HomeComponent} from "./home.component";
+import {GamesListRoutingModule} from "./games-list-routing.module";
+import {GamesListComponent} from "./games-list.component";
 
 @NgModule({
     imports: [
         NativeScriptModule,
-        HomeRoutingModule
+        GamesListRoutingModule
     ],
     declarations: [
-        HomeComponent
+        GamesListComponent
     ],
     schemas: [
         NO_ERRORS_SCHEMA
     ]
 })
-export class HomeModule {
+export class GamesListModule {
 }
