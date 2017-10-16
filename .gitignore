@@ -1,4 +1,7 @@
 /MyCompletedGames/node_modules/
 /MyCompletedGames/platforms/
-/MyCompletedGames/*.js
+*.js
 /MockServer/node_modules/
+/MyCompletedGames/app/common/CLIENT_SECRET.ts
+/MyCompletedGames/NOTICES
+/MyCompletedGames/app/App_Resources/Android/google-services.json

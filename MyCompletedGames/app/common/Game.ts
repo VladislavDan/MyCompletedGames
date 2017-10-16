@@ -1,6 +1,6 @@
 export interface Game {
 
-    id: number;
+    id: string;
     name: string;
     console: string;
     isTogether: boolean;

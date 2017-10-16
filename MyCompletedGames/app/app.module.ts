@@ -4,6 +4,7 @@ import {NSModuleFactoryLoader} from "nativescript-angular/router";
 
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
+import {GamesFileService} from "./services/GamesFileService";
 
 @NgModule({
     bootstrap: [
@@ -17,6 +18,7 @@ import {AppComponent} from "./app.component";
         AppComponent
     ],
     providers: [
+        GamesFileService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ],
     schemas: [
