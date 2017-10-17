@@ -2,6 +2,6 @@
 /MyCompletedGames/platforms/
 *.js
 /MockServer/node_modules/
-/MyCompletedGames/app/common/CLIENT_SECRET.ts
+/MyCompletedGames/MyCompletedGames/app/common/AuthConstants.ts
 /MyCompletedGames/NOTICES
 /MyCompletedGames/app/App_Resources/Android/google-services.json

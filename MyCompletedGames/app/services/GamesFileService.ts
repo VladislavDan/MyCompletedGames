@@ -18,15 +18,6 @@ export class GamesFileService {
         });
     }
 
-    public readFile(): Observable<GamesFileModel> {
-        let documents = fs.knownFolders.documents();
-        let gamesFile = documents.getFile(GAME_FILE_NAME);
-        return Observable.fromPromise(gamesFile.readText())
-            .map((content: string): GamesFileModel => {
-                return JSON.parse(content);
-            })
-    }
-
     public updateFile(games: GamesFileModel): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(GAME_FILE_NAME);
@@ -34,6 +25,15 @@ export class GamesFileService {
         return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
             .map(() => {
                 return games;
+            })
+    }
+
+    private readFile(): Observable<GamesFileModel> {
+        let documents = fs.knownFolders.documents();
+        let gamesFile = documents.getFile(GAME_FILE_NAME);
+        return Observable.fromPromise(gamesFile.readText())
+            .map((content: string): GamesFileModel => {
+                return JSON.parse(content);
             })
     }
 

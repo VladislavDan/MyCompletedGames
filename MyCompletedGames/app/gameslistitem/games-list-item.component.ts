@@ -16,6 +16,5 @@ export class GamesListItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.game);
     }
 }

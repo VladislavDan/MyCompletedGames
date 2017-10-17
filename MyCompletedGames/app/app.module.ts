@@ -5,6 +5,7 @@ import {NSModuleFactoryLoader} from "nativescript-angular/router";
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
 import {GamesFileService} from "./services/GamesFileService";
+import {GoogleAuthService} from "./services/GoogleAuthService";
 
 @NgModule({
     bootstrap: [
@@ -19,6 +20,7 @@ import {GamesFileService} from "./services/GamesFileService";
     ],
     providers: [
         GamesFileService,
+        GoogleAuthService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ],
     schemas: [

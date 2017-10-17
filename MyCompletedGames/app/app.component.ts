@@ -1,7 +1,6 @@
-require('nativescript-nodeify');
+import {GoogleAuthService} from "./services/GoogleAuthService";
 import {Component} from "@angular/core";
-import Application = require("application");
-import SocialLogin = require("nativescript-social-login");
+require('nativescript-nodeify');
 
 @Component({
     selector: "ns-app",
@@ -9,23 +8,16 @@ import SocialLogin = require("nativescript-social-login");
 })
 export class AppComponent {
 
+    constructor(private googleAuthService: GoogleAuthService) {
+
+    }
+
     ngOnInit() {
-        SocialLogin.addLogger(function (msg: any, tag: string) {
-            console.log('[nativescript-social-login]: (' + tag + '): ' + msg);
-        });
-        if (Application.android) {
-            let result = SocialLogin.init({
-                google: {
-                    serverClientId: "144292527666-9h1ugthmsl2qjdlpmv5cl3o8gps44f55.apps.googleusercontent.com",
-                    isRequestAuthCode: true
-                }
-            });
-            console.dir(result);
-            SocialLogin.loginWithGoogle(
-                (result) => {
-                    console.dir(result);
-                }
-            );
-        }
+
+        this.googleAuthService.getToken().subscribe(
+            (result) => {
+                console.log(result);
+            }
+        )
     }
 }
