@@ -1,5 +1,6 @@
 import {GoogleAuthService} from "./services/GoogleAuthService";
 import {Component} from "@angular/core";
+import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 require('nativescript-nodeify');
 
 @Component({
@@ -8,7 +9,7 @@ require('nativescript-nodeify');
 })
 export class AppComponent {
 
-    constructor(private googleAuthService: GoogleAuthService) {
+    constructor(private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService) {
 
     }
 
@@ -16,7 +17,15 @@ export class AppComponent {
 
         this.googleAuthService.getToken().subscribe(
             (result) => {
-                console.log(result);
+                console.log("Result request token: " + result);
+                this.googleFileSyncService.requestLoadFile(result).subscribe(
+                    (result) => {
+                        console.dir(result);
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                )
             }
         )
     }

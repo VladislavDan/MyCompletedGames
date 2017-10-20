@@ -6,6 +6,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
 import {GamesFileService} from "./services/GamesFileService";
 import {GoogleAuthService} from "./services/GoogleAuthService";
+import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 
 @NgModule({
     bootstrap: [
@@ -21,6 +22,7 @@ import {GoogleAuthService} from "./services/GoogleAuthService";
     providers: [
         GamesFileService,
         GoogleAuthService,
+        GoogleFileSyncService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ],
     schemas: [
