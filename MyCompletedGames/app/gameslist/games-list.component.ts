@@ -1,7 +1,9 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
 import {MOCK_GAMES} from "../common/MockGames";
+import {GoogleAuthService} from "../services/GoogleAuthService";
+import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 
 import Application = require("application");
 import SocialLogin = require("nativescript-social-login");
@@ -14,27 +16,41 @@ import SocialLogin = require("nativescript-social-login");
 })
 export class GamesListComponent implements OnInit {
 
-    @Input()
-    public games: Game[];
+    public games: Array<Game> = [];
 
-    constructor(private gamesFileService: GamesFileService) {
+    constructor(private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService, private gamesFileService: GamesFileService) {
+        this.games = MOCK_GAMES.games;
     }
 
     ngOnInit(): void {
-
-        this.gamesFileService.updateFile(MOCK_GAMES).subscribe(
-            () => {
-                this.gamesFileService.getGames().subscribe(
-                    (games) => {
-                        this.games = games;
+        this.googleAuthService.getToken().subscribe(
+            (result) => {
+                console.log("Result request token: " + result);
+                this.googleFileSyncService.requestLoadFile(result).subscribe(
+                    (result) => {
+                        console.dir(result);
+                        this.gamesFileService.updateFile(result).subscribe(
+                            () => {
+                                this.gamesFileService.getGames().subscribe(
+                                    (games) => {
+                                        console.log("GamesListComponent getGames ");
+                                        console.dir(games);
+                                        this.games = games;
+                                    },
+                                    (error) => {
+                                        console.log("GamesListComponent getGames error " + error);
+                                    }
+                                )
+                            },
+                            (error) => {
+                                console.log("GamesListComponent updateFile error " + error);
+                            }
+                        );
                     },
                     (error) => {
-                        console.dir(error)
+                        console.log("GamesListComponent requestLoadFile error " + error);
                     }
                 )
-            },
-            (error) => {
-                console.dir(error);
             }
         );
     }

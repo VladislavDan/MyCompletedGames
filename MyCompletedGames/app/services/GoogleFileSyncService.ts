@@ -11,10 +11,10 @@ export class GoogleFileSyncService {
     constructor() {
     }
 
-    public requestLoadFile(token: string): Observable<string> {
+    public requestLoadFile(token: string): Observable<any> {
         return Observable.ajax(
             {
-                url: "https://www.googleapis.com/drive/v2/files/" + AUTH_CONSTANTS.fileId,
+                url: "https://www.googleapis.com/drive/v3/files/" + AUTH_CONSTANTS.fileId + "?alt=media",
                 headers: {
                     "Authorization": "Bearer " + token
                 }

@@ -6,7 +6,7 @@ export const AUTH_CONSTANTS = {
         auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
         client_secret: "jP3PzPxBtqaZRZGxOIsZSHE_",
         redirect_uri: "https://mycompletedgames.tics.com/",
-        scope: "https://www.googleapis.com/auth/drive.file",
+        scope: "https://www.googleapis.com/auth/drive",
         grant_type: "authorization_code",
         fileId: "0B1hBpySQGpiBeWxTd1FuVGRqa1E"
 };
