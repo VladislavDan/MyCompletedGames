@@ -1,3 +1,21 @@
 .games-list-container {
 
 }
+
+.games-list-container__filters-container {
+
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.games-list-container__filters-container__btn {
+
+    background-color: #3b56f4;
+    color: white;
+}
+
+.games-list-container__filters-container__btn--color-red {
+
+    background-color: #f46e65;
+    color: white;
+}
