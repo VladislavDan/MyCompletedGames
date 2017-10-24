@@ -7,6 +7,8 @@ import {AppComponent} from "./app.component";
 import {GamesFileService} from "./services/GamesFileService";
 import {GoogleAuthService} from "./services/GoogleAuthService";
 import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
+import {ModalDialogService} from "nativescript-angular";
+import {ConsoleChooserComponent} from "./consolechooser/console-chooser.component";
 
 @NgModule({
     bootstrap: [
@@ -17,12 +19,15 @@ import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
         AppRoutingModule
     ],
     declarations: [
-        AppComponent
+        AppComponent,
+        ConsoleChooserComponent
     ],
+    entryComponents: [ConsoleChooserComponent],
     providers: [
         GamesFileService,
         GoogleAuthService,
         GoogleFileSyncService,
+        ModalDialogService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ],
     schemas: [

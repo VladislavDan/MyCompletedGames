@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewContainerRef} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
 
 import {Game} from "../common/Game";
@@ -6,6 +6,8 @@ import {GamesFileService} from "../services/GamesFileService";
 import {MOCK_GAMES} from "../common/MockGames";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
+import {ModalDialogService} from "nativescript-angular";
+import {ConsoleChooserComponent} from "../consolechooser/console-chooser.component";
 
 @Component({
     selector: "games-list",
@@ -17,7 +19,7 @@ export class GamesListComponent implements OnInit {
 
     public games: Array<Game> = [];
 
-    constructor(private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService, private gamesFileService: GamesFileService) {
+    constructor(private modal: ModalDialogService, private vcRef: ViewContainerRef, private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService, private gamesFileService: GamesFileService) {
 
         this.games = MOCK_GAMES.games;
     }
@@ -68,5 +70,17 @@ export class GamesListComponent implements OnInit {
                 console.log("GamesListComponent getGames error " + error);
             }
         )
+    }
+
+    onTap(event) {
+
+        let options = {
+            context: {},
+            fullscreen: false,
+            viewContainerRef: this.vcRef
+        };
+        this.modal.showModal(ConsoleChooserComponent, options).then(res => {
+            console.log("Chooser closed");
+        });
     }
 }
