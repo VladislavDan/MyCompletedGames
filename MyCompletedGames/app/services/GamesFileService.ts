@@ -5,6 +5,7 @@ import * as fs from "tns-core-modules/file-system";
 import {GAME_FILE_NAME} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
+import {MOCK_GAMES} from "../common/MockGames";
 
 @Injectable()
 export class GamesFileService {
@@ -16,6 +17,15 @@ export class GamesFileService {
         return this.readFile().map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
         });
+    }
+
+    public findGamesByName(name: string): Observable<Array<Game>> {
+        return this.getGames()
+            .concatMap(games => games)
+            .filter((game) => {
+                return game.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+            })
+            .toArray();
     }
 
     public updateFile(games: GamesFileModel): Observable<GamesFileModel> {
@@ -33,7 +43,8 @@ export class GamesFileService {
         let gamesFile = documents.getFile(GAME_FILE_NAME);
         return Observable.fromPromise(gamesFile.readText())
             .map((content: string): GamesFileModel => {
-                return JSON.parse(content);
+                // return JSON.parse(content);
+                return MOCK_GAMES;
             })
     }
 

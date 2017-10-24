@@ -1,12 +1,11 @@
 import {Component, OnInit} from "@angular/core";
+import {SearchBar} from "tns-core-modules/ui/search-bar";
+
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
 import {MOCK_GAMES} from "../common/MockGames";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-
-import Application = require("application");
-import SocialLogin = require("nativescript-social-login");
 
 @Component({
     selector: "games-list",
@@ -19,10 +18,12 @@ export class GamesListComponent implements OnInit {
     public games: Array<Game> = [];
 
     constructor(private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService, private gamesFileService: GamesFileService) {
+
         this.games = MOCK_GAMES.games;
     }
 
     ngOnInit(): void {
+
         this.googleAuthService.getToken().subscribe(
             (result) => {
                 console.log("Result request token: " + result);
@@ -53,5 +54,19 @@ export class GamesListComponent implements OnInit {
                 )
             }
         );
+    }
+
+    onTextChanged(args) {
+
+        let searchBar = <SearchBar>args.object;
+        let searchValue = searchBar.text;
+        this.gamesFileService.findGamesByName(searchValue).subscribe(
+            (games) => {
+                this.games = games;
+            },
+            (error) => {
+                console.log("GamesListComponent getGames error " + error);
+            }
+        )
     }
 }
