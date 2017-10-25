@@ -3,6 +3,10 @@ import {ModalDialogParams} from "nativescript-angular";
 import {Page} from "tns-core-modules/ui/page";
 import * as application from "tns-core-modules/application";
 import {isAndroid} from "tns-core-modules/platform";
+import * as _ from "lodash";
+
+import {ChosenConsole} from "../common/ChosenConsole";
+import {VIDEO_GAME_CONSOLES} from "../common/Constants";
 
 @Component({
     selector: "console-chooser",
@@ -12,7 +16,7 @@ import {isAndroid} from "tns-core-modules/platform";
 })
 export class ConsoleChooserComponent implements OnInit {
 
-    public chosenConsoles: Array<String> = [];
+    public chosenConsoles: Array<ChosenConsole>;
 
     constructor(private params: ModalDialogParams, private page: Page) {
         this.page.on("shownModally", data => {
@@ -24,9 +28,30 @@ export class ConsoleChooserComponent implements OnInit {
                 }
             }
         });
+
+        this.createConsolesList();
     }
 
     ngOnInit(): void {
+    }
+
+    createConsolesList() {
+        let chosenConsoles = this.chosenConsoles;
+        chosenConsoles = [];
+        _.forEach(VIDEO_GAME_CONSOLES, function (value, index) {
+            chosenConsoles.push({
+                id: index,
+                name: value,
+                isChosen: false
+            });
+        });
+    }
+
+    onItemChoose(itemId) {
+        let index = _.findIndex(this.chosenConsoles, {id: itemId});
+        let chosenConsole = this.chosenConsoles[index];
+        chosenConsole.isChosen = !chosenConsole.isChosen;
+        this.chosenConsoles.splice(index, 1, chosenConsole);
     }
 
     close() {

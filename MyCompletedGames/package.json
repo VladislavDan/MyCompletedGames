@@ -18,6 +18,8 @@
     "@angular/http": "4.2.5",
     "@angular/platform-browser": "4.2.5",
     "@angular/router": "4.2.5",
+    "@types/lodash": "^4.14.79",
+    "lodash": "^4.17.4",
     "nativescript-angular": "4.2.0",
     "nativescript-nodeify": "^0.5.6",
     "nativescript-social-login": "^1.7.2",
