@@ -18,6 +18,7 @@ export const VIDEO_GAME_CONSOLES = [
     "Sony Playstation 3",
     "Sony Playstation 2",
     "Sony Playstation One",
+    "Sony Playstation Portable",
     "Sega Dreamcast",
     "Sega Saturn",
     "Sega Mega Drive & Sega 32x",
