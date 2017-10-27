@@ -1,12 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {ModalDialogParams} from "nativescript-angular";
-import {Page} from "tns-core-modules/ui/page";
-import * as application from "tns-core-modules/application";
-import {isAndroid} from "tns-core-modules/platform";
-import * as _ from "lodash";
-
-import {ChosenConsole} from "../common/ChosenConsole";
-import {VIDEO_GAME_CONSOLES} from "../common/Constants";
+import {Component, Input} from "@angular/core";
+import {ListPicker} from "tns-core-modules/ui/list-picker";
 
 @Component({
     selector: "console-chooser",
@@ -14,47 +7,22 @@ import {VIDEO_GAME_CONSOLES} from "../common/Constants";
     templateUrl: "./console-chooser.component.html",
     styleUrls: ['./console-chooser.css']
 })
-export class ConsoleChooserComponent implements OnInit {
+export class ConsoleChooserComponent {
 
-    public chosenConsoles: Array<ChosenConsole>;
+    @Input()
+    public callback: any;
 
-    constructor(private params: ModalDialogParams, private page: Page) {
-        this.page.on("shownModally", data => {
-            if (isAndroid) {
-                let fragmentManger = application.android.foregroundActivity.getFragmentManager();
-                let dialogFragment = fragmentManger.findFragmentByTag("dialog");
-                if (dialogFragment !== null) {
-                    dialogFragment.setCancelable(false);
-                }
-            }
-        });
+    @Input()
+    public elements: Array<String>;
 
-        this.createConsolesList();
+    @Input()
+    public selectedIndex: number;
+
+    constructor() {
     }
 
-    ngOnInit(): void {
-    }
-
-    createConsolesList() {
-        let chosenConsoles = this.chosenConsoles;
-        chosenConsoles = [];
-        _.forEach(VIDEO_GAME_CONSOLES, function (value, index) {
-            chosenConsoles.push({
-                id: index,
-                name: value,
-                isChosen: false
-            });
-        });
-    }
-
-    onItemChoose(itemId) {
-        let index = _.findIndex(this.chosenConsoles, {id: itemId});
-        let chosenConsole = this.chosenConsoles[index];
-        chosenConsole.isChosen = !chosenConsole.isChosen;
-        this.chosenConsoles.splice(index, 1, chosenConsole);
-    }
-
-    close() {
-        // this.params.closeCallback();
+    selectedIndexChanged(event) {
+        let picker = <ListPicker> event.object;
+        this.callback(this.elements[picker.selectedIndex]);
     }
 }

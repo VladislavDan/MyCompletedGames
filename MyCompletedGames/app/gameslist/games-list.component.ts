@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
 
 import {Game} from "../common/Game";
@@ -6,8 +6,7 @@ import {GamesFileService} from "../services/GamesFileService";
 import {MOCK_GAMES} from "../common/MockGames";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-import {ModalDialogService} from "nativescript-angular";
-import {ConsoleChooserComponent} from "../consolechooser/console-chooser.component";
+import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 
 @Component({
     selector: "games-list",
@@ -17,11 +16,27 @@ import {ConsoleChooserComponent} from "../consolechooser/console-chooser.compone
 })
 export class GamesListComponent implements OnInit {
 
+    public consoles: Array<String> = VIDEO_GAME_CONSOLES;
+
+    public who: Array<String> = WHO;
+
     public games: Array<Game> = [];
 
-    constructor(private modal: ModalDialogService, private vcRef: ViewContainerRef, private googleAuthService: GoogleAuthService, private googleFileSyncService: GoogleFileSyncService, private gamesFileService: GamesFileService) {
+    public isShowConsoleChooser: boolean;
+
+    public isShowWhoChooser: boolean;
+
+    public chosenConsoleIndex: number = 0;
+
+    public chosenWhoIndex: number = 0;
+
+    constructor(private googleAuthService: GoogleAuthService,
+                private googleFileSyncService: GoogleFileSyncService,
+                private gamesFileService: GamesFileService) {
 
         this.games = MOCK_GAMES.games;
+        this.isShowConsoleChooser = false;
+        this.isShowWhoChooser = false;
     }
 
     ngOnInit(): void {
@@ -72,15 +87,21 @@ export class GamesListComponent implements OnInit {
         )
     }
 
-    onTap(event) {
+    onShowConsoleChooser(event) {
+        this.isShowConsoleChooser = !this.isShowConsoleChooser;
+    }
 
-        let options = {
-            context: {},
-            fullscreen: false,
-            viewContainerRef: this.vcRef
-        };
-        this.modal.showModal(ConsoleChooserComponent, options).then(res => {
-            console.log("Chooser closed");
-        });
+    onShowWhoChooser(event) {
+        this.isShowWhoChooser = !this.isShowWhoChooser;
+    }
+
+    onChooseConsole(index) {
+        this.chosenConsoleIndex = index;
+        console.log("console chosen")
+    }
+
+    onChooseWho(index) {
+        this.chosenWhoIndex = index;
+        console.log("who chosen")
     }
 }

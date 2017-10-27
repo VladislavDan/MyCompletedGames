@@ -24,3 +24,9 @@ export const VIDEO_GAME_CONSOLES = [
     "Sega Master System",
     "Arcade Machine"
 ];
+
+export const WHO = [
+
+    "together",
+    "only me"
+];

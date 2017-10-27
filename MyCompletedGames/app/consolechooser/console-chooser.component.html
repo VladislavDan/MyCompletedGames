@@ -1,13 +1,7 @@
-<StackLayout class="console-chooser-container">
-    <ListView class="console-chooser-container__list" [items]="chosenConsoles">
-        <ng-template let-item="item">
-            <FlexboxLayout class="console-chooser-container__list__item" (tap)="onItemChoose()">
-                <label [text]="item.name"></label>
-                <Image class="console-chooser-container__list__image-chosen"
-                       *ngIf="!item.isChosen">
-                </Image>
-            </FlexboxLayout>
-        </ng-template>
-    </ListView>
-    <Button class="console-chooser-container__label__btn" (tap)="close()" text="Ok" (tap)="onTap($event)"></Button>
+<StackLayout flexDirection="column">
+    <ListPicker [items]="elements"
+                selectedIndex="selectedIndex"
+                (selectedIndexChange)="selectedIndexChanged($event)"
+                class="console-chooser">
+    </ListPicker>
 </StackLayout>

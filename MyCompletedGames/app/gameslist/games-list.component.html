@@ -6,11 +6,17 @@
     <SearchBar class="games-list-container__search-bar" (textChange)="onTextChanged($event)"
                hint="Search game"></SearchBar>
     <FlexboxLayout class="games-list-container__filters-container">
-        <Button class="games-list-container__filters-container__btn" text="Where?" (tap)="onTap($event)"></Button>
-        <Button class="games-list-container__filters-container__btn" text="Who?" (tap)="onTap($event)"></Button>
+        <Button class="games-list-container__filters-container__btn" text="Where?"
+                (tap)="onShowConsoleChooser($event)"></Button>
+        <Button class="games-list-container__filters-container__btn" text="Who?"
+                (tap)="onShowConsoleChooser($event)"></Button>
         <Button class="games-list-container__filters-container__btn--color-red" text="Clear filters"
                 (tap)="onTap($event)"></Button>
     </FlexboxLayout>
+    <console-chooser *ngIf="isShowConsoleChooser" [elements]="consoles" [selectedIndex]="chosenConsoleIndex"
+                     [callback]="onChooseConsole"></console-chooser>
+    <console-chooser *ngIf="isShowWhoChooser" [elements]="who" [selectedIndex]="chosenWhoIndex"
+                     [callback]="onShowWhoChooser"></console-chooser>
     <ListView class="games-list-container__games-list" [items]="games">
         <ng-template let-item="item">
             <games-list-item [game]="item"></games-list-item>

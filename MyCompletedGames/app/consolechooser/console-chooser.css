@@ -1,21 +1,2 @@
-.console-chooser-container {
-    height: 60%;
-    background-color: white;
-}
-
-.console-chooser-container__label {
-
-}
-
-.console-chooser-container__list {
-    height: 90%;
-}
-
-.console-chooser-container__list__item {
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.console-chooser-container__list__image-chosen {
-    background-color: #ed7368;
+.console-chooser {
 }
