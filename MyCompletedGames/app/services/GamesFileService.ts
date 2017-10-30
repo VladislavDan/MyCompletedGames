@@ -2,10 +2,11 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
 
-import {GAME_FILE_NAME} from "../common/Constants";
+import {GAME_FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
 import {MOCK_GAMES} from "../common/MockGames";
+import {Filter} from "../common/Filter";
 
 @Injectable()
 export class GamesFileService {
@@ -13,14 +14,19 @@ export class GamesFileService {
     constructor() {
     }
 
-    public getGames(): Observable<Array<Game>> {
+    public getGames(filter: Filter): Observable<Array<Game>> {
+        console.dir(filter);
         return this.readFile().map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
-        });
+        }).concatMap((games) => {
+            return games;
+        }).filter((game: Game) => {
+            return this.isComplainFilter(game, filter);
+        }).toArray();
     }
 
-    public findGamesByName(name: string): Observable<Array<Game>> {
-        return this.getGames()
+    public findGamesByName(name: string, filter: Filter): Observable<Array<Game>> {
+        return this.getGames(filter)
             .concatMap(games => games)
             .filter((game) => {
                 return game.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
@@ -52,5 +58,18 @@ export class GamesFileService {
         let documents = fs.knownFolders.documents();
         let filePath = fs.path.join(documents.path, GAME_FILE_NAME);
         return fs.File.exists(filePath);
+    }
+
+    private isComplainFilter(game, filter: Filter) {
+        let isThisConsole = game.console === filter.console || filter.console === '';
+        let isThisWho;
+        if (filter.who === TOGETHER) {
+            isThisWho = game.isTogether === true;
+        } else if (filter.who === ONLY_ME) {
+            isThisWho = game.isTogether === false;
+        } else {
+            isThisWho = true;
+        }
+        return isThisConsole || isThisWho;
     }
 }

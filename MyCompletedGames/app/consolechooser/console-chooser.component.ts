@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {ListPicker} from "tns-core-modules/ui/list-picker";
 
 @Component({
@@ -9,8 +9,8 @@ import {ListPicker} from "tns-core-modules/ui/list-picker";
 })
 export class ConsoleChooserComponent {
 
-    @Input()
-    public callback: any;
+    @Output()
+    public callback: EventEmitter<number> = new EventEmitter<number>();
 
     @Input()
     public elements: Array<String>;
@@ -23,6 +23,7 @@ export class ConsoleChooserComponent {
 
     selectedIndexChanged(event) {
         let picker = <ListPicker> event.object;
-        this.callback(this.elements[picker.selectedIndex]);
+        this.callback.emit(picker.selectedIndex);
+        console.log(picker.selectedIndex);
     }
 }

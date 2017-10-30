@@ -4,6 +4,10 @@ export const DATE_CHANGED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 export const TOKEN_KEY = "TOKEN_KEY";
 
+export const TOGETHER = "together";
+
+export const ONLY_ME = "only me";
+
 export const VIDEO_GAME_CONSOLES = [
 
     "WiiU",
@@ -28,6 +32,6 @@ export const VIDEO_GAME_CONSOLES = [
 
 export const WHO = [
 
-    "together",
+    TOGETHER,
     "only me"
 ];

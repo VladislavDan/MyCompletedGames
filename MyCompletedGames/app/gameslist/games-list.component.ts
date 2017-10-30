@@ -7,6 +7,7 @@ import {MOCK_GAMES} from "../common/MockGames";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {Filter} from "../common/Filter";
 
 @Component({
     selector: "games-list",
@@ -15,6 +16,8 @@ import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
     styleUrls: ['./games-list.css']
 })
 export class GamesListComponent implements OnInit {
+
+    private filter: Filter;
 
     public consoles: Array<String> = VIDEO_GAME_CONSOLES;
 
@@ -26,14 +29,13 @@ export class GamesListComponent implements OnInit {
 
     public isShowWhoChooser: boolean;
 
-    public chosenConsoleIndex: number = 0;
-
-    public chosenWhoIndex: number = 0;
-
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService) {
-
+        this.filter = {
+            console: "",
+            who: ""
+        };
         this.games = MOCK_GAMES.games;
         this.isShowConsoleChooser = false;
         this.isShowWhoChooser = false;
@@ -49,7 +51,7 @@ export class GamesListComponent implements OnInit {
                         console.dir(result);
                         this.gamesFileService.updateFile(result).subscribe(
                             () => {
-                                this.gamesFileService.getGames().subscribe(
+                                this.gamesFileService.getGames(this.filter).subscribe(
                                     (games) => {
                                         console.log("GamesListComponent getGames ");
                                         console.dir(games);
@@ -77,7 +79,7 @@ export class GamesListComponent implements OnInit {
 
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        this.gamesFileService.findGamesByName(searchValue).subscribe(
+        this.gamesFileService.findGamesByName(searchValue, this.filter).subscribe(
             (games) => {
                 this.games = games;
             },
@@ -95,13 +97,27 @@ export class GamesListComponent implements OnInit {
         this.isShowWhoChooser = !this.isShowWhoChooser;
     }
 
-    onChooseConsole(index) {
-        this.chosenConsoleIndex = index;
-        console.log("console chosen")
+    onClearFilter(event) {
+        this.filter = {
+            console: "",
+            who: ""
+        };
+    }
+
+    onChooseConsole(index: number) {
+        if (Number.isNaN(index)) {
+            this.filter.console = VIDEO_GAME_CONSOLES[0];
+        } else {
+            this.filter.console = VIDEO_GAME_CONSOLES[index];
+        }
     }
 
     onChooseWho(index) {
-        this.chosenWhoIndex = index;
-        console.log("who chosen")
+        if (Number.isNaN(index)) {
+            this.filter.who = WHO[0];
+        } else {
+            this.filter.who = WHO[index];
+
+        }
     }
 }
