@@ -15,7 +15,6 @@ export class GamesFileService {
     }
 
     public getGames(filter: Filter): Observable<Array<Game>> {
-        console.dir(filter);
         return this.readFile().map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
         }).concatMap((games) => {
@@ -60,7 +59,7 @@ export class GamesFileService {
         return fs.File.exists(filePath);
     }
 
-    private isComplainFilter(game, filter: Filter) {
+    private isComplainFilter(game: Game, filter: Filter) {
         let isThisConsole = game.console === filter.console || filter.console === '';
         let isThisWho;
         if (filter.who === TOGETHER) {
@@ -70,6 +69,7 @@ export class GamesFileService {
         } else {
             isThisWho = true;
         }
-        return isThisConsole || isThisWho;
+        console.dir(filter);
+        return isThisConsole && isThisWho;
     }
 }

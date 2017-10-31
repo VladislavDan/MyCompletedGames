@@ -1,6 +1,6 @@
 <StackLayout flexDirection="column">
     <ListPicker [items]="elements"
-                selectedIndex="selectedIndex"
+                selectedIndex="{{selectedIndex}}"
                 (selectedIndexChange)="selectedIndexChanged($event)"
                 class="console-chooser">
     </ListPicker>

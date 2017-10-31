@@ -29,6 +29,10 @@ export class GamesListComponent implements OnInit {
 
     public isShowWhoChooser: boolean;
 
+    public chosenConsoleIndex: number;
+
+    public chosenWhoIndex: number;
+
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService) {
@@ -51,16 +55,7 @@ export class GamesListComponent implements OnInit {
                         console.dir(result);
                         this.gamesFileService.updateFile(result).subscribe(
                             () => {
-                                this.gamesFileService.getGames(this.filter).subscribe(
-                                    (games) => {
-                                        console.log("GamesListComponent getGames ");
-                                        console.dir(games);
-                                        this.games = games;
-                                    },
-                                    (error) => {
-                                        console.log("GamesListComponent getGames error " + error);
-                                    }
-                                )
+                                this.getGames();
                             },
                             (error) => {
                                 console.log("GamesListComponent updateFile error " + error);
@@ -91,10 +86,16 @@ export class GamesListComponent implements OnInit {
 
     onShowConsoleChooser(event) {
         this.isShowConsoleChooser = !this.isShowConsoleChooser;
+        if (!this.isShowConsoleChooser) {
+            this.getGames();
+        }
     }
 
     onShowWhoChooser(event) {
         this.isShowWhoChooser = !this.isShowWhoChooser;
+        if (!this.isShowWhoChooser) {
+            this.getGames();
+        }
     }
 
     onClearFilter(event) {
@@ -102,9 +103,11 @@ export class GamesListComponent implements OnInit {
             console: "",
             who: ""
         };
+        this.getGames();
     }
 
     onChooseConsole(index: number) {
+        this.chosenConsoleIndex = index;
         if (Number.isNaN(index)) {
             this.filter.console = VIDEO_GAME_CONSOLES[0];
         } else {
@@ -113,11 +116,25 @@ export class GamesListComponent implements OnInit {
     }
 
     onChooseWho(index) {
+        this.chosenWhoIndex = index;
         if (Number.isNaN(index)) {
             this.filter.who = WHO[0];
         } else {
             this.filter.who = WHO[index];
 
         }
+    }
+
+    private getGames() {
+        this.gamesFileService.getGames(this.filter).subscribe(
+            (games) => {
+                console.log("GamesListComponent getGames ");
+                console.dir(games);
+                this.games = games;
+            },
+            (error) => {
+                console.log("GamesListComponent getGames error " + error);
+            }
+        )
     }
 }
