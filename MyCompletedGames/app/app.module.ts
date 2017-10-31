@@ -8,6 +8,8 @@ import {GamesFileService} from "./services/GamesFileService";
 import {GoogleAuthService} from "./services/GoogleAuthService";
 import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 import {ModalDialogService} from "nativescript-angular";
+import {NewGameModule} from "./newgame/new-game.module";
+import {GamesListModule} from "./gameslist/games-list.module";
 
 @NgModule({
     bootstrap: [
@@ -15,7 +17,9 @@ import {ModalDialogService} from "nativescript-angular";
     ],
     imports: [
         NativeScriptModule,
-        AppRoutingModule
+        AppRoutingModule,
+        NewGameModule,
+        GamesListModule
     ],
     declarations: [
         AppComponent
