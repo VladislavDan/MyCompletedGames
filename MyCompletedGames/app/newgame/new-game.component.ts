@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {RouterExtensions} from "nativescript-angular";
 
 @Component({
     selector: "games-list",
@@ -7,4 +8,11 @@ import {Component} from "@angular/core";
     styleUrls: ['./new-game.css']
 })
 export class NewGameComponent {
+
+    constructor(private routerExtensions: RouterExtensions) {
+    }
+
+    onBack() {
+        this.routerExtensions.back();
+    }
 }

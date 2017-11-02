@@ -125,6 +125,10 @@ export class GamesListComponent implements OnInit {
         }
     }
 
+    onCreateNewGame() {
+
+    }
+
     private getGames() {
         this.gamesFileService.getGames(this.filter).subscribe(
             (games) => {
