@@ -1,5 +1,5 @@
 <ActionBar class="action-bar" title="Games List">
-    <ActionItem (tap)="onCreateNewGame()"
+    <ActionItem [nsRouterLink]="['/new-game']"
                 ios.systemIcon="9" ios.position="left"
                 icon="res://ic_add_white_24dp"
                 android.position="actionBar"></ActionItem>
