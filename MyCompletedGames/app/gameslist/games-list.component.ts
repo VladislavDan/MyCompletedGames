@@ -106,7 +106,7 @@ export class GamesListComponent implements OnInit {
         this.getGames();
     }
 
-    onChooseConsole(index: number) {
+    onChooseWhere(index: number) {
         this.chosenConsoleIndex = index;
         if (Number.isNaN(index)) {
             this.filter.console = VIDEO_GAME_CONSOLES[0];
@@ -123,10 +123,6 @@ export class GamesListComponent implements OnInit {
             this.filter.who = WHO[index];
 
         }
-    }
-
-    onCreateNewGame() {
-
     }
 
     private getGames() {

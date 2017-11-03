@@ -2,12 +2,12 @@ import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {ListPicker} from "tns-core-modules/ui/list-picker";
 
 @Component({
-    selector: "console-chooser",
+    selector: "item-chooser",
     moduleId: module.id,
-    templateUrl: "./console-chooser.component.html",
-    styleUrls: ['./console-chooser.css']
+    templateUrl: "./chooser.component.html",
+    styleUrls: ['./chooser.css']
 })
-export class ConsoleChooserComponent {
+export class ChooserComponent {
 
     @Output()
     public callback: EventEmitter<number> = new EventEmitter<number>();

@@ -1,6 +1,57 @@
-<ActionBar class="action-bar" title="New Game">
-    <NavigationButton text="Go Back" icon="res://ic_arrow_back_white_24dp" (tap)="onBack()"></NavigationButton>
-</ActionBar>
-<StackLayout class="new-game-container" orientation="vertical">
+<ActionBar class="action-bar"
+           title="New Game">
 
+    <NavigationButton text="Go Back"
+                      icon="res://ic_arrow_back_white_24dp"
+                      (tap)="onBack()">
+    </NavigationButton>
+
+    <ActionItem (tap)="onSaveNewGame($event)"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_save_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
+</ActionBar>
+
+<StackLayout class="new-game-container"
+             orientation="vertical">
+
+    <TextView [(ngModel)]="what"
+              hint="What?"
+              [editable]="true"
+              class="new-game-container__name">
+    </TextView>
+
+    <item-chooser [elements]="consoles"
+                  [selectedIndex]="chosenConsoleIndex"
+                  (callback)="onChooseWhere($event)">
+    </item-chooser>
+
+    <item-chooser [elements]="who"
+                  [selectedIndex]="chosenWhoIndex"
+                  (callback)="onChooseWho($event)">
+    </item-chooser>
+
+    <StackLayout *ngFor="let image of images"
+                 class="chosen_images_container"
+                 orientation="horizontal">
+
+        <Image class="chosen_images_container__image" src="{{image}}" stretch="aspectFit">
+        </Image>
+    </StackLayout>
+
+    <Label *ngIf="images.length == 0" text="No chosen image"></Label>
+
+    <FlexboxLayout class="image-chooser-container">
+
+        <Button class="image-chooser-container__btn"
+                text="Choose image"
+                (tap)="onChooseImage($event)">
+        </Button>
+
+        <Button class="image-chooser-container__btn"
+                text="Take photo"
+                (tap)="onTakePhoto($event)">
+        </Button>
+    </FlexboxLayout>
 </StackLayout>

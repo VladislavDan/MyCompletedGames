@@ -1,0 +1,40 @@
+.new-game-container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.new-game-container__name {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.where-who-chooser-container {
+}
+
+.where-who-chooser-container__chooser {
+}
+
+.image-chooser-container {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.image-chooser-container__btn {
+    background-color: #f46e65;
+    color: white;
+}
+
+.chosen_images_container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.chosen_images_container__image {
+    width: 100px;
+    height: 100px;
+}
+
+.new-game-container__btn-save {
+    background-color: #3b56f4;
+    color: white;
+}
