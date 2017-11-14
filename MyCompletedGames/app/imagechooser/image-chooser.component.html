@@ -1,0 +1,31 @@
+<ActionBar class="action-bar" title="Image chooser">
+
+    <ActionItem [nsRouterLink]="['/']"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_done_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
+</ActionBar>
+<StackLayout class="image-chooser-container"
+             orientation="vertical">
+
+    <ListView class="image-chooser-container__images-list"
+              [items]="images">
+
+        <ng-template let-item="item" let-i="index">
+
+            <StackLayout orientation="horizontal" (tap)="onItemTap($event, i)">
+                <Image class="image-chooser-container__selected-indicator"
+                       [visibility]="isSelected(i) ? 'visible' : 'collapsed'">
+                </Image>
+                <Image class="image-chooser-container__image"
+                       src="{{item.image}}">
+                </Image>
+                <Label class="image-chooser-container__text"
+                       text="{{item.name}}">
+                </Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+
+</StackLayout>
