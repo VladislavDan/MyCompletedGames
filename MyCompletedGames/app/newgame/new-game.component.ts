@@ -1,6 +1,11 @@
 import {Component} from "@angular/core";
 import {RouterExtensions} from "nativescript-angular";
+
+import {requestPermissions} from "nativescript-camera";
+
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {ImageService} from "../services/ImageService";
+import {AndroidImagePicker} from "../common/AndroidImagePicker";
 
 @Component({
     selector: "games-list",
@@ -24,7 +29,8 @@ export class NewGameComponent {
 
     public chosenWhoIndex: number;
 
-    constructor(private routerExtensions: RouterExtensions) {
+    constructor(private routerExtensions: RouterExtensions, private imageService: ImageService) {
+        requestPermissions();
     }
 
     onChooseWhere(index: number) {
@@ -36,11 +42,28 @@ export class NewGameComponent {
     }
 
     onChooseImage(event) {
-
+        let androidImagePicker = new AndroidImagePicker();
+        androidImagePicker.getPic();
     }
 
     onTakePhoto(event) {
-
+        console.log("Started camera " + this.imageService);
+        this.imageService.getImageFromCamera().subscribe(
+            (asset) => {
+                console.log("Result" + asset);
+                this.imageService.getBase64String(asset).subscribe(
+                    (base64Image) => {
+                        this.images.push(base64Image);
+                    },
+                    (error) => {
+                        console.log(error.message);
+                    }
+                );
+            },
+            (error) => {
+                console.dir(error);
+            }
+        );
     }
 
     onSaveNewGame(event) {
