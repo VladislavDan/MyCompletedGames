@@ -1,0 +1,18 @@
+.image-chooser-container__image {
+
+    height: 300px;
+    width: 300px;
+
+    margin: 30px;
+}
+
+.image-chooser-container__text {
+    vertical-align: center;
+}
+
+.image-chooser-container__selected-indicator {
+
+    height: 100%;
+    width: 20px;
+    background-color: #f46e65;
+}
