@@ -1,6 +1,7 @@
 import {Component, ViewContainerRef} from "@angular/core";
 import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
+import {LoadingIndicator} from "nativescript-loading-indicator";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {CameraService} from "../services/CameraService";
@@ -30,6 +31,8 @@ export class NewGameComponent {
 
     private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
 
+    private loadingIndicator = new LoadingIndicator();
+
     constructor(private routerExtensions: RouterExtensions,
                 private imageService: CameraService,
                 private modalService: ModalDialogService,
@@ -50,7 +53,7 @@ export class NewGameComponent {
     }
 
     onChooseImage(event) {
-        this.createModelView()
+        this.showImagesChooser()
             .then(result => {
                 if (result) {
                     this.images = result;
@@ -82,6 +85,7 @@ export class NewGameComponent {
     }
 
     onSaveNewGame(event) {
+        this.loadingIndicator.show();
         this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
@@ -90,9 +94,11 @@ export class NewGameComponent {
             images: this.images
         }).subscribe(
             () => {
+                this.loadingIndicator.hide();
                 this.routerExtensions.backToPreviousPage();
             },
             (error) => {
+                this.loadingIndicator.hide();
                 console.log("NewGameComponent: " + error.message);
             }
         );
@@ -102,14 +108,11 @@ export class NewGameComponent {
         this.routerExtensions.back();
     }
 
-    private createModelView(): Promise<any> {
-        const today = new Date();
+    private showImagesChooser(): Promise<any> {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
-            context: today.toDateString(),
             fullscreen: true
         };
-
         return this.modalService.showModal(ImageChooserComponent, options);
     }
 }

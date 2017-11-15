@@ -23,6 +23,7 @@
     "nativescript-angular": "~4.4.1",
     "nativescript-bitmap-factory": "^1.7.1",
     "nativescript-camera": "^3.1.4",
+    "nativescript-loading-indicator": "^2.4.0",
     "nativescript-nodeify": "^0.5.6",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.8",
