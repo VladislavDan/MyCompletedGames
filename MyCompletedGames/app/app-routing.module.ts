@@ -4,11 +4,13 @@ import {NativeScriptRouterModule} from "nativescript-angular/router";
 
 import {NewGameComponent} from "./newgame/new-game.component";
 import {GamesListComponent} from "./gameslist/games-list.component";
+import {ImageChooserComponent} from "./imagechooser/image-chooser.component";
 
 const routes: Routes = [
     {path: "", redirectTo: "/games-list", pathMatch: "full"},
     {path: "new-game", component: NewGameComponent},
-    {path: "games-list", component: GamesListComponent}
+    {path: "games-list", component: GamesListComponent},
+    {path: "images-chooser", component: ImageChooserComponent}
 ];
 
 @NgModule({

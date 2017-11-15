@@ -8,6 +8,8 @@ export const TOGETHER = "together";
 
 export const ONLY_ME = "only me";
 
+export const MAX_IMAGE_COUNT = 3;
+
 export const VIDEO_GAME_CONSOLES = [
 
     "WiiU",

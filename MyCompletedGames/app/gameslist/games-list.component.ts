@@ -47,27 +47,27 @@ export class GamesListComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.googleAuthService.getToken().subscribe(
-            (result) => {
-                console.log("Result request token: " + result);
-                this.googleFileSyncService.requestLoadFile(result).subscribe(
-                    (result) => {
-                        console.dir(result);
-                        this.gamesFileService.updateFile(result).subscribe(
-                            () => {
-                                this.getGames();
-                            },
-                            (error) => {
-                                console.log("GamesListComponent updateFile error " + error);
-                            }
-                        );
-                    },
-                    (error) => {
-                        console.log("GamesListComponent requestLoadFile error " + error);
-                    }
-                )
-            }
-        );
+        // this.googleAuthService.getToken().subscribe(
+        //     (result) => {
+        //         console.log("Result request token: " + result);
+        //         this.googleFileSyncService.requestLoadFile(result).subscribe(
+        //             (result) => {
+        //                 console.dir(result);
+        //                 this.gamesFileService.updateFile(result).subscribe(
+        //                     () => {
+        //                         this.getGames();
+        //                     },
+        //                     (error) => {
+        //                         console.log("GamesListComponent updateFile error " + error);
+        //                     }
+        //                 );
+        //             },
+        //             (error) => {
+        //                 console.log("GamesListComponent requestLoadFile error " + error);
+        //             }
+        //         )
+        //     }
+        // );
     }
 
     onTextChanged(args) {

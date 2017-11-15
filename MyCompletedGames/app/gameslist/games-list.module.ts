@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 
 import {GamesListRoutingModule} from "./games-list-routing.module";
@@ -15,6 +15,9 @@ import {ChooserModule} from "../consolechooser/chooser.module";
     declarations: [
         GamesListComponent,
         GamesListItemComponent
+    ],
+    schemas: [
+        NO_ERRORS_SCHEMA
     ]
 })
 export class GamesListModule {

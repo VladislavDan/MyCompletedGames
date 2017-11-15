@@ -16,3 +16,8 @@
     width: 20px;
     background-color: #f46e65;
 }
+
+.image-chooser-container__btn {
+    background-color: #3b56f4;
+    color: white;
+}

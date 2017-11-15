@@ -6,32 +6,29 @@
   "nativescript": {
     "id": "org.nativescript.MyCompletedGames",
     "tns-android": {
-      "version": "3.2.0"
+      "version": "3.3.1"
     }
   },
   "dependencies": {
-    "@angular/animations": "4.2.5",
-    "@angular/common": "4.2.5",
-    "@angular/compiler": "4.2.5",
-    "@angular/core": "4.2.5",
-    "@angular/forms": "4.2.5",
-    "@angular/http": "4.2.5",
-    "@angular/platform-browser": "4.2.5",
-    "@angular/router": "4.2.5",
+    "@angular/animations": "~4.4.5",
+    "@angular/common": "~4.4.5",
+    "@angular/compiler": "~4.4.5",
+    "@angular/core": "~4.4.5",
+    "@angular/forms": "~4.4.5",
+    "@angular/http": "~4.4.5",
+    "@angular/platform-browser": "~4.4.5",
+    "@angular/router": "~4.4.5",
     "@types/lodash": "^4.14.79",
     "lodash": "^4.17.4",
-    "nativescript-angular": "4.2.0",
+    "nativescript-angular": "~4.4.1",
     "nativescript-bitmap-factory": "^1.7.1",
     "nativescript-camera": "^3.1.4",
-    "nativescript-imagepicker": "^4.0.1",
     "nativescript-nodeify": "^0.5.6",
-    "nativescript-social-login": "^1.7.2",
-    "nativescript-telegram-image-picker": "^1.0.3",
-    "nativescript-theme-core": "1.0.4",
-    "reflect-metadata": "0.1.10",
-    "rxjs": "5.4.3",
-    "tns-core-modules": "3.2.0",
-    "zone.js": "0.8.17"
+    "nativescript-theme-core": "~1.0.4",
+    "reflect-metadata": "~0.1.8",
+    "rxjs": "~5.4.2",
+    "tns-core-modules": "~3.1.1",
+    "zone.js": "~0.8.2"
   },
   "devDependencies": {
     "babel-traverse": "6.4.5",

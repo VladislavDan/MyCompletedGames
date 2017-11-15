@@ -4,9 +4,7 @@ import {Observable} from "rxjs/Observable";
 
 import {AUTH_CONSTANTS} from "../common/AuthConstants";
 import {TOKEN_KEY} from "../common/Constants";
-import {AndroidGoogleSignIn} from "../common/AndroidGoogleSignIn";
 import appSettings = require("application-settings");
-import SocialLogin = require("nativescript-social-login");
 import Application = require("application");
 
 @Injectable()
@@ -16,23 +14,23 @@ export class GoogleAuthService {
 
     private authCodeChannel: ReplaySubject<string> = new ReplaySubject();
 
-    private androidGoogleSignIn: AndroidGoogleSignIn;
+    // private androidGoogleSignIn: AndroidGoogleSignIn;
 
     constructor() {
-        this.androidGoogleSignIn = new AndroidGoogleSignIn();
-        this.authCodeChannel.subscribe(
-            (authCode) => {
-                this.getGoogleToken(authCode).subscribe(
-                    (token) => {
-                        this.setTokenToStorage(token);
-                        this.tokenChannel.next(token);
-                    },
-                    (error) => {
-                        console.log(error);
-                    }
-                );
-            }
-        );
+        // this.androidGoogleSignIn = new AndroidGoogleSignIn();
+        // this.authCodeChannel.subscribe(
+        //     (authCode) => {
+        //         this.getGoogleToken(authCode).subscribe(
+        //             (token) => {
+        //                 this.setTokenToStorage(token);
+        //                 this.tokenChannel.next(token);
+        //             },
+        //             (error) => {
+        //                 console.log(error);
+        //             }
+        //         );
+        //     }
+        // );
     }
 
     public getToken() {
@@ -42,16 +40,16 @@ export class GoogleAuthService {
 
     private getGoogleAuthCode() {
         if (Application.android) {
-            this.androidGoogleSignIn.initEnvironment((authCode) => {
-                console.log("getGoogleAuthCode authCode " + authCode);
-                this.authCodeChannel.next(authCode);
-            });
-            this.androidGoogleSignIn.loginWithGoogle(
-                {
-                    googleServerClientId: AUTH_CONSTANTS.client_id,
-                    scope: AUTH_CONSTANTS.scope
-                }
-            );
+            // this.androidGoogleSignIn.initEnvironment((authCode) => {
+            //     console.log("getGoogleAuthCode authCode " + authCode);
+            //     this.authCodeChannel.next(authCode);
+            // });
+            // this.androidGoogleSignIn.loginWithGoogle(
+            //     {
+            //         googleServerClientId: AUTH_CONSTANTS.client_id,
+            //         scope: AUTH_CONSTANTS.scope
+            //     }
+            // );
         }
     }
 

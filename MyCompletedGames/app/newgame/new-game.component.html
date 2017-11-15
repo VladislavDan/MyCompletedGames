@@ -32,15 +32,16 @@
                   (callback)="onChooseWho($event)">
     </item-chooser>
 
-    <StackLayout *ngFor="let image of images"
-                 class="chosen_images_container"
-                 orientation="horizontal">
+    <StackLayout orientation="horizontal" horizontalAlignment="center">
+        <StackLayout *ngFor="let image of images"
+                     class="chosen_images_container"
+                     orientation="horizontal">
 
-        <Image class="chosen_images_container__image" src="{{image}}" stretch="aspectFit">
-        </Image>
+            <Image class="chosen_images_container__image" src="{{image}}" stretch="aspectFit">
+            </Image>
+        </StackLayout>
+        <Label *ngIf="images.length == 0" text="No chosen image"></Label>
     </StackLayout>
-
-    <Label *ngIf="images.length == 0" text="No chosen image"></Label>
 
     <FlexboxLayout class="image-chooser-container">
 

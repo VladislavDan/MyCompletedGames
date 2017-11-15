@@ -1,11 +1,11 @@
-import {Component} from "@angular/core";
-import {RouterExtensions} from "nativescript-angular";
-
+import {Component, ViewContainerRef} from "@angular/core";
+import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
 
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {ImageService} from "../services/ImageService";
-import {AndroidImagePicker} from "../common/AndroidImagePicker";
+import {CameraService} from "../services/CameraService";
+import {ReplaySubject} from "rxjs/ReplaySubject";
+import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
 
 @Component({
     selector: "games-list",
@@ -19,9 +19,7 @@ export class NewGameComponent {
 
     public who: Array<String> = WHO;
 
-    public images: Array<String> = [
-        "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"
-    ];
+    public images: Array<String> = [];
 
     public what: string = "";
 
@@ -29,8 +27,16 @@ export class NewGameComponent {
 
     public chosenWhoIndex: number;
 
-    constructor(private routerExtensions: RouterExtensions, private imageService: ImageService) {
+    private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
+
+    constructor(private routerExtensions: RouterExtensions,
+                private imageService: CameraService,
+                private modalService: ModalDialogService,
+                private vcRef: ViewContainerRef) {
         requestPermissions();
+        this.imageChooseChannel.subscribe((images: Array<string>) => {
+            this.images = images;
+        });
     }
 
     onChooseWhere(index: number) {
@@ -42,8 +48,15 @@ export class NewGameComponent {
     }
 
     onChooseImage(event) {
-        let androidImagePicker = new AndroidImagePicker();
-        androidImagePicker.getPic();
+        this.createModelView()
+            .then(result => {
+                if (result) {
+                    this.images = result;
+                } else {
+                    this.images = [];
+                }
+            })
+            .catch(error => console.log(error.message));
     }
 
     onTakePhoto(event) {
@@ -72,5 +85,16 @@ export class NewGameComponent {
 
     onBack() {
         this.routerExtensions.back();
+    }
+
+    private createModelView(): Promise<any> {
+        const today = new Date();
+        const options: ModalDialogOptions = {
+            viewContainerRef: this.vcRef,
+            context: today.toDateString(),
+            fullscreen: true
+        };
+
+        return this.modalService.showModal(ImageChooserComponent, options);
     }
 }

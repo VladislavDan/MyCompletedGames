@@ -10,6 +10,8 @@ import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 import {ModalDialogService} from "nativescript-angular";
 import {NewGameModule} from "./newgame/new-game.module";
 import {GamesListModule} from "./gameslist/games-list.module";
+import {NewGameService} from "./services/NewGameService";
+import {ImageChooserModule} from "./imagechooser/image-chooser.module";
 
 @NgModule({
     bootstrap: [
@@ -19,7 +21,8 @@ import {GamesListModule} from "./gameslist/games-list.module";
         NativeScriptModule,
         AppRoutingModule,
         NewGameModule,
-        GamesListModule
+        GamesListModule,
+        ImageChooserModule
     ],
     declarations: [
         AppComponent
@@ -29,6 +32,7 @@ import {GamesListModule} from "./gameslist/games-list.module";
         GoogleAuthService,
         GoogleFileSyncService,
         ModalDialogService,
+        NewGameService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ]
 })
