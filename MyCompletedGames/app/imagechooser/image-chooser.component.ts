@@ -25,7 +25,10 @@ export class ImageChooserComponent {
 
         this.imagesService.getImages().subscribe(
             (images) => {
-                this.images = images;
+                if (images) {
+                    console.dir(images);
+                    this.images = images;
+                }
             },
             (error) => {
                 console.log(error.message);

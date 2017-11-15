@@ -35,5 +35,5 @@ export const VIDEO_GAME_CONSOLES = [
 export const WHO = [
 
     TOGETHER,
-    "only me"
+    ONLY_ME
 ];

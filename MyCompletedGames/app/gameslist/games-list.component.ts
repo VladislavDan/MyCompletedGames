@@ -8,6 +8,7 @@ import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: "games-list",
@@ -40,34 +41,33 @@ export class GamesListComponent implements OnInit {
             console: "",
             who: ""
         };
-        this.games = MOCK_GAMES.games;
         this.isShowConsoleChooser = false;
         this.isShowWhoChooser = false;
     }
 
     ngOnInit(): void {
 
-        // this.googleAuthService.getToken().subscribe(
-        //     (result) => {
-        //         console.log("Result request token: " + result);
-        //         this.googleFileSyncService.requestLoadFile(result).subscribe(
-        //             (result) => {
-        //                 console.dir(result);
-        //                 this.gamesFileService.updateFile(result).subscribe(
-        //                     () => {
-        //                         this.getGames();
-        //                     },
-        //                     (error) => {
-        //                         console.log("GamesListComponent updateFile error " + error);
-        //                     }
-        //                 );
-        //             },
-        //             (error) => {
-        //                 console.log("GamesListComponent requestLoadFile error " + error);
-        //             }
-        //         )
-        //     }
-        // );
+        // this.googleAuthService.getToken()
+        Observable.of("").subscribe(
+            (result) => {
+                console.log("Result request token: " + result);
+                this.googleFileSyncService.requestLoadFile(result)
+                    .switchMap((result) => {
+                        //TODO please will replace mock data
+                        console.log("Result request token: " + result);
+                        return this.gamesFileService.updateFile(MOCK_GAMES)
+                    })
+                    .subscribe(
+                        (result) => {
+                            console.dir(result);
+                            this.getGames();
+                        },
+                        (error) => {
+                            console.log("GamesListComponent requestLoadFile error " + error);
+                        }
+                    )
+            }
+        );
     }
 
     onTextChanged(args) {

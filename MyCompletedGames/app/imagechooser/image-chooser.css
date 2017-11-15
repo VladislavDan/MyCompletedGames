@@ -6,6 +6,12 @@
     margin: 30px;
 }
 
+.image-chooser-container__no-image-text {
+    text-align: center;
+    margin-top: 200px;
+    margin-bottom: 200px;
+}
+
 .image-chooser-container__text {
     vertical-align: center;
 }

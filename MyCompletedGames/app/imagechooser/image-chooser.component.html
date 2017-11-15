@@ -28,6 +28,8 @@
         </ng-template>
     </ListView>
 
+    <Label class="image-chooser-container__no-image-text" *ngIf="images.length==0" text="No images"></Label>
+
     <Button class="image-chooser-container__btn"
             text="Save"
             (tap)="onSave($event)">

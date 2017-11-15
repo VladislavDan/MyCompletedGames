@@ -2,10 +2,11 @@ import {Component, ViewContainerRef} from "@angular/core";
 import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
 
-import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {CameraService} from "../services/CameraService";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
+import {GamesFileService} from "../services/GamesFileService";
 
 @Component({
     selector: "games-list",
@@ -23,16 +24,17 @@ export class NewGameComponent {
 
     public what: string = "";
 
-    public chosenConsoleIndex: number;
+    public chosenConsoleIndex: number = 0;
 
-    public chosenWhoIndex: number;
+    public chosenWhoIndex: number = 0;
 
     private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
 
     constructor(private routerExtensions: RouterExtensions,
                 private imageService: CameraService,
                 private modalService: ModalDialogService,
-                private vcRef: ViewContainerRef) {
+                private vcRef: ViewContainerRef,
+                private gamesFileService: GamesFileService) {
         requestPermissions();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
             this.images = images;
@@ -80,7 +82,20 @@ export class NewGameComponent {
     }
 
     onSaveNewGame(event) {
-
+        this.gamesFileService.addNewGame({
+            id: Date.now().toString(),
+            name: this.what,
+            console: this.consoles[this.chosenConsoleIndex],
+            isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
+            images: this.images
+        }).subscribe(
+            () => {
+                this.routerExtensions.backToPreviousPage();
+            },
+            (error) => {
+                console.log("NewGameComponent: " + error.message);
+            }
+        );
     }
 
     onBack() {

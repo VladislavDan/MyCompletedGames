@@ -1,8 +1,8 @@
 export interface Game {
 
-    id: string;
-    name: string;
-    console: string;
+    id: String;
+    name: String;
+    console: String;
     isTogether: boolean;
-    images: string[];
+    images: String[];
 }

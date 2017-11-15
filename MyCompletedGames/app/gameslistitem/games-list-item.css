@@ -15,6 +15,7 @@
 
     flex-direction: column;
     flex: 1;
+    margin-left: 20px;
 }
 
 .games-container__information__name {
