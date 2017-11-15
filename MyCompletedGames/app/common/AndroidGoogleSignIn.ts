@@ -1,11 +1,11 @@
 import application = require("application");
 import {Config} from "./Config";
 
+const GOOGLE_SIGNIN_RESULT_CODE = 597965301;
+
 declare var android: any;
 declare var com: any;
 declare var java: any;
-
-const GOOGLE_SIGNIN_RESULT_CODE = 597965301;
 
 export class AndroidGoogleSignIn {
 

@@ -1,8 +1,9 @@
-import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 
 import {NewGameComponent} from "./new-game.component";
 import {ChooserModule} from "../consolechooser/chooser.module";
+import {ImageService} from "../services/ImageService";
 
 @NgModule({
     imports: [
@@ -12,8 +13,8 @@ import {ChooserModule} from "../consolechooser/chooser.module";
     declarations: [
         NewGameComponent
     ],
-    schemas: [
-        NO_ERRORS_SCHEMA
+    providers: [
+        ImageService
     ]
 })
 export class NewGameModule {
