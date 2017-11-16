@@ -49,19 +49,17 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
 
+        //TODO needed refactoring
         // this.googleAuthService.getToken()
         Observable.of("").subscribe(
             (result) => {
-                console.log("Result request token: " + result);
                 this.googleFileSyncService.requestLoadFile(result)
                     .switchMap((result) => {
                         //TODO please will replace mock data
-                        console.log("Result request token: " + result);
                         return this.gamesFileService.updateFile(MOCK_GAMES)
                     })
                     .subscribe(
                         (result) => {
-                            console.dir(result);
                             this.getGames();
                         },
                         (error) => {
@@ -76,14 +74,18 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        this.gamesFileService.findGamesByName(searchValue, this.filter).subscribe(
+        let subscription = this.gamesFileService.findGamesByName(searchValue, this.filter).subscribe(
             (games) => {
                 this.games = games;
             },
             (error) => {
-                console.log("GamesListComponent getGames error " + error);
+                this.showAlert({
+                    title: "Finding game",
+                    message: error.message
+                });
             }
-        )
+        );
+        this.subscriptions.push(subscription);
     }
 
     onShowConsoleChooser(event) {
@@ -128,15 +130,17 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     }
 
     private getGames() {
-        this.gamesFileService.getGames(this.filter).subscribe(
+        let subscription = this.gamesFileService.getGames(this.filter).subscribe(
             (games) => {
-                console.log("GamesListComponent getGames ");
-                console.dir(games);
                 this.games = games;
             },
             (error) => {
-                console.log("GamesListComponent getGames error " + error);
+                this.showAlert({
+                    title: "Getting games",
+                    message: error.message
+                });
             }
-        )
+        );
+        this.subscriptions.push(subscription);
     }
 }

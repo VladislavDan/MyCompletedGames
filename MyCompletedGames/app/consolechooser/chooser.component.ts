@@ -24,6 +24,5 @@ export class ChooserComponent {
     selectedIndexChanged(event) {
         let picker = <ListPicker> event.object;
         this.callback.emit(picker.selectedIndex);
-        console.log(picker.selectedIndex);
     }
 }
