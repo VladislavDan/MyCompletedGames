@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
+import {Observable} from "rxjs/Observable";
 
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
@@ -8,7 +9,7 @@ import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
-import {Observable} from "rxjs/Observable";
+import {BaseComponent} from "../common/BaseComponent";
 
 @Component({
     selector: "games-list",
@@ -16,7 +17,7 @@ import {Observable} from "rxjs/Observable";
     templateUrl: "./games-list.component.html",
     styleUrls: ['./games-list.css']
 })
-export class GamesListComponent implements OnInit {
+export class GamesListComponent extends BaseComponent implements OnInit {
 
     private filter: Filter;
 
@@ -37,6 +38,7 @@ export class GamesListComponent implements OnInit {
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService) {
+        super();
         this.filter = {
             console: "",
             who: ""

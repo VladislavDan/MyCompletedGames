@@ -1,11 +1,12 @@
 import {Component} from "@angular/core";
-import {ImagesService} from "../services/ImagesService";
-import {Image} from "../common/Image";
 import * as _ from "lodash";
 import {Page} from "tns-core-modules/ui/page";
 import {ModalDialogParams} from "nativescript-angular";
 
 import {MAX_IMAGE_COUNT} from "../common/Constants";
+import {ImagesService} from "../services/ImagesService";
+import {Image} from "../common/Image";
+import {BaseComponent} from "../common/BaseComponent";
 
 @Component({
     selector: "image-chooser",
@@ -13,7 +14,7 @@ import {MAX_IMAGE_COUNT} from "../common/Constants";
     templateUrl: "./image-chooser.component.html",
     styleUrls: ['./image-chooser.css']
 })
-export class ImageChooserComponent {
+export class ImageChooserComponent extends BaseComponent {
 
     public images: Array<Image> = [];
 
@@ -22,18 +23,21 @@ export class ImageChooserComponent {
     constructor(private imagesService: ImagesService,
                 private params: ModalDialogParams,
                 private page: Page) {
-
-        this.imagesService.getImages().subscribe(
+        super();
+        let subscription = this.imagesService.getImages().subscribe(
             (images) => {
                 if (images) {
-                    console.dir(images);
                     this.images = images;
                 }
             },
             (error) => {
-                console.log(error.message);
+                this.showAlert({
+                    title: "Initialisation image chooser",
+                    message: error.message
+                });
             }
         );
+        this.subscriptions.push(subscription);
 
         this.page.on("unloaded", () => {
             this.params.closeCallback();
@@ -41,13 +45,16 @@ export class ImageChooserComponent {
     }
 
     onItemTap(event, index) {
-        console.dir(index);
         if (this.isSelected(index)) {
             _.pull(this.selectedImagesIndexes, index);
-            console.dir(this.selectedImagesIndexes);
         } else {
             if (this.selectedImagesIndexes.length < MAX_IMAGE_COUNT) {
                 this.selectedImagesIndexes.push(index);
+            } else {
+                this.showAlert({
+                    title: "Choosing image",
+                    message: "You chose more than " + MAX_IMAGE_COUNT + " images"
+                });
             }
         }
     }

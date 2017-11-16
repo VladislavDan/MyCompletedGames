@@ -1,13 +1,13 @@
 import {Component, ViewContainerRef} from "@angular/core";
 import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
-import {LoadingIndicator} from "nativescript-loading-indicator";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {CameraService} from "../services/CameraService";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
 import {GamesFileService} from "../services/GamesFileService";
+import {BaseComponent} from "../common/BaseComponent";
 
 @Component({
     selector: "games-list",
@@ -15,7 +15,7 @@ import {GamesFileService} from "../services/GamesFileService";
     templateUrl: "./new-game.component.html",
     styleUrls: ['./new-game.css']
 })
-export class NewGameComponent {
+export class NewGameComponent extends BaseComponent {
 
     public consoles: Array<String> = VIDEO_GAME_CONSOLES;
 
@@ -31,13 +31,12 @@ export class NewGameComponent {
 
     private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
 
-    private loadingIndicator = new LoadingIndicator();
-
     constructor(private routerExtensions: RouterExtensions,
                 private imageService: CameraService,
                 private modalService: ModalDialogService,
                 private vcRef: ViewContainerRef,
                 private gamesFileService: GamesFileService) {
+        super();
         requestPermissions();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
             this.images = images;
@@ -61,32 +60,34 @@ export class NewGameComponent {
                     this.images = [];
                 }
             })
-            .catch(error => console.log(error.message));
+            .catch(error => this.showAlert({
+                title: "Choosing image",
+                message: error.message
+            }));
     }
 
     onTakePhoto(event) {
-        console.log("Started camera " + this.imageService);
-        this.imageService.getImageFromCamera().subscribe(
-            (asset) => {
-                console.log("Result" + asset);
-                this.imageService.getBase64String(asset).subscribe(
-                    (base64Image) => {
-                        this.images.push(base64Image);
-                    },
-                    (error) => {
-                        console.log(error.message);
-                    }
-                );
-            },
-            (error) => {
-                console.dir(error);
-            }
-        );
+        let subscription = this.imageService.getImageFromCamera()
+            .switchMap((asset) => {
+                return this.imageService.getBase64String(asset);
+            })
+            .subscribe(
+                (base64Image) => {
+                    this.images.push(base64Image);
+                },
+                (error) => {
+                    this.showAlert({
+                        title: "Taking photo",
+                        message: error.message
+                    })
+                }
+            );
+        this.subscriptions.push(subscription);
     }
 
     onSaveNewGame(event) {
-        this.loadingIndicator.show();
-        this.gamesFileService.addNewGame({
+        this.showProgress();
+        let subscription = this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
             console: this.consoles[this.chosenConsoleIndex],
@@ -94,14 +95,18 @@ export class NewGameComponent {
             images: this.images
         }).subscribe(
             () => {
-                this.loadingIndicator.hide();
+                this.hideProgress();
                 this.routerExtensions.backToPreviousPage();
             },
             (error) => {
-                this.loadingIndicator.hide();
-                console.log("NewGameComponent: " + error.message);
+                this.hideProgress();
+                this.showAlert({
+                    title: "Saving new game",
+                    message: error.message
+                })
             }
         );
+        this.subscriptions.push(subscription);
     }
 
     onBack() {
