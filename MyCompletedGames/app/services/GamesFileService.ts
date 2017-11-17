@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {GAME_FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
@@ -10,26 +11,21 @@ import {Filter} from "../common/Filter";
 @Injectable()
 export class GamesFileService {
 
+    public gamesChannel: ReplaySubject<Game[]> = new ReplaySubject();
+
     constructor() {
     }
 
-    public getGames(filter: Filter): Observable<Array<Game>> {
-        return this.readFile().map((gamesFileModel: GamesFileModel) => {
+    public getGames(name: string, filter: Filter) {
+        this.readFile().map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
         }).concatMap((games) => {
             return games;
         }).filter((game: Game) => {
-            return this.isComplainFilter(game, filter);
-        }).toArray();
-    }
-
-    public findGamesByName(name: string, filter: Filter): Observable<Array<Game>> {
-        return this.getGames(filter)
-            .concatMap(games => games)
-            .filter((game) => {
-                return game.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-            })
-            .toArray();
+            return this.isComplainFilter(game, name, filter);
+        }).toArray().subscribe((games) => {
+            this.gamesChannel.next(games);
+        });
     }
 
     public addNewGame(game: Game): Observable<GamesFileModel> {
@@ -64,7 +60,7 @@ export class GamesFileService {
         return fs.File.exists(filePath);
     }
 
-    private isComplainFilter(game: Game, filter: Filter) {
+    private isComplainFilter(game: Game, name: string, filter: Filter) {
         let isThisConsole = game.console === filter.console || filter.console === '';
         let isThisWho;
         if (filter.who === TOGETHER) {
@@ -74,6 +70,9 @@ export class GamesFileService {
         } else {
             isThisWho = true;
         }
-        return isThisConsole && isThisWho;
+        if (!name) {
+            name = "";
+        }
+        return isThisConsole && isThisWho && game.name.toLowerCase().indexOf(name.toLowerCase()) !== -1;
     }
 }

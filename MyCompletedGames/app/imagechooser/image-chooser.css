@@ -1,3 +1,7 @@
+.image-chooser-container__images-list {
+    height: 90%;
+}
+
 .image-chooser-container__image {
 
     height: 300px;

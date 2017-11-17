@@ -2,7 +2,7 @@ import {Component, ViewContainerRef} from "@angular/core";
 import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
 
-import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {MAX_IMAGE_COUNT, TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {CameraService} from "../services/CameraService";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
@@ -86,27 +86,16 @@ export class NewGameComponent extends BaseComponent {
     }
 
     onSaveNewGame(event) {
-        this.showProgress();
-        let subscription = this.gamesFileService.addNewGame({
-            id: Date.now().toString(),
-            name: this.what,
-            console: this.consoles[this.chosenConsoleIndex],
-            isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-            images: this.images
-        }).subscribe(
-            () => {
-                this.hideProgress();
-                this.routerExtensions.backToPreviousPage();
-            },
-            (error) => {
-                this.hideProgress();
-                this.showAlert({
-                    title: "Saving new game",
-                    message: error.message
-                })
-            }
-        );
-        this.subscriptions.push(subscription);
+        if (this.what && this.images.length === 3) {
+            this.showProgress();
+            let subscription = this.addGame();
+            this.subscriptions.push(subscription);
+        } else {
+            this.showAlert({
+                title: "Saving image",
+                message: "Choose " + MAX_IMAGE_COUNT + " image and input name"
+            })
+        }
     }
 
     onBack() {
@@ -119,5 +108,30 @@ export class NewGameComponent extends BaseComponent {
             fullscreen: true
         };
         return this.modalService.showModal(ImageChooserComponent, options);
+    }
+
+    private addGame() {
+        let subscription = this.gamesFileService.addNewGame({
+            id: Date.now().toString(),
+            name: this.what,
+            console: this.consoles[this.chosenConsoleIndex],
+            isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
+            images: this.images
+        }).subscribe(
+            () => {
+                //TODO hack for update list
+                this.gamesFileService.getGames("", {who: "", console: ""});
+                this.hideProgress();
+                this.routerExtensions.backToPreviousPage();
+            },
+            (error) => {
+                this.hideProgress();
+                this.showAlert({
+                    title: "Saving new game",
+                    message: error.message
+                })
+            }
+        );
+        return subscription;
     }
 }

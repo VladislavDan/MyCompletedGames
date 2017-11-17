@@ -48,49 +48,41 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.showProgress();
-        this.googleAuthService.getToken()
+        let subscriptionToAuth = this.googleAuthService.getToken()
             .switchMap((result) => {
                 return this.googleFileSyncService.requestLoadFile(result);
             })
             .switchMap((result) => {
                 return this.gamesFileService.updateFile(result)
             })
-            .switchMap(() => {
-                return this.gamesFileService.getGames(this.filter);
-            })
             .subscribe(
-                (games) => {
-                    this.hideProgress();
-                    this.zone.run(() => {
-                        this.games = games
-                    });
+                () => {
+                    this.gamesFileService.getGames("", this.filter);
                 },
                 (error) => {
                     this.hideProgress();
                     this.showAlert({
-                        title: "First getting games",
+                        title: "Uploading games",
                         message: error.message
                     });
                 }
             );
+        let subscriptionToChannel = this.gamesFileService.gamesChannel.subscribe((games) => {
+            this.hideProgress();
+            this.zone.run(() => {
+                this.games = games
+            });
+        });
+
+        this.subscriptions.push(subscriptionToAuth);
+        this.subscriptions.push(subscriptionToChannel);
     }
 
     onTextChanged(args) {
 
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        let subscription = this.gamesFileService.findGamesByName(searchValue, this.filter).subscribe(
-            (games) => {
-                this.games = games;
-            },
-            (error) => {
-                this.showAlert({
-                    title: "Finding game",
-                    message: error.message
-                });
-            }
-        );
-        this.subscriptions.push(subscription);
+        let subscription = this.gamesFileService.getGames(searchValue, this.filter);
     }
 
     onShowConsoleChooser(event) {
@@ -135,19 +127,6 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     }
 
     private getGames() {
-        let subscription = this.gamesFileService.getGames(this.filter).subscribe(
-            (games) => {
-                this.hideProgress();
-                this.games = games;
-            },
-            (error) => {
-                this.hideProgress();
-                this.showAlert({
-                    title: "Getting games",
-                    message: error.message
-                });
-            }
-        );
-        this.subscriptions.push(subscription);
+        let subscription = this.gamesFileService.getGames("", this.filter);
     }
 }
