@@ -42,7 +42,6 @@ export class GoogleAuthService {
     private getGoogleAuthCode() {
         if (Application.android) {
             this.androidGoogleSignIn.initEnvironment((authCode) => {
-                console.log("getGoogleAuthCode authCode " + authCode);
                 this.authCodeChannel.next(authCode);
             });
             this.androidGoogleSignIn.loginWithGoogle(

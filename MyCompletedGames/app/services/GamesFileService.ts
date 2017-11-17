@@ -43,7 +43,6 @@ export class GamesFileService {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(GAME_FILE_NAME);
         games.dateChanged = new Date(Date.now()).toDateString();
-        console.log("UpdateFile: " + games);
         return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
             .map(() => {
                 return games;
@@ -55,7 +54,6 @@ export class GamesFileService {
         let gamesFile = documents.getFile(GAME_FILE_NAME);
         return Observable.fromPromise(gamesFile.readText())
             .map((content: string): GamesFileModel => {
-                console.log("ReadFile: " + content);
                 return JSON.parse(content);
             })
     }
@@ -76,7 +74,6 @@ export class GamesFileService {
         } else {
             isThisWho = true;
         }
-        console.dir(filter);
         return isThisConsole && isThisWho;
     }
 }

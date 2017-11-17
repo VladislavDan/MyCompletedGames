@@ -31,19 +31,22 @@ export class AndroidGoogleSignIn {
         this.activity.onActivityResult = (requestCode, resultCode, data) => {
             try {
                 if (requestCode == GOOGLE_SIGNIN_RESULT_CODE) {
+                    let signInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                     if (resultCode == android.app.Activity.RESULT_OK) {
-
-                        let signInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                         if (signInResult.isSuccess()) {
                             let account = signInResult.getSignInAccount();
                             authCode = account.getServerAuthCode();
                             callback(authCode);
+                        } else {
+                            console.log('SignIn result not success, error code was: ' + signInResult.getStatus().getStatusCode());
                         }
+                    } else {
+                        console.log('SignIn error code: ' + signInResult.getStatus().getStatusCode());
                     }
                 }
             }
-            catch (e) {
-                console.log("initEnvironment e: " + e);
+            catch (error) {
+                throw error;
             }
         }
     }
@@ -65,18 +68,12 @@ export class AndroidGoogleSignIn {
 
             let uiAction = new this.actionRunnable();
             uiAction.action = () => {
-                try {
-                    this.activity.startActivityForResult(signInIntent, GOOGLE_SIGNIN_RESULT_CODE);
-                }
-                catch (e) {
-                    console.log(e);
-                }
+                this.activity.startActivityForResult(signInIntent, GOOGLE_SIGNIN_RESULT_CODE);
             };
             this.activity.runOnUiThread(uiAction);
         }
-        catch (e) {
-            console.log(e);
-            throw e;
+        catch (error) {
+            throw error;
         }
     }
 }

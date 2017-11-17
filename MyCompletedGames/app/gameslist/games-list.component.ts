@@ -1,10 +1,8 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, NgZone, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
-import {Observable} from "rxjs/Observable";
 
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
-import {MOCK_GAMES} from "../common/MockGames";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
@@ -37,7 +35,8 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
-                private gamesFileService: GamesFileService) {
+                private gamesFileService: GamesFileService,
+                private zone: NgZone) {
         super();
         this.filter = {
             console: "",
@@ -48,26 +47,32 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        //TODO needed refactoring
-        // this.googleAuthService.getToken()
-        Observable.of("").subscribe(
-            (result) => {
-                this.googleFileSyncService.requestLoadFile(result)
-                    .switchMap((result) => {
-                        //TODO please will replace mock data
-                        return this.gamesFileService.updateFile(MOCK_GAMES)
-                    })
-                    .subscribe(
-                        (result) => {
-                            this.getGames();
-                        },
-                        (error) => {
-                            console.log("GamesListComponent requestLoadFile error " + error);
-                        }
-                    )
-            }
-        );
+        this.showProgress();
+        this.googleAuthService.getToken()
+            .switchMap((result) => {
+                return this.googleFileSyncService.requestLoadFile(result);
+            })
+            .switchMap((result) => {
+                return this.gamesFileService.updateFile(result)
+            })
+            .switchMap(() => {
+                return this.gamesFileService.getGames(this.filter);
+            })
+            .subscribe(
+                (games) => {
+                    this.hideProgress();
+                    this.zone.run(() => {
+                        this.games = games
+                    });
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "First getting games",
+                        message: error.message
+                    });
+                }
+            );
     }
 
     onTextChanged(args) {
@@ -132,9 +137,11 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     private getGames() {
         let subscription = this.gamesFileService.getGames(this.filter).subscribe(
             (games) => {
+                this.hideProgress();
                 this.games = games;
             },
             (error) => {
+                this.hideProgress();
                 this.showAlert({
                     title: "Getting games",
                     message: error.message
