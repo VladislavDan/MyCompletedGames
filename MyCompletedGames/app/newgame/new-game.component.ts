@@ -8,6 +8,9 @@ import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
 import {GamesFileService} from "../services/GamesFileService";
 import {BaseComponent} from "../common/BaseComponent";
+import {GamesFileModel} from "../common/GamesFile";
+import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
+import {GoogleAuthService} from "../services/GoogleAuthService";
 
 @Component({
     selector: "games-list",
@@ -35,7 +38,9 @@ export class NewGameComponent extends BaseComponent {
                 private imageService: CameraService,
                 private modalService: ModalDialogService,
                 private vcRef: ViewContainerRef,
-                private gamesFileService: GamesFileService) {
+                private gamesFileService: GamesFileService,
+                private googleFileSyncService: GoogleFileSyncService,
+                private googleAuthService: GoogleAuthService) {
         super();
         requestPermissions();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
@@ -117,6 +122,11 @@ export class NewGameComponent extends BaseComponent {
             console: this.consoles[this.chosenConsoleIndex],
             isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
             images: this.images
+        }).switchMap((result: GamesFileModel) => {
+            return this.googleFileSyncService.requestUploadFile(
+                this.googleAuthService.getTokenFromStorage(),
+                JSON.stringify(result)
+            );
         }).subscribe(
             () => {
                 //TODO hack for update list

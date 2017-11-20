@@ -6,6 +6,7 @@ import {NewGameComponent} from "./new-game.component";
 import {ChooserModule} from "../consolechooser/chooser.module";
 import {CameraService} from "../services/CameraService";
 import {ImageChooserModule} from "../imagechooser/image-chooser.module";
+import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import {ImageChooserModule} from "../imagechooser/image-chooser.module";
         NewGameComponent
     ],
     providers: [
-        CameraService
+        CameraService,
+        GoogleFileSyncService
     ]
 })
 export class NewGameModule {

@@ -12,6 +12,7 @@ import {NewGameModule} from "./newgame/new-game.module";
 import {GamesListModule} from "./gameslist/games-list.module";
 import {NewGameService} from "./services/NewGameService";
 import {ImageChooserModule} from "./imagechooser/image-chooser.module";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
     bootstrap: [
@@ -22,7 +23,8 @@ import {ImageChooserModule} from "./imagechooser/image-chooser.module";
         AppRoutingModule,
         NewGameModule,
         GamesListModule,
-        ImageChooserModule
+        ImageChooserModule,
+        HttpModule
     ],
     declarations: [
         AppComponent

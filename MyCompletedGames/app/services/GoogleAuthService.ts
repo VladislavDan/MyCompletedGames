@@ -76,8 +76,8 @@ export class GoogleAuthService {
         });
     }
 
-    private getTokenFromStorage() {
-        this.tokenChannel.next(appSettings.getString(TOKEN_KEY));
+    public getTokenFromStorage() {
+        return appSettings.getString(TOKEN_KEY);
     }
 
     private setTokenToStorage(token) {
