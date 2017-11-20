@@ -3,7 +3,7 @@ import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
-import {GAME_FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
+import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
 import {Filter} from "../common/Filter";
@@ -37,7 +37,7 @@ export class GamesFileService {
 
     public updateFile(games: GamesFileModel): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
-        let gamesFile = documents.getFile(GAME_FILE_NAME);
+        let gamesFile = documents.getFile(FILE_NAME);
         games.dateChanged = new Date(Date.now()).toDateString();
         return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
             .map(() => {
@@ -47,7 +47,7 @@ export class GamesFileService {
 
     private readFile(): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
-        let gamesFile = documents.getFile(GAME_FILE_NAME);
+        let gamesFile = documents.getFile(FILE_NAME);
         return Observable.fromPromise(gamesFile.readText())
             .map((content: string): GamesFileModel => {
                 return JSON.parse(content);
@@ -56,7 +56,7 @@ export class GamesFileService {
 
     private isFileExist(): boolean {
         let documents = fs.knownFolders.documents();
-        let filePath = fs.path.join(documents.path, GAME_FILE_NAME);
+        let filePath = fs.path.join(documents.path, FILE_NAME);
         return fs.File.exists(filePath);
     }
 

@@ -50,7 +50,17 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         this.showProgress();
         let subscriptionToAuth = this.googleAuthService.getToken()
             .switchMap((result) => {
-                return this.googleFileSyncService.requestLoadFile(result);
+                return this.googleFileSyncService.createCompletedGamesFolder(result);
+            })
+            .switchMap((result) => {
+                console.log(result);
+                return this.googleFileSyncService.createCompletedGamesFile(
+                    this.googleAuthService.getTokenFromStorage(),
+                    result
+                );
+            })
+            .switchMap((result) => {
+                return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage());
             })
             .switchMap((result) => {
                 return this.gamesFileService.updateFile(result)
@@ -61,6 +71,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 },
                 (error) => {
                     this.hideProgress();
+                    console.dir(error);
                     this.showAlert({
                         title: "Uploading games",
                         message: error.message
