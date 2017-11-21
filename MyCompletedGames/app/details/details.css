@@ -1,0 +1,19 @@
+.details-container__images {
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: row wrap;
+}
+
+.details-container__name {
+    font-size: 30px;
+    word-wrap: break-word;
+    background-color: transparent;
+    border-color: transparent;
+    text-align: center;
+}
+
+.details-container__image {
+    height: 300px;
+    width: 300px;
+    margin: 20px;
+}

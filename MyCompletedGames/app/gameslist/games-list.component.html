@@ -45,7 +45,8 @@
     </item-chooser>
 
     <ListView class="games-list-container__games-list"
-              [items]="games">
+              [items]="games"
+              (itemTap)="onItemTap($event)">
 
         <ng-template let-item="item">
 

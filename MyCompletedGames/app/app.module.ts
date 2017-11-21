@@ -1,6 +1,7 @@
 import {NgModule, NgModuleFactoryLoader} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 import {NSModuleFactoryLoader} from "nativescript-angular/router";
+import {HttpModule} from "@angular/http";
 
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
@@ -12,7 +13,7 @@ import {NewGameModule} from "./newgame/new-game.module";
 import {GamesListModule} from "./gameslist/games-list.module";
 import {NewGameService} from "./services/NewGameService";
 import {ImageChooserModule} from "./imagechooser/image-chooser.module";
-import {HttpModule} from "@angular/http";
+import {DetailsModule} from "./details/details.module";
 
 @NgModule({
     bootstrap: [
@@ -24,7 +25,8 @@ import {HttpModule} from "@angular/http";
         NewGameModule,
         GamesListModule,
         ImageChooserModule,
-        HttpModule
+        HttpModule,
+        DetailsModule
     ],
     declarations: [
         AppComponent

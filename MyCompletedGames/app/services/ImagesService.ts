@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import * as fs from "file-system";
-import {fromFile} from "tns-core-modules/image-source";
+import {fromFile, ImageSource} from "tns-core-modules/image-source";
 import {Observable} from "rxjs/Observable";
+
 import {Image} from "../common/Image";
 
 declare var android: any;
@@ -26,9 +27,12 @@ export class ImagesService {
                 return entities;
             })
             .map((entity): Image => {
+                let resizedImage = android.graphics.Bitmap.createScaledBitmap(fromFile(entity.path).android, 300, 300, false);
+                let image = new ImageSource();
+                image.android = resizedImage;
                 return {
                     name: entity.name,
-                    image: 'data:image/png;base64,' + fromFile(entity.path).toBase64String('png')
+                    image: 'data:image/png;base64,' + image.toBase64String('png')
                 };
             })
             .toArray();

@@ -8,6 +8,7 @@ import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
+import {PageRoute, RouterExtensions} from "nativescript-angular";
 
 @Component({
     selector: "games-list",
@@ -36,6 +37,8 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService,
+                private routerExtensions: RouterExtensions,
+                private pageRoute: PageRoute,
                 private zone: NgZone) {
         super();
         this.filter = {
@@ -49,16 +52,15 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.showProgress();
         let subscriptionToAuth = this.googleAuthService.getToken()
-            .switchMap((result) => {
-                return this.googleFileSyncService.createCompletedGamesFolder(result);
-            })
-            .switchMap((result) => {
-                console.log(result);
-                return this.googleFileSyncService.createCompletedGamesFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    result
-                );
-            })
+        // .switchMap((result) => {
+        //     return this.googleFileSyncService.createCompletedGamesFolder(result);
+        // })
+        // .switchMap((result) => {
+        //     return this.googleFileSyncService.createCompletedGamesFile(
+        //         this.googleAuthService.getTokenFromStorage(),
+        //         result
+        //     );
+        // })
             .switchMap((result) => {
                 return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage());
             })
@@ -135,6 +137,13 @@ export class GamesListComponent extends BaseComponent implements OnInit {
             this.filter.who = WHO[index];
 
         }
+    }
+
+    onItemTap(event) {
+        // let route = new ActivatedRoute();
+        // route.params = Observable.of(this.games[event.index]);
+        // this.pageRoute.activatedRoute.next(new ActivatedRoute());
+        this.routerExtensions.navigate(["details", this.games[event.index].id]);
     }
 
     private getGames() {

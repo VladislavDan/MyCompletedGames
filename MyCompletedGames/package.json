@@ -27,6 +27,7 @@
     "nativescript-nodeify": "^0.5.6",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.8",
+    "resize-image": "0.0.4",
     "rxjs": "~5.4.2",
     "tns-core-modules": "~3.1.1",
     "zone.js": "~0.8.2"

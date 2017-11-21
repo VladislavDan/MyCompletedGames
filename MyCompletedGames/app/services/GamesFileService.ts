@@ -28,6 +28,17 @@ export class GamesFileService {
         });
     }
 
+    public getGamesById(id: String): Observable<Game> {
+        this.getGames("", {who: "", console: ""});
+        return this.gamesChannel
+            .concatMap((games) => {
+                return games;
+            })
+            .filter((game) => {
+                return game.id === id;
+            })
+    }
+
     public addNewGame(game: Game): Observable<GamesFileModel> {
         return this.readFile().flatMap((content) => {
             content.games.push(game);

@@ -1,0 +1,25 @@
+<ActionBar class="action-bar" title="Details">
+
+    <ActionItem [nsRouterLink]="['/new-game']"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_delete_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
+</ActionBar>
+<ScrollView orientation="vertical">
+    <StackLayout class="details-container"
+                 orientation="vertical">
+
+        <TextView class="details-container__name" [editable]="false" text="{{game.name}}"></TextView>
+
+        <FlexboxLayout class="details-container__images">
+            <Image class="details-container__image" src="{{game.images[0]}}" stretch="aspectFit">
+            </Image>
+            <Image class="details-container__image" src="{{game.images[1]}}" stretch="aspectFit">
+            </Image>
+            <Image class="details-container__image" src="{{game.images[2]}}" stretch="aspectFit">
+            </Image>
+        </FlexboxLayout>
+
+    </StackLayout>
+</ScrollView>
