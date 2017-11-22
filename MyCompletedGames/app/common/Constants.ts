@@ -5,11 +5,15 @@ export const DATE_CHANGED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 export const TOKEN_KEY = "TOKEN_KEY";
 
+export const FILE_ID_KEY = "FILE_ID_KEY";
+
 export const TOGETHER = "together";
 
 export const ONLY_ME = "only me";
 
 export const MAX_IMAGE_COUNT = 3;
+
+export const ADD_NEW_FILE = "Add new file";
 
 export const VIDEO_GAME_CONSOLES = [
 

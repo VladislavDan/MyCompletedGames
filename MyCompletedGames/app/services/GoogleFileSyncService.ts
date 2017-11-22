@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 
-import {AUTH_CONSTANTS} from "../common/AuthConstants";
-import {FILE_NAME, FOLDER_NAME} from "../common/Constants";
+import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "../common/Constants";
+import appSettings = require("application-settings");
 
 @Injectable()
 export class GoogleFileSyncService {
@@ -10,7 +10,7 @@ export class GoogleFileSyncService {
     constructor() {
     }
 
-    public isFileExist(token: string): Observable<any> {
+    public getExistFiles(token: string): Observable<any> {
         return Observable.ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files?q=name contains '" + FILE_NAME + "'",
@@ -20,22 +20,53 @@ export class GoogleFileSyncService {
                 method: "GET"
             }
         ).map((result) => {
-            return result.response.files.length > 0;
+            return result.response.files;
         });
     }
 
     public createCompletedGamesFile(token: string, id: string): Observable<any> {
-        return this.createFile(token, FILE_NAME, "application/vnd.google-apps.file", id);
+        return Observable.ajax(
+            {
+                url: "https://www.googleapis.com/drive/v3/files",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    parents: [id],
+                    name: FILE_NAME
+                },
+                method: "POST"
+            }
+        ).map((result) => {
+            console.dir(result);
+            return result.response.id;
+        });
     }
 
     public createCompletedGamesFolder(token: string): Observable<any> {
-        return this.createFile(token, FOLDER_NAME, "application/vnd.google-apps.folder", "");
-    }
-
-    public requestLoadFile(token: string): Observable<any> {
         return Observable.ajax(
             {
-                url: "https://www.googleapis.com/drive/v3/files/" + AUTH_CONSTANTS.fileId + "?alt=media",
+                url: "https://www.googleapis.com/drive/v3/files",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    name: FOLDER_NAME,
+                    mimeType: "application/vnd.google-apps.folder"
+                },
+                method: "POST"
+            }
+        ).map((result) => {
+            return result.response.id;
+        });
+    }
+
+    public requestLoadFile(token: string, fileId: string): Observable<any> {
+        return Observable.ajax(
+            {
+                url: "https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media",
                 headers: {
                     "Authorization": "Bearer " + token
                 },
@@ -46,10 +77,10 @@ export class GoogleFileSyncService {
         });
     }
 
-    public requestUploadFile(token: string, fileContent: string): Observable<any> {
+    public requestUploadFile(token: string, fileContent: string, fileId: string): Observable<any> {
         return Observable.ajax(
             {
-                url: "https://www.googleapis.com/upload/drive/v3/files/" + AUTH_CONSTANTS.fileId,
+                url: "https://www.googleapis.com/upload/drive/v3/files/" + fileId,
                 headers: {
                     "Authorization": "Bearer " + token
                 },
@@ -58,29 +89,15 @@ export class GoogleFileSyncService {
                 method: "PATCH"
             }
         ).map((result) => {
-            return result.response;
+            return fileId;
         });
     }
 
-    private createFile(token: string, name: string, type, id): Observable<any> {
-        return Observable.ajax(
-            {
-                url: "https://www.googleapis.com/drive/v3/files",
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                },
-                body: {
-                    parents: [
-                        id
-                    ],
-                    name: name,
-                    mimeType: type
-                },
-                method: "POST"
-            }
-        ).map((result) => {
-            return result.response.id;
-        });
+    public getFileIdFromStorage() {
+        return appSettings.getString(FILE_ID_KEY);
+    }
+
+    public setFileIdToStorage(fileId) {
+        appSettings.setString(FILE_ID_KEY, fileId);
     }
 }

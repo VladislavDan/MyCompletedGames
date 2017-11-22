@@ -125,7 +125,8 @@ export class NewGameComponent extends BaseComponent {
         }).switchMap((result: GamesFileModel) => {
             return this.googleFileSyncService.requestUploadFile(
                 this.googleAuthService.getTokenFromStorage(),
-                JSON.stringify(result)
+                JSON.stringify(result),
+                this.googleFileSyncService.getFileIdFromStorage()
             );
         }).subscribe(
             () => {

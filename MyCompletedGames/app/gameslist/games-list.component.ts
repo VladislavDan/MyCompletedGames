@@ -1,14 +1,17 @@
 import {Component, NgZone, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
+import * as dialogs from "ui/dialogs";
+import * as _ from "lodash";
 
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {ADD_NEW_FILE, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
-import {PageRoute, RouterExtensions} from "nativescript-angular";
+import {RouterExtensions} from "nativescript-angular";
+import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
 
 @Component({
     selector: "games-list",
@@ -38,7 +41,6 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService,
                 private routerExtensions: RouterExtensions,
-                private pageRoute: PageRoute,
                 private zone: NgZone) {
         super();
         this.filter = {
@@ -52,34 +54,117 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.showProgress();
         let subscriptionToAuth = this.googleAuthService.getToken()
-        // .switchMap((result) => {
-        //     return this.googleFileSyncService.createCompletedGamesFolder(result);
-        // })
-        // .switchMap((result) => {
-        //     return this.googleFileSyncService.createCompletedGamesFile(
-        //         this.googleAuthService.getTokenFromStorage(),
-        //         result
-        //     );
-        // })
             .switchMap((result) => {
-                return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage());
-            })
-            .switchMap((result) => {
-                return this.gamesFileService.updateFile(result)
+                return this.googleFileSyncService.getExistFiles(result);
             })
             .subscribe(
-                () => {
-                    this.gamesFileService.getGames("", this.filter);
+                (result) => {
+                    this.hideProgress();
+                    let options = _.map(result, (item: any) => {
+                        return item.id;
+                    });
+                    options.push(ADD_NEW_FILE);
+                    dialogs.action({
+                        message: "Choose file",
+                        cancelButtonText: "Cancel",
+                        actions: options
+                    }).then(result => {
+                        let subscription;
+                        if (result === ADD_NEW_FILE) {
+                            this.showProgress();
+                            subscription = this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
+                                .switchMap((result) => {
+                                    return this.googleFileSyncService.createCompletedGamesFile(
+                                        this.googleAuthService.getTokenFromStorage(),
+                                        result
+                                    );
+                                })
+                                .switchMap((result) => {
+                                    this.googleFileSyncService.setFileIdToStorage(result);
+                                    return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL), result);
+                                })
+                                .switchMap((result) => {
+                                    return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
+                                })
+                                .switchMap((result) => {
+                                    return this.gamesFileService.updateFile(result)
+                                })
+                                .subscribe(
+                                    () => {
+                                        this.gamesFileService.getGames("", this.filter);
+                                    },
+                                    (error) => {
+                                        this.hideProgress();
+                                        this.showAlert({
+                                            title: "Uploading games",
+                                            message: error.message
+                                        });
+                                    }
+                                );
+                        } else {
+                            this.googleFileSyncService.setFileIdToStorage(result);
+                            this.showProgress();
+                            console.dir(result);
+                            subscription = this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result)
+                                .switchMap((result) => {
+                                    return this.gamesFileService.updateFile(result)
+                                })
+                                .subscribe(
+                                    () => {
+                                        this.gamesFileService.getGames("", this.filter);
+                                    },
+                                    (error) => {
+                                        this.hideProgress();
+                                        this.showAlert({
+                                            title: "Uploading games",
+                                            message: error.message
+                                        });
+                                    }
+                                );
+                        }
+                        this.subscriptions.push(subscription);
+                    });
                 },
                 (error) => {
                     this.hideProgress();
-                    console.dir(error);
                     this.showAlert({
-                        title: "Uploading games",
+                        title: "Showing exist files",
                         message: error.message
                     });
                 }
             );
+        // let subscriptionToAuth = this.googleAuthService.getToken()
+        //     .switchMap((result) => {
+        //         return this.googleFileSyncService.createCompletedGamesFolder(result);
+        //     })
+        //     .switchMap((result) => {
+        //         return this.googleFileSyncService.createCompletedGamesFile(
+        //             this.googleAuthService.getTokenFromStorage(),
+        //             result
+        //         );
+        //     })
+        //     .switchMap((result) => {
+        //         return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL));
+        //     })
+        //     .switchMap((result) => {
+        //         return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage());
+        //     })
+        //     .switchMap((result) => {
+        //         return this.gamesFileService.updateFile(result)
+        //     })
+        //     .subscribe(
+        //         () => {
+        //             this.gamesFileService.getGames("", this.filter);
+        //         },
+        //         (error) => {
+        //             this.hideProgress();
+        //             console.dir(error);
+        //             this.showAlert({
+        //                 title: "Uploading games",
+        //                 message: error.message
+        //             });
+        //         }
+        //     );
         let subscriptionToChannel = this.gamesFileService.gamesChannel.subscribe((games) => {
             this.hideProgress();
             this.zone.run(() => {
