@@ -1,6 +1,7 @@
 import {LoadingIndicator} from "nativescript-loading-indicator";
 import {Subscription} from "rxjs/Subscription";
 import * as _ from "lodash";
+
 import {AlertMessage} from "./AlertMessage";
 
 export class BaseComponent {

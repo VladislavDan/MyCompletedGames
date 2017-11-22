@@ -135,14 +135,10 @@ export class GamesListComponent extends BaseComponent implements OnInit {
             this.filter.who = WHO[0];
         } else {
             this.filter.who = WHO[index];
-
         }
     }
 
     onItemTap(event) {
-        // let route = new ActivatedRoute();
-        // route.params = Observable.of(this.games[event.index]);
-        // this.pageRoute.activatedRoute.next(new ActivatedRoute());
         this.routerExtensions.navigate(["details", this.games[event.index].id]);
     }
 

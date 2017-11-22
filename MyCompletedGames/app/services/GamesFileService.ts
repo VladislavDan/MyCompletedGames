@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
 import {ReplaySubject} from "rxjs/ReplaySubject";
+import * as _ from "lodash";
 
 import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
@@ -42,6 +43,15 @@ export class GamesFileService {
     public addNewGame(game: Game): Observable<GamesFileModel> {
         return this.readFile().flatMap((content) => {
             content.games.push(game);
+            return this.updateFile(content);
+        });
+    }
+
+    public deleteGame(game: Game): Observable<GamesFileModel> {
+        return this.readFile().flatMap((content) => {
+            _.remove(content.games, function (item: Game) {
+                return item.id === game.id;
+            });
             return this.updateFile(content);
         });
     }

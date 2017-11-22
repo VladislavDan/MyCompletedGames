@@ -5,7 +5,7 @@
 }
 
 .details-container__name {
-    font-size: 30px;
+    font-size: 25px;
     word-wrap: break-word;
     background-color: transparent;
     border-color: transparent;
@@ -16,4 +16,28 @@
     height: 300px;
     width: 300px;
     margin: 20px;
+}
+
+.details-container__console {
+    font-size: 20px;
+    background-color: transparent;
+    border-color: transparent;
+    text-align: center;
+    color: gray;
+}
+
+.details-container__cooperative-information__image-coop {
+    height: 80px;
+    width: 80px;
+}
+
+.details-container__cooperative-information__image-single {
+    height: 80px;
+    width: 80px;
+}
+
+.details-container__title {
+    margin-right: 70px;
+    font-size: 25px;
+    text-align: center;
 }
