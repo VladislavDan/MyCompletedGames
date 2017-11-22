@@ -1,5 +1,10 @@
 <ActionBar class="action-bar" title="Games List">
 
+    <ActionItem (tap)="onReload($event)"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_cloud_download_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
     <ActionItem [nsRouterLink]="['/new-game']"
                 ios.systemIcon="9" ios.position="left"
                 icon="res://ic_add_white_24dp"

@@ -39,7 +39,6 @@ export class GoogleFileSyncService {
                 method: "POST"
             }
         ).map((result) => {
-            console.dir(result);
             return result.response.id;
         });
     }

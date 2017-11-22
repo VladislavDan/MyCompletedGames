@@ -12,6 +12,7 @@ import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
 import {RouterExtensions} from "nativescript-angular";
 import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
+import {Subscriber} from "rxjs/Subscriber";
 
 @Component({
     selector: "games-list",
@@ -53,134 +54,34 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.showProgress();
-        let subscriptionToAuth = this.googleAuthService.getToken()
-            .switchMap((result) => {
-                return this.googleFileSyncService.getExistFiles(result);
-            })
-            .subscribe(
-                (result) => {
-                    this.hideProgress();
-                    let options = _.map(result, (item: any) => {
-                        return item.id;
-                    });
-                    options.push(ADD_NEW_FILE);
-                    dialogs.action({
-                        message: "Choose file",
-                        actions: options
-                    }).then(result => {
-                        let subscription;
-                        if (result === ADD_NEW_FILE) {
-                            this.showProgress();
-                            console.log(result);
-                            subscription = this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
-                                .switchMap((result) => {
-                                    return this.googleFileSyncService.createCompletedGamesFile(
-                                        this.googleAuthService.getTokenFromStorage(),
-                                        result
-                                    );
-                                })
-                                .switchMap((result) => {
-                                    this.googleFileSyncService.setFileIdToStorage(result);
-                                    return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL), result);
-                                })
-                                .switchMap((result) => {
-                                    return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
-                                })
-                                .switchMap((result) => {
-                                    return this.gamesFileService.updateFile(result)
-                                })
-                                .subscribe(
-                                    () => {
-                                        this.gamesFileService.getGames("", this.filter);
-                                    },
-                                    (error) => {
-                                        this.hideProgress();
-                                        this.showAlert({
-                                            title: "Uploading games",
-                                            message: error.message
-                                        });
-                                    }
-                                );
-                        } else if (result.length > 0) {
-                            this.googleFileSyncService.setFileIdToStorage(result);
-                            this.showProgress();
-                            console.dir(result);
-                            subscription = this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result)
-                                .switchMap((result) => {
-                                    return this.gamesFileService.updateFile(result)
-                                })
-                                .subscribe(
-                                    () => {
-                                        this.gamesFileService.getGames("", this.filter);
-                                    },
-                                    (error) => {
-                                        this.hideProgress();
-                                        this.showAlert({
-                                            title: "Uploading games",
-                                            message: error.message
-                                        });
-                                    }
-                                );
-                        }
-                        this.subscriptions.push(subscription);
-                    });
-                },
-                (error) => {
-                    this.hideProgress();
-                    this.showAlert({
-                        title: "Showing exist files",
-                        message: error.message
-                    });
-                }
-            );
-        // let subscriptionToAuth = this.googleAuthService.getToken()
-        //     .switchMap((result) => {
-        //         return this.googleFileSyncService.createCompletedGamesFolder(result);
-        //     })
-        //     .switchMap((result) => {
-        //         return this.googleFileSyncService.createCompletedGamesFile(
-        //             this.googleAuthService.getTokenFromStorage(),
-        //             result
-        //         );
-        //     })
-        //     .switchMap((result) => {
-        //         return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL));
-        //     })
-        //     .switchMap((result) => {
-        //         return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage());
-        //     })
-        //     .switchMap((result) => {
-        //         return this.gamesFileService.updateFile(result)
-        //     })
-        //     .subscribe(
-        //         () => {
-        //             this.gamesFileService.getGames("", this.filter);
-        //         },
-        //         (error) => {
-        //             this.hideProgress();
-        //             console.dir(error);
-        //             this.showAlert({
-        //                 title: "Uploading games",
-        //                 message: error.message
-        //             });
-        //         }
-        //     );
-        let subscriptionToChannel = this.gamesFileService.gamesChannel.subscribe((games) => {
+        let subscriptionAuth = this.googleAuthService.getToken().subscribe(
+            (result) => {
+                this.onReload(null);
+            },
+            (error) => {
+                this.hideProgress();
+                this.showAlert({
+                    title: "Authorization",
+                    message: error.message
+                });
+            }
+        );
+        let subscriptionGamesChannel = this.gamesFileService.gamesChannel.subscribe((games) => {
             this.hideProgress();
             this.zone.run(() => {
                 this.games = games
             });
         });
 
-        this.subscriptions.push(subscriptionToAuth);
-        this.subscriptions.push(subscriptionToChannel);
+        this.subscriptions.push(subscriptionAuth);
+        this.subscriptions.push(subscriptionGamesChannel);
     }
 
     onTextChanged(args) {
 
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        let subscription = this.gamesFileService.getGames(searchValue, this.filter);
+        this.gamesFileService.getGames(searchValue, this.filter);
     }
 
     onShowConsoleChooser(event) {
@@ -227,7 +128,100 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         this.routerExtensions.navigate(["details", this.games[event.index].id]);
     }
 
+    onReload(event) {
+        this.showProgress();
+        this.reload();
+    }
+
+    private reload() {
+        let subscription = this.googleFileSyncService.getExistFiles(this.googleAuthService.getTokenFromStorage())
+            .subscribe(
+                (result) => {
+                    this.hideProgress();
+                    this.showChooserDialog(result);
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Showing exist files",
+                        message: error.message
+                    });
+                }
+            );
+        this.subscriptions.push(subscription);
+    }
+
+    private showChooserDialog(result) {
+        let options = _.map(result, (item: any) => {
+            return item.id;
+        });
+        options.push(ADD_NEW_FILE);
+        dialogs.action({
+            message: "Choose file",
+            actions: options
+        }).then(result => {
+            let subscription;
+            if (result === ADD_NEW_FILE) {
+                subscription = this.createAndLoadFile();
+            } else if (result.length > 0) {
+                subscription = this.loadFile(result);
+            }
+            this.subscriptions.push(subscription);
+        });
+    }
+
+    private createAndLoadFile() {
+        this.showProgress();
+        return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
+            .switchMap((result) => {
+                return this.googleFileSyncService.createCompletedGamesFile(
+                    this.googleAuthService.getTokenFromStorage(),
+                    result
+                );
+            })
+            .switchMap((result) => {
+                this.googleFileSyncService.setFileIdToStorage(result);
+                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL), result);
+            })
+            .switchMap((result) => {
+                return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
+            })
+            .switchMap((result) => {
+                return this.gamesFileService.updateFile(result)
+            })
+            .subscribe(
+                this.createGamesLoadingSubscriber()
+            );
+    }
+
+    private loadFile(result) {
+        this.googleFileSyncService.setFileIdToStorage(result);
+        this.showProgress();
+        return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result)
+            .switchMap((result) => {
+                return this.gamesFileService.updateFile(result)
+            })
+            .subscribe(
+                this.createGamesLoadingSubscriber()
+            );
+    }
+
+    private createGamesLoadingSubscriber(): Subscriber<any> {
+        return Subscriber.create(
+            () => {
+                this.gamesFileService.getGames("", this.filter);
+            },
+            (error) => {
+                this.hideProgress();
+                this.showAlert({
+                    title: "Loading games",
+                    message: error.message
+                });
+            }
+        )
+    }
+
     private getGames() {
-        let subscription = this.gamesFileService.getGames("", this.filter);
+        this.gamesFileService.getGames("", this.filter);
     }
 }
