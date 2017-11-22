@@ -66,12 +66,12 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                     options.push(ADD_NEW_FILE);
                     dialogs.action({
                         message: "Choose file",
-                        cancelButtonText: "Cancel",
                         actions: options
                     }).then(result => {
                         let subscription;
                         if (result === ADD_NEW_FILE) {
                             this.showProgress();
+                            console.log(result);
                             subscription = this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
                                 .switchMap((result) => {
                                     return this.googleFileSyncService.createCompletedGamesFile(
@@ -101,7 +101,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                                         });
                                     }
                                 );
-                        } else {
+                        } else if (result.length > 0) {
                             this.googleFileSyncService.setFileIdToStorage(result);
                             this.showProgress();
                             console.dir(result);
