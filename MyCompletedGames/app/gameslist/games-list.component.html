@@ -1,5 +1,9 @@
 <ActionBar class="action-bar" title="Games List">
 
+    <StackLayout orientation="horizontal">
+        <Label class="games-list-container__title" text="Games List: {{games.length}}"></Label>
+    </StackLayout>
+
     <ActionItem (tap)="onReload($event)"
                 ios.systemIcon="9" ios.position="left"
                 icon="res://ic_cloud_download_white_24dp"

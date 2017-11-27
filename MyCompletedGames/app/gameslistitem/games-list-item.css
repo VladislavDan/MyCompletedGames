@@ -6,10 +6,12 @@
 
 .game-container__image {
 
-    height: 100px;
-    width: 100px;
+    height: 150px;
+    width: 150px;
     border: 2px #996b5b;
     margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .games-container__information {

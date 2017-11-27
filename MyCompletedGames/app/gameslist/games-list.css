@@ -22,3 +22,9 @@
     background-color: #f46e65;
     color: white;
 }
+
+.games-list-container__title {
+    margin-right: 70px;
+    font-size: 25px;
+    text-align: center;
+}

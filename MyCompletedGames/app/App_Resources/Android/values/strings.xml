@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
-    <string name="app_name">MyCompletedGames</string>s
-    <string name="title_activity_kimera">TITLE ACTIVITY KIMERA</string>
+    <string name="app_name">MyCompleted Games</string>
+    <string name="title_activity_kimera">My Completed Games</string>
 </resources>
