@@ -34,7 +34,12 @@ export const VIDEO_GAME_CONSOLES = [
     "Sega Saturn",
     "Sega Mega Drive & Sega 32x",
     "Sega Master System",
-    "Arcade Machine"
+    "Neo-Geo",
+    "CPS-1",
+    "CPS-2",
+    "Irem",
+    "Sega NAOMI",
+    "Other Arcade Machine"
 ];
 
 export const WHO = [
