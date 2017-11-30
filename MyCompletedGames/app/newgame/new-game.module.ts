@@ -4,7 +4,6 @@ import {NativeScriptFormsModule} from "nativescript-angular/forms"
 
 import {NewGameComponent} from "./new-game.component";
 import {ChooserModule} from "../consolechooser/chooser.module";
-import {CameraService} from "../services/CameraService";
 import {ImageChooserModule} from "../imagechooser/image-chooser.module";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 
@@ -19,7 +18,6 @@ import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
         NewGameComponent
     ],
     providers: [
-        CameraService,
         GoogleFileSyncService
     ]
 })

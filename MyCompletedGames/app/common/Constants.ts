@@ -1,4 +1,4 @@
-export const FILE_NAME = "my-completed-games.json";
+export const FILE_NAME = "my-completed-games";
 export const FOLDER_NAME = "my-completed-games";
 
 export const DATE_CHANGED_FORMAT = "YYYY-MM-DDTHH:mm:ss";

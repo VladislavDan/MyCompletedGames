@@ -1,10 +1,9 @@
 import {Component, ViewContainerRef} from "@angular/core";
 import {ModalDialogOptions, ModalDialogService, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {MAX_IMAGE_COUNT, TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {CameraService} from "../services/CameraService";
-import {ReplaySubject} from "rxjs/ReplaySubject";
 import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
 import {GamesFileService} from "../services/GamesFileService";
 import {BaseComponent} from "../common/BaseComponent";
@@ -35,7 +34,6 @@ export class NewGameComponent extends BaseComponent {
     private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
 
     constructor(private routerExtensions: RouterExtensions,
-                private imageService: CameraService,
                 private modalService: ModalDialogService,
                 private vcRef: ViewContainerRef,
                 private gamesFileService: GamesFileService,
@@ -69,25 +67,6 @@ export class NewGameComponent extends BaseComponent {
                 title: "Choosing image",
                 message: error.message
             }));
-    }
-
-    onTakePhoto(event) {
-        let subscription = this.imageService.getImageFromCamera()
-            .switchMap((asset) => {
-                return this.imageService.getBase64String(asset);
-            })
-            .subscribe(
-                (base64Image) => {
-                    this.images.push(base64Image);
-                },
-                (error) => {
-                    this.showAlert({
-                        title: "Taking photo",
-                        message: error.message
-                    })
-                }
-            );
-        this.subscriptions.push(subscription);
     }
 
     onSaveNewGame(event) {

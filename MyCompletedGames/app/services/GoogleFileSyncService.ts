@@ -13,7 +13,7 @@ export class GoogleFileSyncService {
     public getExistFiles(token: string): Observable<any> {
         return Observable.ajax(
             {
-                url: "https://www.googleapis.com/drive/v3/files?q=name contains '" + FILE_NAME + "'",
+                url: "https://www.googleapis.com/drive/v3/files?q=name%20contains%20'" + FILE_NAME + "'",
                 headers: {
                     "Authorization": "Bearer " + token
                 },

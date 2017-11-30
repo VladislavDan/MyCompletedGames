@@ -142,6 +142,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 },
                 (error) => {
                     this.hideProgress();
+                    console.dir(error);
                     this.showAlert({
                         title: "Showing exist files",
                         message: error.message
