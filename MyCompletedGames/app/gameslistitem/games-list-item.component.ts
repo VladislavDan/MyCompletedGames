@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Game} from "../common/Game";
+import * as fs from "tns-core-modules/file-system";
 
 @Component({
     selector: "games-list-item",
@@ -16,5 +17,11 @@ export class GamesListItemComponent implements OnInit {
     }
 
     ngOnInit(): void {
+    }
+
+    getImage() {
+        let documents = fs.knownFolders.documents();
+        let imageFile = documents.getFile(this.game.id.toString());
+        return imageFile.path;
     }
 }

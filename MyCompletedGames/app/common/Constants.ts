@@ -1,4 +1,4 @@
-export const FILE_NAME = "my-completed-games";
+export const FILE_NAME = "my-completed-games.json";
 export const FOLDER_NAME = "my-completed-games";
 
 export const DATE_CHANGED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
@@ -17,12 +17,14 @@ export const ADD_NEW_FILE = "Add new file";
 
 export const VIDEO_GAME_CONSOLES = [
 
+    "3DO",
     "WiiU",
     "Game Cube & Wii",
     "Nintendo 3DS",
     "Nintendo DS",
     "Super Nintendo",
     "Nintendo Famicom",
+    "Nintendo 64",
     "Game Boy Advanced",
     "Game Boy Color & Game Boy",
     "Personal Computer",

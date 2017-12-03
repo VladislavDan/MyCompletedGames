@@ -60,8 +60,9 @@ export class GamesFileService {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(FILE_NAME);
         games.dateChanged = new Date(Date.now()).toDateString();
-        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
+        return Observable.of("")
             .map(() => {
+                gamesFile.writeTextSync(JSON.stringify(games));
                 return games;
             })
     }
@@ -69,7 +70,10 @@ export class GamesFileService {
     private readFile(): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(FILE_NAME);
-        return Observable.fromPromise(gamesFile.readText())
+        return Observable.of("")
+            .map(() => {
+                return gamesFile.readTextSync();
+            })
             .map((content: string): GamesFileModel => {
                 return JSON.parse(content);
             })

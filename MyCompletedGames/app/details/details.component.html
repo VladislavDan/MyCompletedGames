@@ -30,11 +30,27 @@
         <TextView class="details-container__console" [editable]="false" text="{{game.console}}"></TextView>
 
         <FlexboxLayout class="details-container__images">
-            <Image class="details-container__image" src="{{game.images[0]}}" stretch="aspectFit">
+            <Image class="details-container__image"
+                   [src]="game.images[0]"
+                   decodeWidth="300"
+                   decodeHeight="300"
+                   loadMode="async"
+                   stretch="aspectFit"
+            >
             </Image>
-            <Image class="details-container__image" src="{{game.images[1]}}" stretch="aspectFit">
+            <Image class="details-container__image"
+                   src="{{game.images[1]}}"
+                   decodeWidth="300"
+                   decodeHeight="300"
+                   loadMode="async"
+                   stretch="aspectFit">
             </Image>
-            <Image class="details-container__image" src="{{game.images[2]}}" stretch="aspectFit">
+            <Image class="details-container__image"
+                   src="{{game.images[2]}}"
+                   decodeWidth="300"
+                   decodeHeight="300"
+                   loadMode="async"
+                   stretch="aspectFit">
             </Image>
         </FlexboxLayout>
     </StackLayout>
