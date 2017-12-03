@@ -70,9 +70,9 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         );
         let subscriptionGamesChannel = this.gamesFileService.gamesChannel
             .concatMap((games: Array<Game>) => {
-                console.dir(games);
+                this.hideProgress();
                 this.zone.run(() => {
-                    this.games = games;
+                    this.games = games.sort();
                 });
                 return games;
             })
@@ -85,7 +85,6 @@ export class GamesListComponent extends BaseComponent implements OnInit {
             })
             .subscribe(
                 (game) => {
-                    this.hideProgress();
                 },
                 (error) => {
                     this.hideProgress();
