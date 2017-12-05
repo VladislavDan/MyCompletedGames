@@ -19,9 +19,7 @@
                        [visibility]="isSelected(i) ? 'visible' : 'collapsed'">
                 </Image>
                 <Image class="image-chooser-container__image"
-                       [src]="item.image"
-                       decodeWidth="300"
-                       decodeHeight="300"
+                       src="{{item.image}}"
                        loadMode="async">
                 </Image>
                 <Label class="image-chooser-container__text"

@@ -1,5 +1,6 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, NgZone, OnInit} from "@angular/core";
 import * as dialogs from "ui/dialogs";
+import * as _ from "lodash";
 
 import {BaseComponent} from "../common/BaseComponent";
 import {PageRoute, RouterExtensions} from "nativescript-angular";
@@ -23,11 +24,13 @@ export class DetailsComponent extends BaseComponent implements OnInit {
                 private gamesService: GamesFileService,
                 private routerExtensions: RouterExtensions,
                 private googleFileSyncService: GoogleFileSyncService,
-                private googleAuthService: GoogleAuthService) {
+                private googleAuthService: GoogleAuthService,
+                private zone: NgZone) {
         super();
     }
 
     ngOnInit() {
+        let subscriptionGamesChannel;
         this.showProgress();
         let subscription = this.pageRoute.activatedRoute
             .switchMap(activatedRoute => activatedRoute.params)
@@ -38,6 +41,14 @@ export class DetailsComponent extends BaseComponent implements OnInit {
                 (game) => {
                     this.hideProgress();
                     this.game = game;
+                    subscriptionGamesChannel = this.gamesService.gamesChannel.subscribe((games) => {
+                        this.hideProgress();
+                        this.zone.run(() => {
+                            this.game = _.find(games, (item) => {
+                                return item.id === this.game.id;
+                            })
+                        });
+                    });
                 },
                 (error) => {
                     this.hideProgress();
@@ -46,7 +57,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
                         message: error.message
                     })
                 });
-        this.subscriptions.push(subscription);
+        this.subscriptions.push(subscription, subscriptionGamesChannel);
     }
 
     onBack() {
@@ -64,6 +75,10 @@ export class DetailsComponent extends BaseComponent implements OnInit {
                 this.deleteGame();
             }
         });
+    }
+
+    onCreate() {
+        this.routerExtensions.navigate(["edit", this.game.id]);
     }
 
     private deleteGame() {

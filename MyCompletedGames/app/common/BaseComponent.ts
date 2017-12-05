@@ -3,8 +3,9 @@ import {Subscription} from "rxjs/Subscription";
 import * as _ from "lodash";
 
 import {AlertMessage} from "./AlertMessage";
+import {OnDestroy} from "@angular/core";
 
-export class BaseComponent {
+export class BaseComponent implements OnDestroy {
 
     private loadingIndicator = new LoadingIndicator();
 

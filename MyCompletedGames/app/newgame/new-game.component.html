@@ -36,12 +36,7 @@
                      class="chosen_images_container"
                      orientation="horizontal">
 
-            <Image class="chosen_images_container__image"
-                   src="{{image}}"
-                   decodeWidth="200"
-                   decodeHeight="200"
-                   loadMode="async"
-                   stretch="aspectFit">
+            <Image class="chosen_images_container__image" src="{{image}}" stretch="aspectFit">
             </Image>
         </StackLayout>
         <Label *ngIf="images.length == 0" text="No chosen image"></Label>

@@ -33,21 +33,16 @@ export class ImagesService {
             })
             .map((entity) => {
                 return {
-                    image: entity.path,
+                    source: fromFile(entity.path),
                     name: entity.name
                 }
             })
-            .toArray();
-    }
-
-    public resizeImages(images: Array<string>): Observable<Array<String>> {
-        return Observable.from(images)
-            .map((image) => {
-                return fromFile(image)
+            .filter((result) => {
+                return result.source !== null;
             })
-            .map((result) => {
-                let width = result.width;
-                let height = result.height;
+            .map((result): Image => {
+                let width = result.source.width;
+                let height = result.source.height;
                 let maxWidth = 600;
                 let maxHeight = 600;
 
@@ -64,11 +59,14 @@ export class ImagesService {
                     width = maxWidth;
                 }
 
-                let resizedImage = android.graphics.Bitmap.createScaledBitmap(result.android, width, height, false);
-                result = null;
+                let resizedImage = android.graphics.Bitmap.createScaledBitmap(result.source.android, width, height, false);
+                result.source = null;
                 let image = new ImageSource();
                 image.android = resizedImage;
-                return 'data:image/jpeg;base64,' + image.toBase64String('jpeg', 80);
+                return {
+                    name: result.name,
+                    image: 'data:image/png;base64,' + image.toBase64String('png')
+                };
             })
             .toArray();
     }

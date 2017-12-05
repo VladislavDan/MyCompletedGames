@@ -10,6 +10,7 @@ import {DetailsComponent} from "./details/details.component";
 const routes: Routes = [
     {path: "", redirectTo: "/games-list", pathMatch: "full"},
     {path: "new-game", component: NewGameComponent},
+    {path: "edit/:id", component: NewGameComponent},
     {path: "games-list", component: GamesListComponent},
     {path: "images-chooser", component: ImageChooserComponent},
     {path: "details/:id", component: DetailsComponent}

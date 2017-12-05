@@ -19,19 +19,20 @@ export class GoogleAuthService {
 
     constructor() {
         this.androidGoogleSignIn = new AndroidGoogleSignIn();
-        this.authCodeChannel.subscribe(
-            (authCode) => {
-                this.getGoogleToken(authCode).subscribe(
-                    (token) => {
-                        this.setTokenToStorage(token);
-                        this.tokenChannel.next(token);
-                    },
-                    (error) => {
-                        console.log(error);
-                    }
-                );
-            }
-        );
+        this.authCodeChannel
+            .switchMap((authCode) => {
+                return this.getGoogleToken(authCode);
+            })
+            .subscribe(
+                (token) => {
+                    this.setTokenToStorage(token);
+                    this.tokenChannel.next(token);
+
+                },
+                (error) => {
+                    throw error;
+                }
+            );
     }
 
     public getToken() {
@@ -54,7 +55,6 @@ export class GoogleAuthService {
     }
 
     private getGoogleToken(authCode: string): Observable<string> {
-        console.log("getGoogleToken authCode " + authCode);
         return Observable.ajax(
             {
                 url: "https://www.googleapis.com/oauth2/v4/token",

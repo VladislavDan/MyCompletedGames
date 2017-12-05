@@ -1,7 +1,7 @@
 <ActionBar class="action-bar" title="Games List">
 
     <StackLayout orientation="horizontal">
-        <Label class="games-list-container__title" text="Games List: {{games.length}}"></Label>
+        <Label class="games-list-container__title" text="Games List: {{games ? games.length : 0}}"></Label>
     </StackLayout>
 
     <ActionItem (tap)="onReload($event)"
@@ -55,7 +55,7 @@
 
     <ListView class="games-list-container__games-list"
               [items]="games"
-              (itemTap)="onItemTap($event)">
+              (itemTap)="onOpenDetails($event)">
 
         <ng-template let-item="item">
 

@@ -20,6 +20,12 @@
                 icon="res://ic_delete_white_24dp"
                 android.position="actionBar">
     </ActionItem>
+
+    <ActionItem (tap)="onCreate()"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_mode_edit_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
 </ActionBar>
 <ScrollView orientation="vertical">
     <StackLayout class="details-container"
@@ -30,27 +36,11 @@
         <TextView class="details-container__console" [editable]="false" text="{{game.console}}"></TextView>
 
         <FlexboxLayout class="details-container__images">
-            <Image class="details-container__image"
-                   [src]="game.images[0]"
-                   decodeWidth="300"
-                   decodeHeight="300"
-                   loadMode="async"
-                   stretch="aspectFit"
-            >
+            <Image class="details-container__image" src="{{game.images[0]}}" stretch="aspectFit">
             </Image>
-            <Image class="details-container__image"
-                   src="{{game.images[1]}}"
-                   decodeWidth="300"
-                   decodeHeight="300"
-                   loadMode="async"
-                   stretch="aspectFit">
+            <Image class="details-container__image" src="{{game.images[1]}}" stretch="aspectFit">
             </Image>
-            <Image class="details-container__image"
-                   src="{{game.images[2]}}"
-                   decodeWidth="300"
-                   decodeHeight="300"
-                   loadMode="async"
-                   stretch="aspectFit">
+            <Image class="details-container__image" src="{{game.images[2]}}" stretch="aspectFit">
             </Image>
         </FlexboxLayout>
     </StackLayout>

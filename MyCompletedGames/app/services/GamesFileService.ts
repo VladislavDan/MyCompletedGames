@@ -1,18 +1,18 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
-import {ReplaySubject} from "rxjs/ReplaySubject";
 import * as _ from "lodash";
 
 import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
 import {Filter} from "../common/Filter";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class GamesFileService {
 
-    public gamesChannel: ReplaySubject<Game[]> = new ReplaySubject();
+    public gamesChannel: BehaviorSubject<Game[]> = new BehaviorSubject(null);
 
     constructor() {
     }
@@ -38,11 +38,28 @@ export class GamesFileService {
             .filter((game) => {
                 return game.id === id;
             })
+            .first();
     }
 
     public addNewGame(game: Game): Observable<GamesFileModel> {
         return this.readFile().flatMap((content) => {
             content.games.push(game);
+            return this.updateFile(content);
+        });
+    }
+
+    public changeGame(game: Game): Observable<GamesFileModel> {
+        return this.readFile().flatMap((content) => {
+            let index = _.findIndex(content.games, (item) => {
+                return item.id === game.id;
+            });
+            let value = content.games[index];
+            if (value.id === game.id) {
+                value.name = game.name;
+                value.console = game.console;
+                value.isTogether = game.isTogether;
+                value.images = game.images;
+            }
             return this.updateFile(content);
         });
     }
@@ -60,9 +77,8 @@ export class GamesFileService {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(FILE_NAME);
         games.dateChanged = new Date(Date.now()).toDateString();
-        return Observable.of("")
+        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
             .map(() => {
-                gamesFile.writeTextSync(JSON.stringify(games));
                 return games;
             })
     }
@@ -70,10 +86,7 @@ export class GamesFileService {
     private readFile(): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(FILE_NAME);
-        return Observable.of("")
-            .map(() => {
-                return gamesFile.readTextSync();
-            })
+        return Observable.fromPromise(gamesFile.readText())
             .map((content: string): GamesFileModel => {
                 return JSON.parse(content);
             })

@@ -60,15 +60,11 @@ export class ImageChooserComponent extends BaseComponent {
     }
 
     onSave(event) {
-        this.showProgress();
         let images = [];
         _.forEach(this.selectedImagesIndexes, (item) => {
             images.push(this.images[item].image)
         });
-        this.imagesService.resizeImages(images).subscribe((images) => {
-            this.hideProgress();
-            this.params.closeCallback(images);
-        });
+        this.params.closeCallback(images);
     }
 
     isSelected(index) {

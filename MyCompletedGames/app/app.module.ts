@@ -14,7 +14,6 @@ import {GamesListModule} from "./gameslist/games-list.module";
 import {NewGameService} from "./services/NewGameService";
 import {ImageChooserModule} from "./imagechooser/image-chooser.module";
 import {DetailsModule} from "./details/details.module";
-import {ThreadService} from "./services/ThreadService";
 
 @NgModule({
     bootstrap: [
@@ -38,7 +37,6 @@ import {ThreadService} from "./services/ThreadService";
         GoogleFileSyncService,
         ModalDialogService,
         NewGameService,
-        ThreadService,
         {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
     ]
 })
