@@ -202,7 +202,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
             })
             .switchMap((result) => {
                 this.googleFileSyncService.setFileIdToStorage(result);
-                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL), result);
+                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL, [], 4), result);
             })
             .switchMap((result) => {
                 return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);

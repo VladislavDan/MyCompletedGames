@@ -91,7 +91,7 @@ export class NewGameComponent extends BaseComponent {
             .switchMap((result: GamesFileModel) => {
                 return this.googleFileSyncService.requestUploadFile(
                     this.googleAuthService.getTokenFromStorage(),
-                    JSON.stringify(result),
+                    JSON.stringify(result, null, 4),
                     this.googleFileSyncService.getFileIdFromStorage()
                 );
             })
@@ -124,7 +124,7 @@ export class NewGameComponent extends BaseComponent {
         }).switchMap((result: GamesFileModel) => {
             return this.googleFileSyncService.requestUploadFile(
                 this.googleAuthService.getTokenFromStorage(),
-                JSON.stringify(result),
+                JSON.stringify(result, null, 4),
                 this.googleFileSyncService.getFileIdFromStorage()
             );
         }).subscribe(
@@ -155,7 +155,7 @@ export class NewGameComponent extends BaseComponent {
             .switchMap((result: GamesFileModel) => {
                 return this.googleFileSyncService.requestUploadFile(
                     this.googleAuthService.getTokenFromStorage(),
-                    JSON.stringify(result),
+                    JSON.stringify(result, null, 4),
                     this.googleFileSyncService.getFileIdFromStorage()
                 );
             }).subscribe(

@@ -79,7 +79,7 @@ export class GamesFileService {
         gamesFileModel.games = _.sortBy(gamesFileModel.games, function (game) {
             return game.name;
         });
-        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(gamesFileModel)))
+        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(gamesFileModel, null, 4)))
             .map(() => {
                 return gamesFileModel;
             })
