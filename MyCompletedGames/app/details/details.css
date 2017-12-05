@@ -1,7 +1,5 @@
 .details-container__images {
-    flex-direction: row;
-    justify-content: space-around;
-    flex-flow: row wrap;
+    flex-direction: column;
 }
 
 .details-container__name {

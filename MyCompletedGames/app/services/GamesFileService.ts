@@ -12,7 +12,7 @@ import {Filter} from "../common/Filter";
 @Injectable()
 export class GamesFileService {
 
-    public gamesChannel: BehaviorSubject<Game[]> = new BehaviorSubject(null);
+    public gamesChannel: BehaviorSubject<Game[]> = new BehaviorSubject([]);
 
     constructor() {
     }

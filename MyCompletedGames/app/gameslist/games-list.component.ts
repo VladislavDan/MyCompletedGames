@@ -2,6 +2,7 @@ import {Component, NgZone, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
 import * as dialogs from "ui/dialogs";
 import * as _ from "lodash";
+import * as fs from "tns-core-modules/file-system";
 
 import {Game} from "../common/Game";
 import {GamesFileService} from "../services/GamesFileService";
@@ -13,6 +14,7 @@ import {BaseComponent} from "../common/BaseComponent";
 import {RouterExtensions} from "nativescript-angular";
 import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
 import {Subscriber} from "rxjs/Subscriber";
+import {fromBase64} from "tns-core-modules/image-source";
 
 @Component({
     selector: "games-list",
@@ -66,12 +68,34 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 });
             }
         );
-        let subscriptionGamesChannel = this.gamesFileService.gamesChannel.subscribe((games) => {
-            this.hideProgress();
-            this.zone.run(() => {
-                this.games = games
-            });
-        });
+        let subscriptionGamesChannel = this.gamesFileService.gamesChannel
+            .concatMap((games: Array<Game>) => {
+                this.zone.run(() => {
+                    this.games = games;
+                });
+                return games;
+            })
+            .map((game) => {
+                for (let i = 0; i < game.images.length; i++) {
+                    let documents = fs.knownFolders.documents();
+                    let imageFile = documents.getFile(game.id.toString() + i);
+                    let source = fromBase64(game.images[i].replace("data:image/jpeg;base64,", "").toString());
+                    source.saveToFile(imageFile.path, "jpeg");
+                }
+                return game;
+            })
+            .subscribe(
+                (game) => {
+                    this.hideProgress();
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Showing games",
+                        message: error.message
+                    });
+                }
+            );
 
         this.subscriptions.push(subscriptionAuth);
         this.subscriptions.push(subscriptionGamesChannel);
@@ -124,7 +148,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         }
     }
 
-    onOpenDetails(event) {
+    onItemTap(event) {
         this.routerExtensions.navigate(["details", this.games[event.index].id]);
     }
 
@@ -190,7 +214,12 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 return this.gamesFileService.updateFile(result)
             })
             .subscribe(
-                this.createGamesLoadingSubscriber()
+                () => {
+                    this.hideProgress();
+                },
+                (error) => {
+                    this.createGamesLoadingSubscriber();
+                }
             );
     }
 
@@ -209,6 +238,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     private createGamesLoadingSubscriber(): Subscriber<any> {
         return Subscriber.create(
             () => {
+                this.hideProgress();
                 this.gamesFileService.getGames("", this.filter);
             },
             (error) => {

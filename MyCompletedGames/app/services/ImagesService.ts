@@ -43,8 +43,8 @@ export class ImagesService {
             .map((result): Image => {
                 let width = result.source.width;
                 let height = result.source.height;
-                let maxWidth = 600;
-                let maxHeight = 600;
+                let maxWidth = 300;
+                let maxHeight = 300;
 
                 if (width > height) {
                     let ratio = width / maxWidth;
@@ -65,7 +65,7 @@ export class ImagesService {
                 image.android = resizedImage;
                 return {
                     name: result.name,
-                    image: 'data:image/png;base64,' + image.toBase64String('png')
+                    image: 'data:image/jpeg;base64,' + image.toBase64String('jpeg', 80)
                 };
             })
             .toArray();

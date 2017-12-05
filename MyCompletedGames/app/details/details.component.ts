@@ -9,6 +9,7 @@ import {GamesFileService} from "../services/GamesFileService";
 import {GamesFileModel} from "../common/GamesFile";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
+import * as fs from "tns-core-modules/file-system";
 
 @Component({
     selector: "details",
@@ -19,6 +20,10 @@ import {GoogleAuthService} from "../services/GoogleAuthService";
 export class DetailsComponent extends BaseComponent implements OnInit {
 
     public game: Game;
+
+    public image_1: string;
+
+    public image_2: string;
 
     constructor(private pageRoute: PageRoute,
                 private gamesService: GamesFileService,
@@ -46,7 +51,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
                         this.zone.run(() => {
                             this.game = _.find(games, (item) => {
                                 return item.id === this.game.id;
-                            })
+                            });
+                            let documents = fs.knownFolders.documents();
+                            let imageFile = documents.getFile(this.game.id.toString());
+                            this.image_1 = imageFile.path + 0;
+                            this.image_2 = imageFile.path + 1;
                         });
                     });
                 },
