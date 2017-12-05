@@ -1,10 +1,9 @@
-import {Component, NgZone, ViewContainerRef} from "@angular/core";
-import {ModalDialogOptions, ModalDialogService, PageRoute, RouterExtensions} from "nativescript-angular";
+import {Component} from "@angular/core";
+import {PageRoute, RouterExtensions} from "nativescript-angular";
 import {requestPermissions} from "nativescript-camera";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
-import {MAX_IMAGE_COUNT, TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {ImageChooserComponent} from "../imagechooser/image-chooser.component";
+import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {GamesFileService} from "../services/GamesFileService";
 import {BaseComponent} from "../common/BaseComponent";
 import {GamesFileModel} from "../common/GamesFile";
@@ -37,12 +36,9 @@ export class NewGameComponent extends BaseComponent {
 
     constructor(private pageRoute: PageRoute,
                 private routerExtensions: RouterExtensions,
-                private modalService: ModalDialogService,
-                private vcRef: ViewContainerRef,
                 private gamesFileService: GamesFileService,
                 private googleFileSyncService: GoogleFileSyncService,
-                private googleAuthService: GoogleAuthService,
-                private zone: NgZone) {
+                private googleAuthService: GoogleAuthService) {
         super();
         requestPermissions();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
@@ -57,7 +53,6 @@ export class NewGameComponent extends BaseComponent {
                 (game) => {
                     this.chosenWhoIndex = game.isTogether ? 0 : 1;
                     this.chosenConsoleIndex = this.consoles.indexOf(game.console);
-                    this.images = game.images;
                     this.what = game.name;
                     this.id = game.id;
                 },
@@ -79,51 +74,45 @@ export class NewGameComponent extends BaseComponent {
         this.chosenWhoIndex = index;
     }
 
-    onChooseImage(event) {
-        this.showImagesChooser()
-            .then(result => {
-                if (result) {
-                    this.images = result;
-                } else {
-                    this.images = [];
-                }
-            })
-            .catch(error => this.showAlert({
-                title: "Choosing image",
-                message: error.message
-            }));
+    onSaveNewGame(event) {
+        this.showProgress();
+        let subscription;
+        if (!this.id) {
+            subscription = this.addGame();
+        } else {
+            subscription = this.changeGame();
+        }
+        this.subscriptions.push(subscription);
     }
 
-    onSaveNewGame(event) {
-        if (this.what && this.images.length === 3) {
-            this.showProgress();
-            let subscription;
-            if (!this.id) {
-                console.log("add game");
-                subscription = this.addGame();
-            } else {
-                console.log("change game " + this.id);
-                subscription = this.changeGame();
-            }
-            this.subscriptions.push(subscription);
-        } else {
-            this.showAlert({
-                title: "Saving image",
-                message: "Choose " + MAX_IMAGE_COUNT + " image and input name"
+    onDeleteGame() {
+        this.showProgress();
+        this.gamesFileService.deleteGame(this.id.toString())
+            .switchMap((result: GamesFileModel) => {
+                return this.googleFileSyncService.requestUploadFile(
+                    this.googleAuthService.getTokenFromStorage(),
+                    JSON.stringify(result),
+                    this.googleFileSyncService.getFileIdFromStorage()
+                );
             })
-        }
+            .subscribe(
+                () => {
+                    this.hideProgress();
+                    this.gamesFileService.getGames("", {who: "", console: ""});
+                    this.routerExtensions.back();
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Deleting game",
+                        message: error.message
+                    })
+                }
+            );
     }
 
     onBack() {
         this.routerExtensions.backToPreviousPage();
-    }
-
-    private showImagesChooser(): Promise<any> {
-        const options: ModalDialogOptions = {
-            viewContainerRef: this.vcRef,
-            fullscreen: true
-        };
-        return this.modalService.showModal(ImageChooserComponent, options);
     }
 
     private addGame() {
@@ -132,7 +121,6 @@ export class NewGameComponent extends BaseComponent {
             name: this.what,
             console: this.consoles[this.chosenConsoleIndex],
             isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-            images: this.images
         }).switchMap((result: GamesFileModel) => {
             return this.googleFileSyncService.requestUploadFile(
                 this.googleAuthService.getTokenFromStorage(),
@@ -162,8 +150,7 @@ export class NewGameComponent extends BaseComponent {
                 id: this.id,
                 name: this.what,
                 console: this.consoles[this.chosenConsoleIndex],
-                isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-                images: this.images
+                isTogether: this.who[this.chosenWhoIndex] === TOGETHER
             })
             .switchMap((result: GamesFileModel) => {
                 return this.googleFileSyncService.requestUploadFile(

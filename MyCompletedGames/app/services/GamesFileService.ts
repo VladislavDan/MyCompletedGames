@@ -58,16 +58,15 @@ export class GamesFileService {
                 value.name = game.name;
                 value.console = game.console;
                 value.isTogether = game.isTogether;
-                value.images = game.images;
             }
             return this.updateFile(content);
         });
     }
 
-    public deleteGame(game: Game): Observable<GamesFileModel> {
+    public deleteGame(id: string): Observable<GamesFileModel> {
         return this.readFile().flatMap((content) => {
             _.remove(content.games, function (item: Game) {
-                return item.id === game.id;
+                return item.id === id;
             });
             return this.updateFile(content);
         });

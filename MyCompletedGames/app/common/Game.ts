@@ -4,5 +4,4 @@ export interface Game {
     name: String;
     console: String;
     isTogether: boolean;
-    images: String[];
 }

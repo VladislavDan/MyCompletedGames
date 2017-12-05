@@ -16,10 +16,12 @@
     </ActionItem>
 </ActionBar>
 <StackLayout class="games-list-container"
-             orientation="vertical">
+             orientation="vertical"
+             focus="true">
 
     <SearchBar class="games-list-container__search-bar"
                (textChange)="onTextChanged($event)"
+               (loaded)="onClearFocus($event)"
                hint="Search game">
     </SearchBar>
 

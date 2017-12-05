@@ -4,15 +4,13 @@ import {NativeScriptFormsModule} from "nativescript-angular/forms"
 
 import {NewGameComponent} from "./new-game.component";
 import {ChooserModule} from "../consolechooser/chooser.module";
-import {ImageChooserModule} from "../imagechooser/image-chooser.module";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 
 @NgModule({
     imports: [
         NativeScriptModule,
         NativeScriptFormsModule,
-        ChooserModule,
-        ImageChooserModule
+        ChooserModule
     ],
     declarations: [
         NewGameComponent
