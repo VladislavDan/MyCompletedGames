@@ -2,12 +2,12 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
 import * as fs from "tns-core-modules/file-system";
 import * as _ from "lodash";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
 import {Filter} from "../common/Filter";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class GamesFileService {
@@ -73,13 +73,16 @@ export class GamesFileService {
         });
     }
 
-    public updateFile(games: GamesFileModel): Observable<GamesFileModel> {
+    public updateFile(gamesFileModel: GamesFileModel): Observable<GamesFileModel> {
         let documents = fs.knownFolders.documents();
         let gamesFile = documents.getFile(FILE_NAME);
-        games.dateChanged = new Date(Date.now()).toDateString();
-        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(games)))
+        gamesFileModel.dateChanged = new Date(Date.now()).toDateString();
+        gamesFileModel.games = _.sortBy(gamesFileModel.games, function (game) {
+            return game.name;
+        });
+        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(gamesFileModel)))
             .map(() => {
-                return games;
+                return gamesFileModel;
             })
     }
 
