@@ -1,4 +1,4 @@
-<FlexboxLayout class="game-container">
+<FlexboxLayout class="game-container" (longPress)="onItemTap($event)">
     <FlexboxLayout class="games-container__information">
         <Label class="games-container__information__name" [text]="game.name" lineHeight="10"></Label>
         <Label class="games-container__information__console" [text]="game.console"></Label>

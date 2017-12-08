@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {Game} from "../common/Game";
+import {RouterExtensions} from "nativescript-angular";
 
 @Component({
     selector: "games-list-item",
@@ -7,14 +8,15 @@ import {Game} from "../common/Game";
     templateUrl: "./games-list-item.component.html",
     styleUrls: ['./games-list-item.css']
 })
-export class GamesListItemComponent implements OnInit {
+export class GamesListItemComponent {
 
     @Input()
     public game: Game;
 
-    constructor() {
+    constructor(private routerExtensions: RouterExtensions) {
     }
 
-    ngOnInit(): void {
+    onItemTap(event) {
+        this.routerExtensions.navigate(["edit", this.game.id]);
     }
 }

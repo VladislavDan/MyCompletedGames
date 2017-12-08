@@ -10,7 +10,6 @@ import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {ADD_NEW_FILE, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
-import {RouterExtensions} from "nativescript-angular";
 import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
 import {Subscriber} from "rxjs/Subscriber";
 import {isAndroid} from "tns-core-modules/platform";
@@ -42,7 +41,6 @@ export class GamesListComponent extends BaseComponent implements OnInit {
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesFileService: GamesFileService,
-                private routerExtensions: RouterExtensions,
                 private zone: NgZone) {
         super();
         this.filter = {
@@ -143,10 +141,6 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         } else {
             this.filter.who = WHO[index];
         }
-    }
-
-    onItemTap(event) {
-        this.routerExtensions.navigate(["edit", this.games[event.index].id]);
     }
 
     onReload(event) {
