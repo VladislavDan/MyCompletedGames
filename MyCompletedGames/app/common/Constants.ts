@@ -41,6 +41,7 @@ export const VIDEO_GAME_CONSOLES = [
     "CPS-2",
     "Irem",
     "Sega NAOMI",
+    "Data East Arcade",
     "Other Arcade Machine"
 ];
 
