@@ -3,4 +3,6 @@ import {platformNativeScriptDynamic} from "nativescript-angular/platform";
 
 import {AppModule} from "./app.module";
 
+import "./bundle-config";
+
 platformNativeScriptDynamic().bootstrapModule(AppModule);

@@ -14,6 +14,8 @@ import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
 import {Subscriber} from "rxjs/Subscriber";
 import {isAndroid} from "tns-core-modules/platform";
 
+import 'rxjs/add/operator/mergeMap'
+
 @Component({
     selector: "games-list",
     moduleId: module.id,

@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 import {NativeScriptFormsModule} from "nativescript-angular/forms"
 
@@ -17,6 +17,9 @@ import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
     ],
     providers: [
         GoogleFileSyncService
+    ],
+    schemas: [
+        NO_ERRORS_SCHEMA
     ]
 })
 export class NewGameModule {

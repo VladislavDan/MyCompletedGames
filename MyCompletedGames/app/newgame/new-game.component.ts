@@ -10,6 +10,8 @@ import {GamesFileModel} from "../common/GamesFile";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 
+import 'rxjs/add/operator/mergeMap'
+
 @Component({
     selector: "games-list",
     moduleId: module.id,

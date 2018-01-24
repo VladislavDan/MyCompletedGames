@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs/Rx";
+import {Observable} from "rxjs/Observable";
 import * as fs from "tns-core-modules/file-system";
 import * as _ from "lodash";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
@@ -8,6 +8,14 @@ import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
 import {GamesFileModel} from "../common/GamesFile";
 import {Game} from "../common/Game";
 import {Filter} from "../common/Filter";
+
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/concatMap'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/toArray'
+import 'rxjs/add/operator/first'
+import 'rxjs/add/operator/mergeMap'
+
 
 @Injectable()
 export class GamesFileService {

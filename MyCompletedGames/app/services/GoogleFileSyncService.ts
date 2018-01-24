@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
+import 'rxjs/add/observable/dom/ajax'
 
 import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "../common/Constants";
 import appSettings = require("application-settings");

@@ -1,5 +1,4 @@
 import {Component} from "@angular/core";
-require('nativescript-nodeify');
 
 @Component({
     selector: "ns-app",

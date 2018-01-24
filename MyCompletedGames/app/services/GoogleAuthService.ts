@@ -5,6 +5,9 @@ import {Observable} from "rxjs/Observable";
 import {AUTH_CONSTANTS} from "../common/AuthConstants";
 import {TOKEN_KEY} from "../common/Constants";
 import {AndroidGoogleSignIn} from "../common/AndroidGoogleSignIn";
+
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/observable/dom/ajax'
 import appSettings = require("application-settings");
 import Application = require("application");
 
