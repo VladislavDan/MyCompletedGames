@@ -1,8 +1,8 @@
-<ActionBar class="action-bar" title="Games List">
+<ActionBar class="action-bar">
 
-    <StackLayout orientation="horizontal">
+    <FlexboxLayout orientation="horizontal" class="title__action-bar">
         <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
-    </StackLayout>
+    </FlexboxLayout>
 
     <ActionItem (tap)="onReload($event)"
                 ios.systemIcon="9" ios.position="left"

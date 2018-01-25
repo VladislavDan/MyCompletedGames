@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {PageRoute, RouterExtensions} from "nativescript-angular";
-import {requestPermissions} from "nativescript-camera";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
@@ -42,7 +41,6 @@ export class NewGameComponent extends BaseComponent {
                 private googleFileSyncService: GoogleFileSyncService,
                 private googleAuthService: GoogleAuthService) {
         super();
-        requestPermissions();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
             this.images = images;
         });
