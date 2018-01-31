@@ -4,7 +4,7 @@ import * as dialogs from "ui/dialogs";
 import * as _ from "lodash";
 
 import {Game} from "../common/Game";
-import {GamesFileService} from "../services/GamesFileService";
+import {GamesService} from "../services/GamesFileService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {ADD_NEW_FILE, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
@@ -42,7 +42,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
-                private gamesFileService: GamesFileService,
+                private gamesFileService: GamesService,
                 private zone: NgZone) {
         super();
         this.filter = {
@@ -204,7 +204,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
             })
             .switchMap((result) => {
-                return this.gamesFileService.updateFile(result)
+                return this.gamesFileService.updateGames(result)
             })
             .subscribe(
                 () => {
@@ -221,7 +221,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         this.showProgress();
         return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result)
             .switchMap((result) => {
-                return this.gamesFileService.updateFile(result)
+                return this.gamesFileService.updateGames(result)
             })
             .subscribe(
                 this.createGamesLoadingSubscriber()

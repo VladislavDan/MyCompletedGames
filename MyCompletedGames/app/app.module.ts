@@ -5,7 +5,7 @@ import {HttpModule} from "@angular/http";
 
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app.component";
-import {GamesFileService} from "./services/GamesFileService";
+import {GamesService} from "./services/GamesFileService";
 import {GoogleAuthService} from "./services/GoogleAuthService";
 import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 import {ModalDialogService} from "nativescript-angular";
@@ -28,7 +28,7 @@ import {ThreadService} from "./services/ThreadService";
         AppComponent
     ],
     providers: [
-        GamesFileService,
+        GamesService,
         GoogleAuthService,
         GoogleFileSyncService,
         ModalDialogService,

@@ -1,15 +1,15 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
-import * as fs from "tns-core-modules/file-system";
 import * as _ from "lodash";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
-import {FILE_NAME, ONLY_ME, TOGETHER} from "../common/Constants";
-import {GamesFileModel} from "../common/GamesFile";
+import {ONLY_ME, TOGETHER} from "../common/Constants";
+import {GamesFileModel} from "../common/GamesFileModel";
 import {Game} from "../common/Game";
 import {Filter} from "../common/Filter";
 
 import 'rxjs/add/operator/map'
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/concatMap'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/toArray'
@@ -18,20 +18,25 @@ import 'rxjs/add/operator/mergeMap'
 
 
 @Injectable()
-export class GamesFileService {
+export class GamesService {
 
     public gamesChannel: BehaviorSubject<Game[]> = new BehaviorSubject([]);
+
+    private gamesFileModel: GamesFileModel = {
+        dateChanged: '',
+        games: []
+    };
 
     constructor() {
     }
 
     public getGames(name: string, filter: Filter) {
-        this.readFile().map((gamesFileModel: GamesFileModel) => {
+        Observable.of(this.gamesFileModel).map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
         }).concatMap((games) => {
             return games;
         }).filter((game: Game) => {
-            return this.isComplainFilter(game, name, filter);
+            return GamesService.isComplainFilter(game, name, filter);
         }).toArray().subscribe((games) => {
             this.gamesChannel.next(games);
         });
@@ -50,14 +55,14 @@ export class GamesFileService {
     }
 
     public addNewGame(game: Game): Observable<GamesFileModel> {
-        return this.readFile().flatMap((content) => {
+        return Observable.of(this.gamesFileModel).flatMap((content) => {
             content.games.push(game);
-            return this.updateFile(content);
+            return this.updateGames(content);
         });
     }
 
     public changeGame(game: Game): Observable<GamesFileModel> {
-        return this.readFile().flatMap((content) => {
+        return Observable.of(this.gamesFileModel).flatMap((content) => {
             let index = _.findIndex(content.games, (item) => {
                 return item.id === game.id;
             });
@@ -67,48 +72,28 @@ export class GamesFileService {
                 value.console = game.console;
                 value.isTogether = game.isTogether;
             }
-            return this.updateFile(content);
+            return this.updateGames(content);
         });
     }
 
     public deleteGame(id: string): Observable<GamesFileModel> {
-        return this.readFile().flatMap((content) => {
+        return Observable.of(this.gamesFileModel).flatMap((content) => {
             _.remove(content.games, function (item: Game) {
                 return item.id === id;
             });
-            return this.updateFile(content);
+            return this.updateGames(content);
         });
     }
 
-    public updateFile(gamesFileModel: GamesFileModel): Observable<GamesFileModel> {
-        let documents = fs.knownFolders.documents();
-        let gamesFile = documents.getFile(FILE_NAME);
-        gamesFileModel.dateChanged = new Date(Date.now()).toDateString();
-        gamesFileModel.games = _.sortBy(gamesFileModel.games, function (game) {
-            return game.name;
-        });
-        return Observable.fromPromise(gamesFile.writeText(JSON.stringify(gamesFileModel, null, 4)))
-            .map(() => {
-                return gamesFileModel;
-            })
+    public updateGames(gamesFileModel: GamesFileModel): Observable<GamesFileModel> {
+        this.gamesFileModel = {
+            dateChanged: gamesFileModel.dateChanged,
+            games: _.orderBy(gamesFileModel.games, ['name'], ['asc'])
+        };
+        return Observable.of(this.gamesFileModel);
     }
 
-    private readFile(): Observable<GamesFileModel> {
-        let documents = fs.knownFolders.documents();
-        let gamesFile = documents.getFile(FILE_NAME);
-        return Observable.fromPromise(gamesFile.readText())
-            .map((content: string): GamesFileModel => {
-                return JSON.parse(content);
-            })
-    }
-
-    private isFileExist(): boolean {
-        let documents = fs.knownFolders.documents();
-        let filePath = fs.path.join(documents.path, FILE_NAME);
-        return fs.File.exists(filePath);
-    }
-
-    private isComplainFilter(game: Game, name: string, filter: Filter) {
+    private static isComplainFilter(game: Game, name: string, filter: Filter) {
         let isThisConsole = game.console === filter.console || filter.console === '';
         let isThisWho;
         if (filter.who === TOGETHER) {

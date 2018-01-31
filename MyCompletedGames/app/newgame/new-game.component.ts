@@ -3,9 +3,9 @@ import {PageRoute, RouterExtensions} from "nativescript-angular";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {GamesFileService} from "../services/GamesFileService";
+import {GamesService} from "../services/GamesFileService";
 import {BaseComponent} from "../common/BaseComponent";
-import {GamesFileModel} from "../common/GamesFile";
+import {GamesFileModel} from "../common/GamesFileModel";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 
@@ -37,7 +37,7 @@ export class NewGameComponent extends BaseComponent {
 
     constructor(private pageRoute: PageRoute,
                 private routerExtensions: RouterExtensions,
-                private gamesFileService: GamesFileService,
+                private gamesFileService: GamesService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private googleAuthService: GoogleAuthService) {
         super();
