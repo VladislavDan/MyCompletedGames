@@ -1,4 +1,5 @@
 /MyCompletedGames/node_modules/
 /MyCompletedGames/platforms/
 /MyCompletedGames/hooks
+/MyCompletedGames/app/**/*.js
 /.idea
