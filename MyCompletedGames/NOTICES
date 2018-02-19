@@ -1,8 +1,0 @@
-Request for google after google-sign-in:
-POST /oauth2/v4/token HTTP/1.1
-Host: www.googleapis.com
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-Postman-Token: 7c557ebf-fd94-7409-e504-8acb3f4b69b8
-
-code=4%2F4iVKftHo5W_xcieBzTS9AfV7AFLvoh8K_pKWGARNAS4&redirect_uri=https%3A%2F%2Fmycompletedgames.tics.com%2F&client_id=144292527666-9h1ugthmsl2qjdlpmv5cl3o8gps44f55.apps.googleusercontent.com&client_secret=jP3PzPxBtqaZRZGxOIsZSHE_&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.readonly&grant_type=authorization_code
