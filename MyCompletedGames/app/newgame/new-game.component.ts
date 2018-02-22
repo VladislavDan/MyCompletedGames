@@ -12,7 +12,7 @@ import {GoogleAuthService} from "../services/GoogleAuthService";
 import 'rxjs/add/operator/mergeMap'
 
 @Component({
-    selector: "games-list",
+    selector: "new-game",
     moduleId: module.id,
     templateUrl: "./new-game.component.html",
     styleUrls: ['./new-game.css']

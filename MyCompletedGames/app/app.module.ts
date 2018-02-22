@@ -10,8 +10,8 @@ import {GoogleAuthService} from "./services/GoogleAuthService";
 import {GoogleFileSyncService} from "./services/GoogleFileSyncService";
 import {ModalDialogService} from "nativescript-angular";
 import {NewGameModule} from "./newgame/new-game.module";
-import {GamesListModule} from "./gameslist/games-list.module";
 import {ThreadService} from "./services/ThreadService";
+import {PageContainerModule} from "./pagescontainer/page-container.module";
 
 @NgModule({
     bootstrap: [
@@ -21,7 +21,7 @@ import {ThreadService} from "./services/ThreadService";
         NativeScriptModule,
         AppRoutingModule,
         NewGameModule,
-        GamesListModule,
+        PageContainerModule,
         HttpModule
     ],
     declarations: [

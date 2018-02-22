@@ -2,15 +2,15 @@ import {NgModule} from "@angular/core";
 import {Routes} from "@angular/router";
 import {NativeScriptRouterModule} from "nativescript-angular/router";
 
-import {GamesListComponent} from "./games-list.component";
+import {PageContainerComponent} from "./page-container.component";
 
 const routes: Routes = [
-    {path: "", component: GamesListComponent}
+    {path: "", component: PageContainerComponent}
 ];
 
 @NgModule({
     imports: [NativeScriptRouterModule.forChild(routes)],
     exports: [NativeScriptRouterModule]
 })
-export class GamesListRoutingModule {
+export class PageContainerRoutingModule {
 }

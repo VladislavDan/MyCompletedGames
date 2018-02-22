@@ -1,0 +1,22 @@
+<ScrollView orientation="vertical">
+    <StackLayout height="1800">
+        <RadPieChart>
+            <PieSeries tkPieSeries
+                       selectionMode="DataPoint"
+                       expandRadius="0.4"
+                       outerRadiusFactor="1.0"
+                       [items]="pieSource"
+                       valueProperty="amount"
+                       legendLabel="console"
+                       showLabels="true">
+            </PieSeries>
+
+            <RadLegendView tkPieLegend
+                           position="Bottom"
+                           width="200"
+                           height="1300"
+                           enableSelection="true">
+            </RadLegendView>
+        </RadPieChart>
+    </StackLayout>
+</ScrollView>
