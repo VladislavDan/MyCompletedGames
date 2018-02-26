@@ -1,11 +1,11 @@
 <ScrollView orientation="vertical">
-    <StackLayout height="1800">
+    <StackLayout height="1200">
         <RadPieChart>
             <PieSeries tkPieSeries
                        selectionMode="DataPoint"
                        expandRadius="0.4"
                        outerRadiusFactor="1.0"
-                       [items]="pieSource"
+                       [items]="gamesChartData"
                        valueProperty="amount"
                        legendLabel="console"
                        showLabels="true">
@@ -14,7 +14,7 @@
             <RadLegendView tkPieLegend
                            position="Bottom"
                            width="200"
-                           height="1300"
+                           height="700"
                            enableSelection="true">
             </RadLegendView>
         </RadPieChart>

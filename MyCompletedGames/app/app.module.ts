@@ -13,6 +13,10 @@ import {NewGameModule} from "./newgame/new-game.module";
 import {ThreadService} from "./services/ThreadService";
 import {PageContainerModule} from "./pagescontainer/page-container.module";
 
+import {registerElement} from "nativescript-angular/element-registry";
+
+registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
+
 @NgModule({
     bootstrap: [
         AppComponent

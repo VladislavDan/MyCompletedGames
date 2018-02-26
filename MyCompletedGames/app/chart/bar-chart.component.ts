@@ -1,16 +1,17 @@
-import {Component} from "@angular/core";
-
-import {ChartComponent} from "./chart.component";
-import {GamesService} from "../services/GamesFileService";
+import {Component, Input} from "@angular/core";
+import {GamesChartPoint} from "../common/GamesChartData";
+import {ObservableArray} from "tns-core-modules/data/observable-array";
 
 @Component({
     selector: "games-bar-chart",
     moduleId: module.id,
     templateUrl: "./bar-chart.component.html"
 })
-export class BarChartComponent extends ChartComponent {
+export class BarChartComponent {
 
-    constructor(private gamesFileService: GamesService,) {
-        super(gamesFileService);
+    @Input()
+    public gamesChartData: ObservableArray<GamesChartPoint>;
+
+    constructor() {
     }
 }
