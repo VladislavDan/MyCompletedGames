@@ -21,6 +21,8 @@ export class PageContainerComponent extends BaseComponent {
 
     public chartData: ObservableArray<GamesChartPoint>;
 
+    public visibleButton = 'visible';
+
     constructor(private routerExtensions: RouterExtensions, private gamesFileService: GamesService) {
         super();
         this.gamesFileService.gamesChannel
@@ -57,12 +59,14 @@ export class PageContainerComponent extends BaseComponent {
         let tabView = <TabView>args.object;
         let tabSelectedIndex = tabView.selectedIndex;
         if (tabSelectedIndex === 0) {
-
+            this.visibleButton = 'visible';
         } else if (tabSelectedIndex === 1) {
-
+            this.visibleButton = 'hidden';
         } else if (tabSelectedIndex === 2) {
+            this.visibleButton = 'hidden';
             this.computeChartData();
         } else if (tabSelectedIndex === 3) {
+            this.visibleButton = 'hidden';
             this.computeChartData();
         }
     };
