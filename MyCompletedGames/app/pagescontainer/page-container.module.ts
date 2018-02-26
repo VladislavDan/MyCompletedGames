@@ -9,6 +9,7 @@ import {ChooserModule} from "../consolechooser/chooser.module";
 import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
 import {PieChartComponent} from "../chart/pie-chart.component";
 import {BarChartComponent} from "../chart/bar-chart.component";
+import {BackupComponent} from "../backup/backup.component";
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import {BarChartComponent} from "../chart/bar-chart.component";
         GamesListComponent,
         GamesListItemComponent,
         PieChartComponent,
-        BarChartComponent
+        BarChartComponent,
+        BackupComponent
     ],
     schemas: [
         NO_ERRORS_SCHEMA
