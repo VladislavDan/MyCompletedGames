@@ -1,3 +1,9 @@
 .backup-list__text {
     margin: 50px;
 }
+
+.backup-list__load-button {
+    margin-top: 50%;
+    background-color: #f46e65;
+    color: white;
+}

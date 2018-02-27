@@ -3,9 +3,8 @@ import {PageRoute, RouterExtensions} from "nativescript-angular";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {GamesService} from "../services/GamesFileService";
+import {GamesService} from "../services/GamesService";
 import {BaseComponent} from "../common/BaseComponent";
-import {GamesFileModel} from "../common/GamesFileModel";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 
@@ -88,13 +87,6 @@ export class NewGameComponent extends BaseComponent {
     onDeleteGame() {
         this.showProgress();
         this.gamesFileService.deleteGame(this.id.toString())
-            .switchMap((result: GamesFileModel) => {
-                return this.googleFileSyncService.requestUploadFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    JSON.stringify(result, null, 4),
-                    this.googleFileSyncService.getFileIdFromStorage()
-                );
-            })
             .subscribe(
                 () => {
                     this.hideProgress();
@@ -121,12 +113,6 @@ export class NewGameComponent extends BaseComponent {
             name: this.what,
             console: this.consoles[this.chosenConsoleIndex],
             isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-        }).switchMap((result: GamesFileModel) => {
-            return this.googleFileSyncService.requestUploadFile(
-                this.googleAuthService.getTokenFromStorage(),
-                JSON.stringify(result, null, 4),
-                this.googleFileSyncService.getFileIdFromStorage()
-            );
         }).subscribe(
             () => {
                 //TODO hack for update list
@@ -151,13 +137,6 @@ export class NewGameComponent extends BaseComponent {
                 name: this.what,
                 console: this.consoles[this.chosenConsoleIndex],
                 isTogether: this.who[this.chosenWhoIndex] === TOGETHER
-            })
-            .switchMap((result: GamesFileModel) => {
-                return this.googleFileSyncService.requestUploadFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    JSON.stringify(result, null, 4),
-                    this.googleFileSyncService.getFileIdFromStorage()
-                );
             }).subscribe(
                 () => {
                     //TODO hack for update list

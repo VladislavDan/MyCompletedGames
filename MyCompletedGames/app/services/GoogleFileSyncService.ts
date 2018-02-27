@@ -25,6 +25,19 @@ export class GoogleFileSyncService {
         });
     }
 
+    public deleteGamesFile(token: string, fileId: string): Observable<any> {
+        return Observable.ajax(
+            {
+                url: "https://www.googleapis.com/drive/v3/files/" + fileId,
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                method: "DELETE"
+            }
+        );
+    }
+
     public createCompletedGamesFile(token: string, id: string): Observable<any> {
         return Observable.ajax(
             {
@@ -84,7 +97,7 @@ export class GoogleFileSyncService {
                 headers: {
                     "Authorization": "Bearer " + token
                 },
-                body: fileContent,
+                body: JSON.stringify(fileContent, null, 4),
                 responseType: 'text',
                 method: "PATCH"
             }

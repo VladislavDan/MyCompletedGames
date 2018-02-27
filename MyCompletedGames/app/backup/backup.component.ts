@@ -4,10 +4,10 @@ import * as dialogs from "ui/dialogs";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {BaseComponent} from "../common/BaseComponent";
-import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
 
 import 'rxjs/add/operator/mergeMap'
-import {BackupFile} from "../common/BackupFile";
+import {GamesService} from "../services/GamesService";
+import {Subscriber} from "rxjs/Subscriber";
 
 @Component({
     selector: "backup",
@@ -19,30 +19,80 @@ export class BackupComponent extends BaseComponent {
 
     public backupFiles: Array<String> = [];
 
+    public isHideConnectButton: boolean = false;
+
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
+                private gamesService: GamesService,
                 private zone: NgZone) {
         super();
     }
 
     connectGoogleDrive = () => {
-        // this.showProgress();
-        // let subscriptionAuth = this.googleAuthService.getToken().subscribe(
-        //     (result) => {
-        //         this.showProgress();
-        //         this.reload();
-        //     },
-        //     (error) => {
-        //         this.hideProgress();
-        //         this.showAlert({
-        //             title: "Authorization",
-        //             message: error.message
-        //         });
-        //     }
-        // );
-        //
-        // this.subscriptions.push(subscriptionAuth);
-        this.reload();
+        this.showProgress();
+        let subscription = this.googleAuthService.getToken().subscribe(
+            (result) => {
+                this.isHideConnectButton = true;
+                this.reload();
+            },
+            (error) => {
+                this.hideProgress();
+                this.showAlert({
+                    title: "Authorization",
+                    message: error.message
+                });
+            }
+        );
+
+        this.subscriptions.push(subscription);
+    };
+
+    onActionBackup = (event) => {
+        let fileId = this.backupFiles[event.index];
+        dialogs.action({
+            message: "Actions with backup",
+            cancelButtonText: "Cancel",
+            actions: ["Delete", "Load", "Upload"]
+        }).then((result) => {
+            if (result == "Delete") {
+                dialogs.confirm({
+                    title: "Delete backup",
+                    message: "Are you sure that you want to delete backup?",
+                    okButtonText: "Yes",
+                    cancelButtonText: "No"
+                }).then((result) => {
+                    if (result) {
+                        this.deleteBackup(fileId)
+                    }
+                });
+            } else if (result == "Load") {
+                dialogs.confirm({
+                    title: "Load backup",
+                    message: "Are you sure that you want to load backup? " +
+                    "Your local saved games will be replaced on remote games or removed.",
+                    okButtonText: "Yes",
+                    cancelButtonText: "No"
+                }).then((result) => {
+                    if (result) {
+                        this.showProgress();
+                        this.load(fileId);
+                    }
+                });
+            } else if (result == "Upload") {
+                dialogs.confirm({
+                    title: "Upload backup",
+                    message: "Are you sure that you want to upload backup? " +
+                    "Your remote saved games will be replaced on local games or removed.",
+                    okButtonText: "Yes",
+                    cancelButtonText: "No"
+                }).then((result) => {
+                    if (result) {
+                        this.showProgress();
+                        this.upload(fileId);
+                    }
+                });
+            }
+        });
     };
 
     private reload() {
@@ -52,7 +102,9 @@ export class BackupComponent extends BaseComponent {
                     this.hideProgress();
                     this.backupFiles = [];
                     _.forEach(result, (item) => {
-                        this.backupFiles.push(item.id);
+                        this.zone.run(() => {
+                            this.backupFiles.push(item.id);
+                        });
                     });
                 },
                 (error) => {
@@ -66,80 +118,66 @@ export class BackupComponent extends BaseComponent {
         this.subscriptions.push(subscription);
     }
 
-    private createAndLoadFile() {
+    private deleteBackup(fileId) {
         this.showProgress();
-        return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
-            .switchMap((result) => {
-                return this.googleFileSyncService.createCompletedGamesFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    result
-                );
-            })
-            .switchMap((result) => {
-                this.googleFileSyncService.setFileIdToStorage(result);
-                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL, [], 4), result);
-            })
-            .switchMap((result) => {
-                return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
-            })
+        let subscription = this.googleFileSyncService.deleteGamesFile(this.googleAuthService.getTokenFromStorage(), fileId)
             .subscribe(
                 () => {
-                    this.hideProgress();
+                    this.reload();
                 },
                 (error) => {
-
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Delete backup",
+                        message: error.message
+                    });
                 }
             );
+        this.subscriptions.push(subscription);
     }
 
-    public onActionBackup(event) {
-        dialogs.action({
-            message: "Actions with backup",
-            cancelButtonText: "Cancel",
-            actions: ["Delete", "Load", "Upload"]
-        }).then(function (result) {
-            if (result == "Delete") {
-                dialogs.confirm({
-                    title: "Delete backup",
-                    message: "Are you sure that you want to delete backup?",
-                    okButtonText: "Yes",
-                    cancelButtonText: "No"
-                }).then(function (result) {
-                    if (result) {
-                        console.log("deleted")
-                    } else {
-                        console.log("no deleted")
-                    }
+    private load(fileId) {
+        this.googleFileSyncService.setFileIdToStorage(fileId);
+        this.showProgress();
+        let subscription = this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), fileId)
+            .switchMap((result) => {
+                return this.gamesService.updateGames(result)
+            })
+            .subscribe(
+                this.createGamesLoadingSubscriber()
+            );
+        this.subscriptions.push(subscription);
+    }
+
+    private upload(fileId) {
+        this.googleFileSyncService.setFileIdToStorage(fileId);
+        this.showProgress();
+        let subscription = this.googleFileSyncService
+            .requestUploadFile(
+                this.googleAuthService.getTokenFromStorage(),
+                this.gamesService.getGamesFromSetting(),
+                fileId
+            )
+            .subscribe(this.createGamesLoadingSubscriber());
+        this.subscriptions.push(subscription);
+    }
+
+    private createGamesLoadingSubscriber(): Subscriber<any> {
+        return Subscriber.create(
+            () => {
+                this.hideProgress();
+                this.gamesService.getGames("", {
+                    console: "",
+                    who: ""
                 });
-            } else if (result == "Load") {
-                dialogs.confirm({
-                    title: "Load backup",
-                    message: "Are you sure that you want to load backup? " +
-                    "Your local saved games will be replaced on remote games or removed.",
-                    okButtonText: "Yes",
-                    cancelButtonText: "No"
-                }).then(function (result) {
-                    if (result) {
-                        console.log("loaded")
-                    } else {
-                        console.log("no loaded")
-                    }
-                });
-            } else if (result == "Upload") {
-                dialogs.confirm({
-                    title: "Upload backup",
-                    message: "Are you sure that you want to upload backup? " +
-                    "Your remote saved games will be replaced on local games or removed.",
-                    okButtonText: "Yes",
-                    cancelButtonText: "No"
-                }).then(function (result) {
-                    if (result) {
-                        console.log("uploaded")
-                    } else {
-                        console.log("no uploaded")
-                    }
+            },
+            (error) => {
+                this.hideProgress();
+                this.showAlert({
+                    title: "Loading games",
+                    message: error.message
                 });
             }
-        });
+        )
     }
 }

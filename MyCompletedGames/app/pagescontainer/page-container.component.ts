@@ -3,7 +3,7 @@ import 'rxjs/add/operator/mergeMap'
 import {RouterExtensions} from "nativescript-angular";
 import * as _ from "lodash";
 
-import {GamesService} from "../services/GamesFileService";
+import {GamesService} from "../services/GamesService";
 import {GamesChartPoint} from "../common/GamesChartData";
 import {VIDEO_GAME_CONSOLES} from "../common/Constants";
 import {Game} from "../common/Game";

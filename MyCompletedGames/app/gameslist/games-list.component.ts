@@ -1,17 +1,13 @@
 import {Component, NgZone, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
-import * as dialogs from "ui/dialogs";
-import * as _ from "lodash";
 
 import {Game} from "../common/Game";
-import {GamesService} from "../services/GamesFileService";
+import {GamesService} from "../services/GamesService";
 import {GoogleAuthService} from "../services/GoogleAuthService";
 import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-import {ADD_NEW_FILE, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
-import {FIRST_UPLOAD_MODEL} from "../common/FirstUploadModel";
-import {Subscriber} from "rxjs/Subscriber";
 import {isAndroid} from "tns-core-modules/platform";
 
 import 'rxjs/add/operator/mergeMap'
@@ -55,18 +51,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.showProgress();
-        let subscriptionAuth = this.googleAuthService.getToken().subscribe(
-            (result) => {
-                this.onReload(null);
-            },
-            (error) => {
-                this.hideProgress();
-                this.showAlert({
-                    title: "Authorization",
-                    message: error.message
-                });
-            }
-        );
+        this.reload();
         let subscriptionGamesChannel = this.gamesFileService.gamesChannel
             .subscribe(
                 (games) => {
@@ -84,12 +69,10 @@ export class GamesListComponent extends BaseComponent implements OnInit {
                 }
             );
 
-        this.subscriptions.push(subscriptionAuth);
         this.subscriptions.push(subscriptionGamesChannel);
     }
 
     onTextChanged(args) {
-
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
         this.gamesFileService.getGames(searchValue, this.filter);
@@ -145,103 +128,8 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         }
     }
 
-    onReload(event) {
-        this.showProgress();
-        this.reload();
-    }
-
     private reload() {
-        let subscription = this.googleFileSyncService.getExistFiles(this.googleAuthService.getTokenFromStorage())
-            .subscribe(
-                (result) => {
-                    this.hideProgress();
-                    this.showChooserDialog(result);
-                },
-                (error) => {
-                    this.hideProgress();
-                    this.showAlert({
-                        title: "Showing exist files",
-                        message: error.message
-                    });
-                }
-            );
-        this.subscriptions.push(subscription);
-    }
-
-    private showChooserDialog(result) {
-        let options = _.map(result, (item: any) => {
-            return item.id;
-        });
-        options.push(ADD_NEW_FILE);
-        dialogs.action({
-            message: "Choose file",
-            actions: options
-        }).then(result => {
-            let subscription;
-            if (result === ADD_NEW_FILE) {
-                subscription = this.createAndLoadFile();
-            } else if (result.length > 0) {
-                subscription = this.loadFile(result);
-            }
-            this.subscriptions.push(subscription);
-        });
-    }
-
-    private createAndLoadFile() {
-        this.showProgress();
-        return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
-            .switchMap((result) => {
-                return this.googleFileSyncService.createCompletedGamesFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    result
-                );
-            })
-            .switchMap((result) => {
-                this.googleFileSyncService.setFileIdToStorage(result);
-                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), JSON.stringify(FIRST_UPLOAD_MODEL, [], 4), result);
-            })
-            .switchMap((result) => {
-                return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result);
-            })
-            .switchMap((result) => {
-                return this.gamesFileService.updateGames(result)
-            })
-            .subscribe(
-                () => {
-                    this.hideProgress();
-                },
-                (error) => {
-                    this.createGamesLoadingSubscriber();
-                }
-            );
-    }
-
-    private loadFile(result) {
-        this.googleFileSyncService.setFileIdToStorage(result);
-        this.showProgress();
-        return this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), result)
-            .switchMap((result) => {
-                return this.gamesFileService.updateGames(result)
-            })
-            .subscribe(
-                this.createGamesLoadingSubscriber()
-            );
-    }
-
-    private createGamesLoadingSubscriber(): Subscriber<any> {
-        return Subscriber.create(
-            () => {
-                this.hideProgress();
-                this.gamesFileService.getGames("", this.filter);
-            },
-            (error) => {
-                this.hideProgress();
-                this.showAlert({
-                    title: "Loading games",
-                    message: error.message
-                });
-            }
-        )
+        this.getGames();
     }
 
     private getGames() {

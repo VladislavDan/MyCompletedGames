@@ -3,12 +3,6 @@
     <FlexboxLayout orientation="horizontal" class="title__action-bar">
         <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
     </FlexboxLayout>
-
-    <ActionItem (tap)="onReload($event)"
-                ios.systemIcon="9" ios.position="left"
-                icon="res://ic_cloud_download_white_24dp"
-                android.position="actionBar">
-    </ActionItem>
 </ActionBar>
 <StackLayout class="games-list-container"
              orientation="vertical"

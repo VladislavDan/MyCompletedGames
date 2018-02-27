@@ -2,12 +2,6 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 import * as _ from "lodash";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-
-import {ONLY_ME, TOGETHER} from "../common/Constants";
-import {GamesFileModel} from "../common/GamesFileModel";
-import {Game} from "../common/Game";
-import {Filter} from "../common/Filter";
-
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/concatMap'
@@ -16,25 +10,28 @@ import 'rxjs/add/operator/toArray'
 import 'rxjs/add/operator/first'
 import 'rxjs/add/operator/mergeMap'
 
+import {GAMES_KEY, ONLY_ME, TOGETHER} from "../common/Constants";
+import {GamesFileModel} from "../common/GamesFileModel";
+import {Game} from "../common/Game";
+import {Filter} from "../common/Filter";
+import appSettings = require("application-settings");
+
 
 @Injectable()
 export class GamesService {
 
     public gamesChannel: BehaviorSubject<Game[]> = new BehaviorSubject([]);
 
-    private gamesFileModel: GamesFileModel = {
-        dateChanged: '',
-        games: []
-    };
-
     constructor() {
     }
 
     public getGames(name: string, filter: Filter) {
-        Observable.of(this.gamesFileModel).map((gamesFileModel: GamesFileModel) => {
+        Observable.of(appSettings.getString(GAMES_KEY)).map(
+            savedGames => JSON.parse(savedGames)
+        ).map((gamesFileModel: GamesFileModel) => {
             return gamesFileModel.games;
         }).concatMap((games) => {
-            return games;
+            return games ? games : [];
         }).filter((game: Game) => {
             return GamesService.isComplainFilter(game, name, filter);
         }).toArray().subscribe((games) => {
@@ -55,14 +52,18 @@ export class GamesService {
     }
 
     public addNewGame(game: Game): Observable<GamesFileModel> {
-        return Observable.of(this.gamesFileModel).flatMap((content) => {
+        return Observable.of(appSettings.getString(GAMES_KEY)).map(
+            savedGames => JSON.parse(savedGames)
+        ).flatMap((content: GamesFileModel) => {
             content.games.push(game);
             return this.updateGames(content);
         });
     }
 
     public changeGame(game: Game): Observable<GamesFileModel> {
-        return Observable.of(this.gamesFileModel).flatMap((content) => {
+        return Observable.of(appSettings.getString(GAMES_KEY)).map(
+            savedGames => JSON.parse(savedGames)
+        ).flatMap((content: GamesFileModel) => {
             let index = _.findIndex(content.games, (item) => {
                 return item.id === game.id;
             });
@@ -77,7 +78,9 @@ export class GamesService {
     }
 
     public deleteGame(id: string): Observable<GamesFileModel> {
-        return Observable.of(this.gamesFileModel).flatMap((content) => {
+        return Observable.of(appSettings.getString(GAMES_KEY)).map(
+            savedGames => JSON.parse(savedGames)
+        ).flatMap((content: GamesFileModel) => {
             _.remove(content.games, function (item: Game) {
                 return item.id === id;
             });
@@ -86,11 +89,14 @@ export class GamesService {
     }
 
     public updateGames(gamesFileModel: GamesFileModel): Observable<GamesFileModel> {
-        this.gamesFileModel = {
-            dateChanged: gamesFileModel.dateChanged,
-            games: _.orderBy(gamesFileModel.games, ['name'], ['asc'])
-        };
-        return Observable.of(this.gamesFileModel);
+        appSettings.setString(GAMES_KEY, JSON.stringify(gamesFileModel));
+        return Observable.of(appSettings.getString(GAMES_KEY)).map(
+            savedGames => JSON.parse(savedGames)
+        );
+    }
+
+    public getGamesFromSetting(): string {
+        return JSON.parse(appSettings.getString(GAMES_KEY));
     }
 
     private static isComplainFilter(game: Game, name: string, filter: Filter) {

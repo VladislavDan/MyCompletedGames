@@ -5,6 +5,8 @@ export const DATE_CHANGED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 export const TOKEN_KEY = "TOKEN_KEY";
 
+export const GAMES_KEY = "GAMES_KEY";
+
 export const FILE_ID_KEY = "FILE_ID_KEY";
 
 export const TOGETHER = "together";

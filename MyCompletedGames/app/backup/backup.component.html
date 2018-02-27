@@ -1,15 +1,22 @@
 <StackLayout orientation="vertical"
              focus="true">
 
-    <Button text="Connect GoogleDrive"
+    <Button class="backup-list__load-button"
+            text="Connect GoogleDrive"
+            visibility="{{isHideConnectButton ? 'collapsed' : 'visible'}}"
             (tap)="connectGoogleDrive()">
     </Button>
 
-    <ListView [items]="backupFiles" (itemTap)="onActionBackup($event)">
+    <ListView [items]="backupFiles"
+              (itemTap)="onActionBackup($event)"
+              visibility="{{!isHideConnectButton ? 'hidden' : 'visible'}}">
 
         <ng-template let-item="item">
             <StackLayout orientation="vertical">
-                <Label class="backup-list__text" [text]="item" horizontalAlignment="center"></Label>
+                <Label class="backup-list__text"
+                       [text]="item"
+                       horizontalAlignment="center">
+                </Label>
             </StackLayout>
         </ng-template>
     </ListView>
