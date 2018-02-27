@@ -1,4 +1,4 @@
-import {Component, NgZone} from "@angular/core";
+import {Component, EventEmitter, NgZone, Output} from "@angular/core";
 import * as _ from "lodash";
 import * as dialogs from "ui/dialogs";
 import {GoogleAuthService} from "../services/GoogleAuthService";
@@ -21,6 +21,9 @@ export class BackupComponent extends BaseComponent {
 
     public isHideConnectButton: boolean = false;
 
+    @Output()
+    public connectStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     constructor(private googleAuthService: GoogleAuthService,
                 private googleFileSyncService: GoogleFileSyncService,
                 private gamesService: GamesService,
@@ -28,11 +31,12 @@ export class BackupComponent extends BaseComponent {
         super();
     }
 
-    connectGoogleDrive = () => {
+    onConnectGoogleDrive = () => {
         this.showProgress();
         let subscription = this.googleAuthService.getToken().subscribe(
             (result) => {
                 this.isHideConnectButton = true;
+                this.connectStatus.emit(true);
                 this.reload();
             },
             (error) => {
@@ -41,6 +45,7 @@ export class BackupComponent extends BaseComponent {
                     title: "Authorization",
                     message: error.message
                 });
+                this.connectStatus.emit(false);
             }
         );
 
@@ -94,6 +99,33 @@ export class BackupComponent extends BaseComponent {
             }
         });
     };
+
+    public createNewBackup() {
+        this.showProgress();
+        return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage())
+            .switchMap((result) => {
+                return this.googleFileSyncService.createCompletedGamesFile(
+                    this.googleAuthService.getTokenFromStorage(),
+                    result
+                );
+            })
+            .switchMap((fileId) => {
+                this.googleFileSyncService.setFileIdToStorage(fileId);
+                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), this.gamesService.getGamesFromSetting(), fileId);
+            })
+            .subscribe(
+                () => {
+                    this.reload();
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Creating new backup",
+                        message: error.message
+                    });
+                }
+            );
+    }
 
     private reload() {
         let subscription = this.googleFileSyncService.getExistFiles(this.googleAuthService.getTokenFromStorage())

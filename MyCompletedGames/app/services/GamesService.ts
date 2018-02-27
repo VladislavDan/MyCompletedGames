@@ -26,16 +26,18 @@ export class GamesService {
     }
 
     public getGames(name: string, filter: Filter) {
-        Observable.of(appSettings.getString(GAMES_KEY)).map(
-            savedGames => JSON.parse(savedGames)
-        ).map((gamesFileModel: GamesFileModel) => {
-            return gamesFileModel.games;
-        }).concatMap((games) => {
-            return games ? games : [];
-        }).filter((game: Game) => {
-            return GamesService.isComplainFilter(game, name, filter);
-        }).toArray().subscribe((games) => {
-            this.gamesChannel.next(games);
+        Observable.of(this.getGamesFromSetting())
+            .map((gamesFileModel: GamesFileModel) => {
+                return gamesFileModel.games;
+            })
+            .concatMap((games) => {
+                return games ? games : [];
+            })
+            .filter((game: Game) => {
+                return GamesService.isComplainFilter(game, name, filter);
+            })
+            .toArray().subscribe((games) => {
+            this.gamesChannel.next(games)
         });
     }
 
@@ -52,35 +54,31 @@ export class GamesService {
     }
 
     public addNewGame(game: Game): Observable<GamesFileModel> {
-        return Observable.of(appSettings.getString(GAMES_KEY)).map(
-            savedGames => JSON.parse(savedGames)
-        ).flatMap((content: GamesFileModel) => {
-            content.games.push(game);
-            return this.updateGames(content);
-        });
+        return Observable.of(this.getGamesFromSetting())
+            .flatMap((content: GamesFileModel) => {
+                content.games.push(game);
+                return this.updateGames(content);
+            });
     }
 
     public changeGame(game: Game): Observable<GamesFileModel> {
-        return Observable.of(appSettings.getString(GAMES_KEY)).map(
-            savedGames => JSON.parse(savedGames)
-        ).flatMap((content: GamesFileModel) => {
-            let index = _.findIndex(content.games, (item) => {
-                return item.id === game.id;
+        return Observable.of(this.getGamesFromSetting())
+            .flatMap((content: GamesFileModel) => {
+                let index = _.findIndex(content.games, (item) => {
+                    return item.id === game.id;
+                });
+                let value = content.games[index];
+                if (value.id === game.id) {
+                    value.name = game.name;
+                    value.console = game.console;
+                    value.isTogether = game.isTogether;
+                }
+                return this.updateGames(content);
             });
-            let value = content.games[index];
-            if (value.id === game.id) {
-                value.name = game.name;
-                value.console = game.console;
-                value.isTogether = game.isTogether;
-            }
-            return this.updateGames(content);
-        });
     }
 
     public deleteGame(id: string): Observable<GamesFileModel> {
-        return Observable.of(appSettings.getString(GAMES_KEY)).map(
-            savedGames => JSON.parse(savedGames)
-        ).flatMap((content: GamesFileModel) => {
+        return Observable.of(this.getGamesFromSetting()).flatMap((content: GamesFileModel) => {
             _.remove(content.games, function (item: Game) {
                 return item.id === id;
             });
@@ -95,8 +93,9 @@ export class GamesService {
         );
     }
 
-    public getGamesFromSetting(): string {
-        return JSON.parse(appSettings.getString(GAMES_KEY));
+    public getGamesFromSetting(): GamesFileModel {
+        let gamesFromSetting = appSettings.getString(GAMES_KEY);
+        return JSON.parse(gamesFromSetting ? gamesFromSetting : '{}');
     }
 
     private static isComplainFilter(game: Game, name: string, filter: Filter) {

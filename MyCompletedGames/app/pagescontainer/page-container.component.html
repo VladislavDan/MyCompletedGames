@@ -1,9 +1,9 @@
 <TabView selectedIndex="0" (selectedIndexChange)="onIndexChanged($event)">
     <StackLayout *tabItem="{title: 'Games list'}">
-        <games-list></games-list>
+        <games-list #gamelist></games-list>
     </StackLayout>
     <StackLayout *tabItem="{title: 'Backups'}">
-        <backup></backup>
+        <backup (connectStatus)="onConnectedBackups($event)" #backup></backup>
     </StackLayout>
     <StackLayout *tabItem="{title: 'Diagram'}">
         <games-pie-chart [gamesChartData]="chartData"></games-pie-chart>
@@ -13,5 +13,9 @@
     </StackLayout>
 </TabView>
 
-<FAB (tap)="onCreateNewGame()" visibility="{{visibleButton}}" icon="res://ic_add_white_24dp" rippleColor="#c7675d"
-     class="fab-button"></FAB>
+<FAB (tap)="onClickAddButton()"
+     visibility="{{isVisibleAddButton? 'visible' : 'hidden'}}"
+     icon="res://ic_add_white_24dp"
+     rippleColor="#c7675d"
+     class="fab-button">
+</FAB>

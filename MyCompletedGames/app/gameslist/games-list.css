@@ -1,23 +1,19 @@
 .action-bar__navigation {
-
     flex-direction: row;
     align-items: center;
 }
 
 .games-list-container__filters-container {
-
     flex-direction: row;
     justify-content: space-around;
 }
 
 .games-list-container__filters-container__btn {
-
     background-color: #3b56f4;
     color: white;
 }
 
 .games-list-container__filters-container__btn--color-red {
-
     background-color: #f46e65;
     color: white;
 }
@@ -30,4 +26,13 @@
 
 .title__action-bar {
     flex-direction: row;
+}
+
+.fab-button {
+    height: 60;
+    width: 60;
+    margin: 15;
+    background-color: #f46e65;
+    horizontal-align: right;
+    vertical-align: bottom;
 }

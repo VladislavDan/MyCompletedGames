@@ -1,6 +1,5 @@
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import 'rxjs/add/operator/mergeMap'
-import {RouterExtensions} from "nativescript-angular";
 import * as _ from "lodash";
 
 import {GamesService} from "../services/GamesService";
@@ -10,6 +9,8 @@ import {Game} from "../common/Game";
 import {BaseComponent} from "../common/BaseComponent";
 import {TabView} from "tns-core-modules/ui/tab-view";
 import {ObservableArray} from "tns-core-modules/data/observable-array";
+import {BackupComponent} from "../backup/backup.component";
+import {GamesListComponent} from "../gameslist/games-list.component";
 
 @Component({
     selector: "page-container",
@@ -19,11 +20,21 @@ import {ObservableArray} from "tns-core-modules/data/observable-array";
 })
 export class PageContainerComponent extends BaseComponent {
 
+    @ViewChild('backup')
+    public backup: BackupComponent;
+
+    @ViewChild('gamelist')
+    public gamesList: GamesListComponent;
+
     public chartData: ObservableArray<GamesChartPoint>;
 
-    public visibleButton = 'visible';
+    public isVisibleAddButton = true;
 
-    constructor(private routerExtensions: RouterExtensions, private gamesFileService: GamesService) {
+    public isConnectedBackups = false;
+
+    public selectedIndex = 0;
+
+    constructor(private gamesFileService: GamesService) {
         super();
         this.gamesFileService.gamesChannel
             .subscribe(
@@ -51,23 +62,33 @@ export class PageContainerComponent extends BaseComponent {
             );
     }
 
-    onCreateNewGame() {
-        this.routerExtensions.navigate(["/new-game"], {clearHistory: false});
+    onClickAddButton() {
+        if (this.selectedIndex === 0) {
+            this.gamesList.createNewGame();
+        } else {
+            this.backup.createNewBackup();
+        }
     }
 
     onIndexChanged = (args) => {
         let tabView = <TabView>args.object;
-        let tabSelectedIndex = tabView.selectedIndex;
-        if (tabSelectedIndex === 0) {
-            this.visibleButton = 'visible';
-        } else if (tabSelectedIndex === 1) {
-            this.visibleButton = 'hidden';
-        } else if (tabSelectedIndex === 2) {
-            this.visibleButton = 'hidden';
-            this.computeChartData();
-        } else if (tabSelectedIndex === 3) {
-            this.visibleButton = 'hidden';
-            this.computeChartData();
+        this.selectedIndex = tabView.selectedIndex;
+
+        switch (this.selectedIndex) {
+            case 0:
+                this.isVisibleAddButton = true;
+                break;
+            case 1:
+                this.isVisibleAddButton = this.isConnectedBackups;
+                break;
+            case 2:
+                this.isVisibleAddButton = false;
+                this.computeChartData();
+                break;
+            case 3:
+                this.isVisibleAddButton = false;
+                this.computeChartData();
+                break;
         }
     };
 
@@ -76,5 +97,10 @@ export class PageContainerComponent extends BaseComponent {
             console: "",
             who: ""
         })
+    };
+
+    onConnectedBackups(event) {
+        this.isConnectedBackups = event;
+        this.isVisibleAddButton = event;
     }
 }

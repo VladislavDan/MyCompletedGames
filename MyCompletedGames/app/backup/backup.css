@@ -3,7 +3,18 @@
 }
 
 .backup-list__load-button {
-    margin-top: 50%;
+    margin-top: 40%;
+    margin-left: 20px;
+    margin-right: 20px;
     background-color: #f46e65;
     color: white;
+}
+
+.fab-button {
+    height: 60;
+    width: 60;
+    margin: 15;
+    background-color: #f46e65;
+    horizontal-align: right;
+    vertical-align: bottom;
 }

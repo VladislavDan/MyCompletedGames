@@ -1,16 +1,14 @@
 import {Component, NgZone, OnInit} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
+import {isAndroid} from "tns-core-modules/platform";
+import 'rxjs/add/operator/mergeMap'
+import {RouterExtensions} from "nativescript-angular";
 
 import {Game} from "../common/Game";
 import {GamesService} from "../services/GamesService";
-import {GoogleAuthService} from "../services/GoogleAuthService";
-import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
-import {isAndroid} from "tns-core-modules/platform";
-
-import 'rxjs/add/operator/mergeMap'
 
 @Component({
     selector: "games-list",
@@ -32,13 +30,12 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     public isShowWhoChooser: boolean;
 
-    public chosenConsoleIndex: number;
+    public chosenConsoleIndex: number = 0;
 
-    public chosenWhoIndex: number;
+    public chosenWhoIndex: number = 0;
 
-    constructor(private googleAuthService: GoogleAuthService,
-                private googleFileSyncService: GoogleFileSyncService,
-                private gamesFileService: GamesService,
+    constructor(private gamesFileService: GamesService,
+                private routerExtensions: RouterExtensions,
                 private zone: NgZone) {
         super();
         this.filter = {
@@ -126,6 +123,10 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         } else {
             this.filter.who = WHO[index];
         }
+    }
+
+    public createNewGame() {
+        this.routerExtensions.navigate(["/new-game"], {clearHistory: false});
     }
 
     private reload() {

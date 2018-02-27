@@ -3,6 +3,7 @@ import {Observable} from "rxjs/Observable";
 import 'rxjs/add/observable/dom/ajax'
 
 import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "../common/Constants";
+import {GamesFileModel} from "../common/GamesFileModel";
 import appSettings = require("application-settings");
 
 @Injectable()
@@ -90,7 +91,7 @@ export class GoogleFileSyncService {
         });
     }
 
-    public requestUploadFile(token: string, fileContent: string, fileId: string): Observable<any> {
+    public requestUploadFile(token: string, fileContent: GamesFileModel, fileId: string): Observable<any> {
         return Observable.ajax(
             {
                 url: "https://www.googleapis.com/upload/drive/v3/files/" + fileId,
