@@ -5,8 +5,6 @@ import {ReplaySubject} from "rxjs/ReplaySubject";
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {GamesService} from "../services/GamesService";
 import {BaseComponent} from "../common/BaseComponent";
-import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-import {GoogleAuthService} from "../services/GoogleAuthService";
 
 import 'rxjs/add/operator/mergeMap'
 
@@ -32,13 +30,13 @@ export class NewGameComponent extends BaseComponent {
 
     public id: String = "";
 
+    public title: string = "New game";
+
     private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
 
     constructor(private pageRoute: PageRoute,
                 private routerExtensions: RouterExtensions,
-                private gamesFileService: GamesService,
-                private googleFileSyncService: GoogleFileSyncService,
-                private googleAuthService: GoogleAuthService) {
+                private gamesFileService: GamesService) {
         super();
         this.imageChooseChannel.subscribe((images: Array<string>) => {
             this.images = images;
@@ -50,6 +48,7 @@ export class NewGameComponent extends BaseComponent {
             })
             .subscribe(
                 (game) => {
+                    this.title = "Changing game";
                     this.chosenWhoIndex = game.isTogether ? 0 : 1;
                     this.chosenConsoleIndex = this.consoles.indexOf(game.console);
                     this.what = game.name;
