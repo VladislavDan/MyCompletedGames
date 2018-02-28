@@ -23,4 +23,12 @@
             </StackLayout>
         </ng-template>
     </ListView>
+
+    <Label visibility="{{backupFiles.length === 0 ? 'visible' : 'collapsed'}}"
+           row="2"
+           horizontalAlignment="center"
+           marginTop="50%"
+           fontSize="20"
+           [text]="'No backup files'">
+    </Label>
 </GridLayout>

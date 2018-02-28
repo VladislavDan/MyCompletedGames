@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit, ViewChild} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
 import {isAndroid} from "tns-core-modules/platform";
 import 'rxjs/add/operator/mergeMap'
@@ -9,6 +9,8 @@ import {GamesService} from "../services/GamesService";
 import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
+import {RadSideDrawerComponent} from "nativescript-pro-ui/sidedrawer/angular";
+import {RadSideDrawer} from "nativescript-pro-ui/sidedrawer";
 
 @Component({
     selector: "games-list",
@@ -16,7 +18,7 @@ import {BaseComponent} from "../common/BaseComponent";
     templateUrl: "./games-list.component.html",
     styleUrls: ['./games-list.css']
 })
-export class GamesListComponent extends BaseComponent implements OnInit {
+export class GamesListComponent extends BaseComponent implements AfterViewInit, OnInit {
 
     private filter: Filter;
 
@@ -26,24 +28,29 @@ export class GamesListComponent extends BaseComponent implements OnInit {
 
     public games: Array<Game> = [];
 
-    public isShowConsoleChooser: boolean;
-
-    public isShowWhoChooser: boolean;
-
     public chosenConsoleIndex: number = 0;
 
     public chosenWhoIndex: number = 0;
 
+    @ViewChild(RadSideDrawerComponent)
+    public drawerComponent: RadSideDrawerComponent;
+
+    private drawer: RadSideDrawer;
+
     constructor(private gamesFileService: GamesService,
                 private routerExtensions: RouterExtensions,
-                private zone: NgZone) {
+                private zone: NgZone,
+                private changeDetectionRef: ChangeDetectorRef) {
         super();
         this.filter = {
             console: "",
             who: ""
         };
-        this.isShowConsoleChooser = false;
-        this.isShowWhoChooser = false;
+    }
+
+    ngAfterViewInit() {
+        this.drawer = this.drawerComponent.sideDrawer;
+        this.changeDetectionRef.detectChanges();
     }
 
     ngOnInit(): void {
@@ -85,18 +92,17 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         }
     }
 
-    onShowConsoleChooser(event) {
-        this.isShowConsoleChooser = !this.isShowConsoleChooser;
-        if (!this.isShowConsoleChooser) {
-            this.getGames();
+    onApplyFilters(event) {
+        if (this.chosenConsoleIndex === 0) {
+            this.filter.console = VIDEO_GAME_CONSOLES[0];
         }
-    }
 
-    onShowWhoChooser(event) {
-        this.isShowWhoChooser = !this.isShowWhoChooser;
-        if (!this.isShowWhoChooser) {
-            this.getGames();
+        if (this.chosenWhoIndex === 0) {
+            this.filter.who = WHO[0];
         }
+
+        this.getGames();
+        this.drawer.closeDrawer();
     }
 
     onClearFilter(event) {
@@ -105,6 +111,7 @@ export class GamesListComponent extends BaseComponent implements OnInit {
             who: ""
         };
         this.getGames();
+        this.drawer.closeDrawer();
     }
 
     onChooseWhere(index: number) {
@@ -123,6 +130,10 @@ export class GamesListComponent extends BaseComponent implements OnInit {
         } else {
             this.filter.who = WHO[index];
         }
+    }
+
+    onOpenFilters(event) {
+        this.drawer.showDrawer();
     }
 
     public createNewGame() {

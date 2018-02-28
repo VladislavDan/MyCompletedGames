@@ -6,6 +6,7 @@
 .games-list-container__filters-container {
     flex-direction: row;
     justify-content: space-around;
+    margin-top: 50px;
 }
 
 .games-list-container__filters-container__btn {
@@ -35,4 +36,8 @@
     background-color: #f46e65;
     horizontal-align: right;
     vertical-align: bottom;
+}
+
+.sideStackLayout {
+    background-color: white;
 }

@@ -3,54 +3,73 @@
     <FlexboxLayout orientation="horizontal" class="title__action-bar">
         <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
     </FlexboxLayout>
+
+    <ActionItem (tap)="onOpenFilters($event)"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_filter_list_white_24dp"
+                android.position="actionBar">
+    </ActionItem>
 </ActionBar>
-<StackLayout class="games-list-container"
-             orientation="vertical"
-             focus="true">
 
-    <SearchBar class="games-list-container__search-bar"
-               (textChange)="onTextChanged($event)"
-               (loaded)="onClearFocus($event)"
-               hint="Search game">
-    </SearchBar>
+<RadSideDrawer tkExampleTitle tkToggleNavButton>
+    <StackLayout tkDrawerContent
+                 class="sideStackLayout">
+        <item-chooser [elements]="consoles"
+                      [selectedIndex]="chosenConsoleIndex"
+                      (callback)="onChooseWhere($event)">
+        </item-chooser>
 
-    <FlexboxLayout class="games-list-container__filters-container">
+        <item-chooser [elements]="who"
+                      [selectedIndex]="chosenWhoIndex"
+                      (callback)="onChooseWho($event)">
+        </item-chooser>
 
-        <Button class="games-list-container__filters-container__btn"
-                text="Where?"
-                (tap)="onShowConsoleChooser($event)">
-        </Button>
+        <FlexboxLayout class="games-list-container__filters-container">
 
-        <Button class="games-list-container__filters-container__btn"
-                text="Who?"
-                (tap)="onShowWhoChooser($event)">
-        </Button>
+            <Button class="games-list-container__filters-container__btn"
+                    text="Apply filters"
+                    (tap)="onApplyFilters($event)">
+            </Button>
 
-        <Button class="games-list-container__filters-container__btn--color-red"
-                text="Clear filters"
-                (tap)="onClearFilter($event)">
-        </Button>
+            <Button class="games-list-container__filters-container__btn--color-red"
+                    text="Clear filters"
+                    (tap)="onClearFilter($event)">
+            </Button>
+        </FlexboxLayout>
+    </StackLayout>
+
+    <FlexboxLayout tkMainContent
+                   class="games-list-container"
+                   flexDirection="column"
+                   focus="true">
+
+        <SearchBar class="games-list-container__search-bar"
+                   height="100"
+                   visibility="{{games.length !== 0 ? 'visible' : 'collapsed'}}"
+                   (textChange)="onTextChanged($event)"
+                   (loaded)="onClearFocus($event)"
+                   hint="Search game">
+        </SearchBar>
+
+        <ListView class="games-list-container__games-list"
+                  flexShrink="1"
+                  visibility="{{games.length !== 0 ? 'visible' : 'collapsed'}}"
+                  [items]="games">
+
+            <ng-template let-item="item">
+
+                <games-list-item [game]="item">
+                </games-list-item>
+            </ng-template>
+        </ListView>
+
+        <Label visibility="{{games.length === 0 ? 'visible' : 'collapsed'}}"
+               horizontalAlignment="center"
+               height="100%"
+               alignSelf="center"
+               marginTop="50%"
+               fontSize="20"
+               [text]="'No games'">
+        </Label>
     </FlexboxLayout>
-
-    <item-chooser *ngIf="isShowConsoleChooser"
-                  [elements]="consoles"
-                  [selectedIndex]="chosenConsoleIndex"
-                  (callback)="onChooseWhere($event)">
-    </item-chooser>
-
-    <item-chooser *ngIf="isShowWhoChooser"
-                  [elements]="who"
-                  [selectedIndex]="chosenWhoIndex"
-                  (callback)="onChooseWho($event)">
-    </item-chooser>
-
-    <ListView class="games-list-container__games-list"
-              [items]="games">
-
-        <ng-template let-item="item">
-
-            <games-list-item [game]="item">
-            </games-list-item>
-        </ng-template>
-    </ListView>
-</StackLayout>
+</RadSideDrawer>

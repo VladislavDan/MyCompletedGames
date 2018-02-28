@@ -1,12 +1,13 @@
 import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
+import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
+import {NativeScriptUISideDrawerModule} from "nativescript-pro-ui/sidedrawer/angular";
 
 
 import {PageContainerComponent} from "./page-container.component";
 import {GamesListComponent} from "../gameslist/games-list.component";
 import {GamesListItemComponent} from "../gameslistitem/games-list-item.component";
 import {ChooserModule} from "../consolechooser/chooser.module";
-import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
 import {PieChartComponent} from "../chart/pie-chart.component";
 import {BarChartComponent} from "../chart/bar-chart.component";
 import {BackupComponent} from "../backup/backup.component";
@@ -15,7 +16,8 @@ import {BackupComponent} from "../backup/backup.component";
     imports: [
         NativeScriptModule,
         ChooserModule,
-        NativeScriptUIChartModule
+        NativeScriptUIChartModule,
+        NativeScriptUISideDrawerModule
     ],
     declarations: [
         PageContainerComponent,
