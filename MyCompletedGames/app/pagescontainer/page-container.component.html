@@ -1,7 +1,7 @@
 <ActionBar class="action-bar">
 
     <FlexboxLayout orientation="horizontal" class="title__action-bar">
-        <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
+        <Label class="games-list-container__title" text="Games: {{countGames}}"></Label>
     </FlexboxLayout>
 
     <ActionItem (tap)="onOpenFilters($event)"

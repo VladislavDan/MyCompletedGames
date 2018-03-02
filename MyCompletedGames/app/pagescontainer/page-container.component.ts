@@ -34,11 +34,14 @@ export class PageContainerComponent extends BaseComponent {
 
     public selectedIndex = 0;
 
+    public countGames: number = 0;
+
     constructor(private gamesFileService: GamesService) {
         super();
         this.gamesFileService.gamesChannel
             .subscribe(
                 (games) => {
+                    this.countGames = games.length;
                     let gamesChartData = [];
                     _.forEach(VIDEO_GAME_CONSOLES, (gameConsole, key) => {
                         let amount = _.filter(games, (game: Game) => {
