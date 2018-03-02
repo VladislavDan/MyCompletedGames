@@ -1,17 +1,4 @@
-<ActionBar class="action-bar">
-
-    <FlexboxLayout orientation="horizontal" class="title__action-bar">
-        <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
-    </FlexboxLayout>
-
-    <ActionItem (tap)="onOpenFilters($event)"
-                ios.systemIcon="9" ios.position="left"
-                icon="res://ic_filter_list_white_24dp"
-                android.position="actionBar">
-    </ActionItem>
-</ActionBar>
-
-<RadSideDrawer tkExampleTitle tkToggleNavButton>
+<RadSideDrawer tkExampleTitle tkToggleNavButton drawerLocation="Top" drawerContentSize="500">
     <StackLayout tkDrawerContent
                  class="sideStackLayout">
         <item-chooser [elements]="consoles"
@@ -24,35 +11,35 @@
                       (callback)="onChooseWho($event)">
         </item-chooser>
 
-        <FlexboxLayout class="games-list-container__filters-container">
+        <Button class="games-list-container__filters-container__btn"
+                text="Apply filters"
+                (tap)="onApplyFilters($event)">
+        </Button>
 
-            <Button class="games-list-container__filters-container__btn"
-                    text="Apply filters"
-                    (tap)="onApplyFilters($event)">
-            </Button>
-
-            <Button class="games-list-container__filters-container__btn--color-red"
-                    text="Clear filters"
-                    (tap)="onClearFilter($event)">
-            </Button>
-        </FlexboxLayout>
+        <Button class="games-list-container__filters-container__btn--color-red"
+                text="Clear filters"
+                marginTop="30"
+                (tap)="onClearFilter($event)">
+        </Button>
     </StackLayout>
 
-    <FlexboxLayout tkMainContent
-                   class="games-list-container"
-                   flexDirection="column"
-                   focus="true">
+    <GridLayout columns="*"
+                rows="50,*"
+                tkMainContent
+                flexDirection="column"
+                focus="true">
 
         <SearchBar class="games-list-container__search-bar"
-                   height="100"
-                   visibility="{{games.length !== 0 ? 'visible' : 'collapsed'}}"
+                   col="0"
+                   row="0"
                    (textChange)="onTextChanged($event)"
                    (loaded)="onClearFocus($event)"
                    hint="Search game">
         </SearchBar>
 
         <ListView class="games-list-container__games-list"
-                  flexShrink="1"
+                  col="0"
+                  row="1"
                   visibility="{{games.length !== 0 ? 'visible' : 'collapsed'}}"
                   [items]="games">
 
@@ -64,12 +51,13 @@
         </ListView>
 
         <Label visibility="{{games.length === 0 ? 'visible' : 'collapsed'}}"
+               col="0"
+               row="1"
                horizontalAlignment="center"
-               height="100%"
                alignSelf="center"
                marginTop="50%"
                fontSize="20"
                [text]="'No games'">
         </Label>
-    </FlexboxLayout>
+    </GridLayout>
 </RadSideDrawer>

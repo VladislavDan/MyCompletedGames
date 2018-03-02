@@ -99,6 +99,10 @@ export class PageContainerComponent extends BaseComponent {
         })
     };
 
+    onOpenFilters= (event) =>{
+        this.gamesList.onOpenFilters(event);
+    };
+
     onConnectedBackups(event) {
         this.isConnectedBackups = event;
         this.isVisibleAddButton = event;

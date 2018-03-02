@@ -79,7 +79,15 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
     onTextChanged(args) {
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        this.gamesFileService.getGames(searchValue, this.filter);
+        if(searchValue === ''){
+            this.filter = {
+                console: "",
+                who: ""
+            };
+            this.getGames();
+        }else{
+            this.gamesFileService.getGames(searchValue, this.filter);
+        }
     }
 
     onClearFocus(event) {

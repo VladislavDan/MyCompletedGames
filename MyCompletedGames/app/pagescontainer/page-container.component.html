@@ -1,3 +1,17 @@
+<ActionBar class="action-bar">
+
+    <FlexboxLayout orientation="horizontal" class="title__action-bar">
+        <Label class="games-list-container__title" text="Games: {{games ? games.length : 0}}"></Label>
+    </FlexboxLayout>
+
+    <ActionItem (tap)="onOpenFilters($event)"
+                ios.systemIcon="9" ios.position="left"
+                icon="res://ic_filter_list_white_24dp"
+                visibility="{{selectedIndex === 0 ? 'visible' : 'hidden'}}"
+                android.position="actionBar">
+    </ActionItem>
+</ActionBar>
+
 <TabView selectedIndex="0" (selectedIndexChange)="onIndexChanged($event)">
     <StackLayout *tabItem="{title: 'Games list'}">
         <games-list #gamelist></games-list>
