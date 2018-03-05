@@ -1,5 +1,5 @@
 export interface Filter {
 
-    who: string,
-    console: string
+    who: String,
+    console: String
 }

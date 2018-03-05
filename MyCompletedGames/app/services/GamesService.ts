@@ -87,6 +87,7 @@ export class GamesService {
     }
 
     public updateGames(gamesFileModel: GamesFileModel): Observable<GamesFileModel> {
+        gamesFileModel.games = _.sortBy(gamesFileModel.games, ['name']);
         appSettings.setString(GAMES_KEY, JSON.stringify(gamesFileModel));
         return Observable.of(appSettings.getString(GAMES_KEY)).map(
             savedGames => JSON.parse(savedGames)

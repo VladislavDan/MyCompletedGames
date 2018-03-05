@@ -17,8 +17,7 @@ export const MAX_IMAGE_COUNT = 3;
 
 export const ADD_NEW_FILE = "Add new file";
 
-export const VIDEO_GAME_CONSOLES = [
-
+export const VIDEO_GAME_CONSOLES: Array<String> = [
     "3DO",
     "CPS-1",
     "CPS-2",
@@ -46,6 +45,8 @@ export const VIDEO_GAME_CONSOLES = [
     "Super Nintendo",
     "WiiU"
 ];
+
+export const DEFAULT_VALUE_FILTER = "None";
 
 export const WHO = [
 

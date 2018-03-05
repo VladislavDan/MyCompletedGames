@@ -6,7 +6,7 @@ import {RouterExtensions} from "nativescript-angular";
 
 import {Game} from "../common/Game";
 import {GamesService} from "../services/GamesService";
-import {VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
+import {DEFAULT_VALUE_FILTER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
 import {Filter} from "../common/Filter";
 import {BaseComponent} from "../common/BaseComponent";
 import {RadSideDrawerComponent} from "nativescript-pro-ui/sidedrawer/angular";
@@ -22,9 +22,9 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
 
     private filter: Filter;
 
-    public consoles: Array<String> = VIDEO_GAME_CONSOLES;
+    public consoles: Array<String> = [];
 
-    public who: Array<String> = WHO;
+    public who: Array<String> = [];
 
     public games: Array<Game> = [];
 
@@ -46,6 +46,10 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
             console: "",
             who: ""
         };
+        this.consoles.push(DEFAULT_VALUE_FILTER);
+        this.consoles = this.consoles.concat(VIDEO_GAME_CONSOLES);
+        this.who.push(DEFAULT_VALUE_FILTER);
+        this.who = this.who.concat(WHO);
     }
 
     ngAfterViewInit() {
@@ -79,13 +83,13 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
     onTextChanged(args) {
         let searchBar = <SearchBar>args.object;
         let searchValue = searchBar.text;
-        if(searchValue === ''){
+        if (searchValue === '') {
             this.filter = {
                 console: "",
                 who: ""
             };
             this.getGames();
-        }else{
+        } else {
             this.gamesFileService.getGames(searchValue, this.filter);
         }
     }
@@ -102,11 +106,11 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
 
     onApplyFilters(event) {
         if (this.chosenConsoleIndex === 0) {
-            this.filter.console = VIDEO_GAME_CONSOLES[0];
+            this.filter.console = '';
         }
 
         if (this.chosenWhoIndex === 0) {
-            this.filter.who = WHO[0];
+            this.filter.who = '';
         }
 
         this.getGames();
@@ -115,8 +119,8 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
 
     onClearFilter(event) {
         this.filter = {
-            console: "",
-            who: ""
+            console: '',
+            who: ''
         };
         this.getGames();
         this.drawer.closeDrawer();
@@ -124,19 +128,19 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
 
     onChooseWhere(index: number) {
         this.chosenConsoleIndex = index;
-        if (Number.isNaN(index)) {
-            this.filter.console = VIDEO_GAME_CONSOLES[0];
+        if (index === 0) {
+            this.filter.console = '';
         } else {
-            this.filter.console = VIDEO_GAME_CONSOLES[index];
+            this.filter.console = this.consoles[index];
         }
     }
 
     onChooseWho(index) {
         this.chosenWhoIndex = index;
-        if (Number.isNaN(index)) {
-            this.filter.who = WHO[0];
+        if (index === 0) {
+            this.filter.who = '';
         } else {
-            this.filter.who = WHO[index];
+            this.filter.who = this.who[index];
         }
     }
 
