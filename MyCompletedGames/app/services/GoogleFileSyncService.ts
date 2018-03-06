@@ -26,6 +26,20 @@ export class GoogleFileSyncService {
         });
     }
 
+    public getExistFolder(token: string): Observable<any> {
+        return Observable.ajax(
+            {
+                url: "https://www.googleapis.com/drive/v3/files?q=name%20contains%20'" + FOLDER_NAME + "'",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                method: "GET"
+            }
+        ).map((result) => {
+            return result.response.files;
+        });
+    }
+
     public deleteGamesFile(token: string, fileId: string): Observable<any> {
         return Observable.ajax(
             {
