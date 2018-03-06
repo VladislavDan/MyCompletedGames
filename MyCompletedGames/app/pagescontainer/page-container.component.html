@@ -19,9 +19,6 @@
     <StackLayout *tabItem="{title: 'Backups'}">
         <backup (connectStatus)="onConnectedBackups($event)" #backup></backup>
     </StackLayout>
-    <StackLayout *tabItem="{title: 'Diagram'}">
-        <games-pie-chart [gamesChartData]="chartData"></games-pie-chart>
-    </StackLayout>
     <StackLayout *tabItem="{title: 'Chart'}">
         <games-bar-chart [gamesChartData]="chartData"></games-bar-chart>
     </StackLayout>
