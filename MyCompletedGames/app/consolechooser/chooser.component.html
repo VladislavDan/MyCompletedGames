@@ -1,7 +1,7 @@
-<StackLayout flexDirection="column">
-    <ListPicker [items]="elements"
-                selectedIndex="{{selectedIndex}}"
-                (selectedIndexChange)="selectedIndexChanged($event)"
-                class="console-chooser">
-    </ListPicker>
+<StackLayout class="console-chooser-container">
+    <Label class="console-chooser-label" [text]="description"></Label>
+    <TextField [text]='elements[selectedIndex]'
+               (tap)="onChangeChoice()"
+               editable="false">
+    </TextField>
 </StackLayout>

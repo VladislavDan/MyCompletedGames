@@ -1,12 +1,17 @@
 <RadSideDrawer tkExampleTitle tkToggleNavButton drawerLocation="Top" drawerContentSize="500">
     <StackLayout tkDrawerContent
                  class="sideStackLayout">
+
         <item-chooser [elements]="consoles"
+                      description="Video game console:"
+                      dialogTitle="Video game console"
                       [selectedIndex]="chosenConsoleIndex"
                       (callback)="onChooseWhere($event)">
         </item-chooser>
 
         <item-chooser [elements]="who"
+                      description="Who plays:"
+                      dialogTitle="Who plays"
                       [selectedIndex]="chosenWhoIndex"
                       (callback)="onChooseWho($event)">
         </item-chooser>

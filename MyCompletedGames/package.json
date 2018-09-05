@@ -3,6 +3,10 @@
   "license": "SEE LICENSE IN <your-license-filename>",
   "readme": "NativeScript Application",
   "repository": "<fill-your-repository-here>",
+  "scripts": {
+    "debug": "tns run android",
+    "release": "tns run android --bundle --env.uglify --env.aot --env.snapshot"
+  },
   "nativescript": {
     "id": "org.nativescript.MyCompletedGames",
     "tns-android": {

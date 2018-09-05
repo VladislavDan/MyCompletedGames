@@ -145,7 +145,11 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
     }
 
     onOpenFilters(event) {
-        this.drawer.showDrawer();
+        if (this.drawer.getIsOpen()) {
+            this.drawer.closeDrawer();
+        } else {
+            this.drawer.showDrawer();
+        }
     }
 
     public createNewGame() {

@@ -2,6 +2,7 @@
 
     flex-direction: row;
     justify-content: space-between;
+    height: 80px;
 }
 
 .game-container__image {
@@ -25,13 +26,17 @@
 .games-container__information__name {
 
     width: 60%;
-    margin: 10px;
-    font-size: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 18px;
+    color: black;
 }
 
 .games-container__information__console {
 
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 14px;
 }
 
 .games-container__information__isTogether {
@@ -46,13 +51,13 @@
 .games-container__cooperative-information__image-coop {
 
     height: 50px;
-    width: 50px;
+    width: 30px;
     background-color: #5c687c;
 }
 
 .games-container__cooperative-information__image-single {
 
     height: 50px;
-    width: 50px;
+    width: 30px;
     background-color: #ed7368;
 }

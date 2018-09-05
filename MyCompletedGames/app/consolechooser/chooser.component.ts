@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {ListPicker} from "tns-core-modules/ui/list-picker";
+import {action} from "tns-core-modules/ui/dialogs";
+import * as _ from "lodash";
 
 @Component({
     selector: "item-chooser",
@@ -13,16 +14,31 @@ export class ChooserComponent {
     public callback: EventEmitter<number> = new EventEmitter<number>();
 
     @Input()
-    public elements: Array<String>;
+    public elements: Array<string>;
 
     @Input()
     public selectedIndex: number;
 
+    @Input()
+    public dialogTitle: string;
+
+    @Input()
+    public description: string;
+
     constructor() {
     }
 
-    selectedIndexChanged(event) {
-        let picker = <ListPicker> event.object;
-        this.callback.emit(picker.selectedIndex);
+    onChangeChoice() {
+        let options = {
+            title: this.dialogTitle,
+            cancelButtonText: "Cancel",
+            actions: this.elements
+        };
+
+        action(options).then((result) => {
+            if (result !== 'Cancel') {
+                this.callback.emit(_.findIndex(this.elements, (element) => element === result));
+            }
+        });
     }
 }
