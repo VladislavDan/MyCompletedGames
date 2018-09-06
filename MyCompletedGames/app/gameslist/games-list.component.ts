@@ -1,14 +1,13 @@
 import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit, ViewChild} from "@angular/core";
 import {SearchBar} from "tns-core-modules/ui/search-bar";
 import {isAndroid} from "tns-core-modules/platform";
-import 'rxjs/add/operator/mergeMap'
 import {RouterExtensions} from "nativescript-angular";
 
-import {Game} from "../common/Game";
-import {GamesService} from "../services/GamesService";
-import {DEFAULT_VALUE_FILTER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {Filter} from "../common/Filter";
-import {BaseComponent} from "../common/BaseComponent";
+import {Game} from "~/common/Game";
+import {GamesService} from "~/services/GamesService";
+import {DEFAULT_VALUE_FILTER, VIDEO_GAME_CONSOLES, WHO} from "~/common/Constants";
+import {Filter} from "~/common/Filter";
+import {BaseComponent} from "~/common/BaseComponent";
 import {RadSideDrawerComponent} from "nativescript-pro-ui/sidedrawer/angular";
 import {RadSideDrawer} from "nativescript-pro-ui/sidedrawer";
 

@@ -1,12 +1,12 @@
 import {Component} from "@angular/core";
 import {PageRoute, RouterExtensions} from "nativescript-angular";
-import {ReplaySubject} from "rxjs/ReplaySubject";
+import {ReplaySubject} from "rxjs";
 
-import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "../common/Constants";
-import {GamesService} from "../services/GamesService";
-import {BaseComponent} from "../common/BaseComponent";
+import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "~/common/Constants";
+import {GamesService} from "~/services/GamesService";
+import {BaseComponent} from "~/common/BaseComponent";
 
-import 'rxjs/add/operator/mergeMap'
+import {switchMap} from 'rxjs/operators'
 
 @Component({
     selector: "new-game",
@@ -42,10 +42,13 @@ export class NewGameComponent extends BaseComponent {
             this.images = images;
         });
         let subscription = this.pageRoute.activatedRoute
-            .switchMap(activatedRoute => activatedRoute.params)
-            .switchMap((params) => {
-                return this.gamesFileService.getGamesById(params['id'])
-            })
+
+            .pipe(
+                switchMap(activatedRoute => activatedRoute.params),
+                switchMap((params) => {
+                    return this.gamesFileService.getGamesById(params['id'])
+                })
+            )
             .subscribe(
                 (game) => {
                     this.title = "Changing game";

@@ -1,5 +1,4 @@
 import {Component, ViewChild} from "@angular/core";
-import 'rxjs/add/operator/mergeMap'
 import * as _ from "lodash";
 
 import {GamesService} from "../services/GamesService";
@@ -49,7 +48,7 @@ export class PageContainerComponent extends BaseComponent {
                             }
                         ).length;
                         gamesChartData.push({
-                            console: gameConsole,
+                            console: gameConsole + " (" + amount + ")",
                             amount: amount
                         });
                         this.chartData = new ObservableArray(gamesChartData);

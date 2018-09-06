@@ -1,4 +1,4 @@
-import application = require("application");
+import {android as androidApp} from "application";
 import {Config} from "./Config";
 
 const GOOGLE_SIGNIN_RESULT_CODE = 597965301;
@@ -26,7 +26,7 @@ export class AndroidGoogleSignIn {
 
         let authCode = null;
 
-        this.activity = application.android.foregroundActivity || application.android.startActivity;
+        this.activity = androidApp.foregroundActivity || androidApp.startActivity;
 
         this.activity.onActivityResult = (requestCode, resultCode, data) => {
             try {

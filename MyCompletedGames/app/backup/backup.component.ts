@@ -1,14 +1,13 @@
 import {Component, EventEmitter, NgZone, Output} from "@angular/core";
 import * as _ from "lodash";
 import * as dialogs from "ui/dialogs";
-import {GoogleAuthService} from "../services/GoogleAuthService";
-import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
-import {BaseComponent} from "../common/BaseComponent";
+import {of, Subscriber} from "rxjs";
+import {switchMap} from 'rxjs/operators'
 
-import 'rxjs/add/operator/mergeMap'
-import {GamesService} from "../services/GamesService";
-import {Subscriber} from "rxjs/Subscriber";
-import {Observable} from "rxjs/Observable";
+import {GoogleAuthService} from "~/services/GoogleAuthService";
+import {GoogleFileSyncService} from "~/services/GoogleFileSyncService";
+import {BaseComponent} from "~/common/BaseComponent";
+import {GamesService} from "~/services/GamesService";
 
 @Component({
     selector: "backup",
@@ -104,32 +103,34 @@ export class BackupComponent extends BaseComponent {
     public createNewBackup() {
         this.showProgress();
         return this.googleFileSyncService.getExistFolder(this.googleAuthService.getTokenFromStorage())
-            .switchMap((foundedFiles) => {
-                if (foundedFiles) {
-                    let foundedFolders = _.find(foundedFiles, (file) => {
-                        return file.mimeType === "application/vnd.google-apps.folder"
-                    });
-                    if (foundedFolders) {
-                        return Observable.of(_.find(foundedFiles, (file) => {
+            .pipe(
+                switchMap((foundedFiles) => {
+                    if (foundedFiles) {
+                        let foundedFolders = _.find(foundedFiles, (file) => {
                             return file.mimeType === "application/vnd.google-apps.folder"
-                        }).id);
+                        });
+                        if (foundedFolders) {
+                            return of(_.find(foundedFiles, (file) => {
+                                return file.mimeType === "application/vnd.google-apps.folder"
+                            }).id);
+                        } else {
+                            return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage());
+                        }
                     } else {
                         return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage());
                     }
-                } else {
-                    return this.googleFileSyncService.createCompletedGamesFolder(this.googleAuthService.getTokenFromStorage());
-                }
-            })
-            .switchMap((folderId) => {
-                return this.googleFileSyncService.createCompletedGamesFile(
-                    this.googleAuthService.getTokenFromStorage(),
-                    folderId
-                );
-            })
-            .switchMap((fileId) => {
-                this.googleFileSyncService.setFileIdToStorage(fileId);
-                return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), this.gamesService.getGamesFromSetting(), fileId);
-            })
+                }),
+                switchMap((folderId) => {
+                    return this.googleFileSyncService.createCompletedGamesFile(
+                        this.googleAuthService.getTokenFromStorage(),
+                        folderId
+                    );
+                }),
+                switchMap((fileId) => {
+                    this.googleFileSyncService.setFileIdToStorage(fileId);
+                    return this.googleFileSyncService.requestUploadFile(this.googleAuthService.getTokenFromStorage(), this.gamesService.getGamesFromSetting(), fileId);
+                })
+            )
             .subscribe(
                 () => {
                     this.reload();
@@ -189,9 +190,11 @@ export class BackupComponent extends BaseComponent {
         this.googleFileSyncService.setFileIdToStorage(fileId);
         this.showProgress();
         let subscription = this.googleFileSyncService.requestLoadFile(this.googleAuthService.getTokenFromStorage(), fileId)
-            .switchMap((result) => {
-                return this.gamesService.updateGames(result)
-            })
+            .pipe(
+                switchMap((result) => {
+                    return this.gamesService.updateGames(result)
+                })
+            )
             .subscribe(
                 this.createGamesLoadingSubscriber()
             );

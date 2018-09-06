@@ -1,15 +1,13 @@
 import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Observable} from "rxjs/Observable";
+import {Observable, ReplaySubject} from "rxjs";
+import {map, switchMap} from 'rxjs/operators'
+import {ajax} from 'rxjs/ajax'
+import {isAndroid} from "platform";
+import {getString, setString} from "application-settings";
 
-import {AUTH_CONSTANTS} from "../common/AuthConstants";
-import {TOKEN_KEY} from "../common/Constants";
-import {AndroidGoogleSignIn} from "../common/AndroidGoogleSignIn";
-
-import 'rxjs/add/operator/switchMap'
-import 'rxjs/add/observable/dom/ajax'
-import appSettings = require("application-settings");
-import Application = require("application");
+import {AUTH_CONSTANTS} from "~/common/AuthConstants";
+import {TOKEN_KEY} from "~/common/Constants";
+import {AndroidGoogleSignIn} from "~/common/AndroidGoogleSignIn";
 
 @Injectable()
 export class GoogleAuthService {
@@ -23,9 +21,11 @@ export class GoogleAuthService {
     constructor() {
         this.androidGoogleSignIn = new AndroidGoogleSignIn();
         this.authCodeChannel
-            .switchMap((authCode) => {
-                return this.getGoogleToken(authCode);
-            })
+            .pipe(
+                switchMap((authCode) => {
+                    return this.getGoogleToken(authCode);
+                })
+            )
             .subscribe(
                 (token) => {
                     this.setTokenToStorage(token);
@@ -44,7 +44,7 @@ export class GoogleAuthService {
     }
 
     private getGoogleAuthCode() {
-        if (Application.android) {
+        if (isAndroid) {
             this.androidGoogleSignIn.initEnvironment((authCode) => {
                 this.authCodeChannel.next(authCode);
             });
@@ -58,7 +58,7 @@ export class GoogleAuthService {
     }
 
     private getGoogleToken(authCode: string): Observable<string> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/oauth2/v4/token",
                 body: {
@@ -74,16 +74,18 @@ export class GoogleAuthService {
                     "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
-        ).map((response) => {
-            return response.response.access_token;
-        });
+        ).pipe(
+            map((response) => {
+                return response.response.access_token;
+            })
+        );
     }
 
     public getTokenFromStorage() {
-        return appSettings.getString(TOKEN_KEY);
+        return getString(TOKEN_KEY);
     }
 
     private setTokenToStorage(token) {
-        appSettings.setString(TOKEN_KEY, token);
+        setString(TOKEN_KEY, token);
     }
 }

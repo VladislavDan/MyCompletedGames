@@ -1,15 +1,18 @@
-<RadCartesianChart>
-    <CategoricalAxis tkCartesianVerticalAxis labelSize="8"></CategoricalAxis>
-    <LinearAxis tkCartesianHorizontalAxis labelSize="8"></LinearAxis>
-    <BarSeries tkCartesianSeries
-               [items]="gamesChartData"
-               categoryProperty="console"
-               valueProperty="amount">
-    </BarSeries>
-</RadCartesianChart>
+<StackLayout>
+    <RadCartesianChart>
+        <RadCartesianChartGrid tkCartesianGrid verticalLinesVisible="true"></RadCartesianChartGrid>
+        <CategoricalAxis tkCartesianVerticalAxis labelSize="8"></CategoricalAxis>
+        <LinearAxis tkCartesianHorizontalAxis labelSize="8"></LinearAxis>
+        <BarSeries tkCartesianSeries
+                   [items]="gamesChartData"
+                   categoryProperty="console"
+                   valueProperty="amount">
+        </BarSeries>
+    </RadCartesianChart>
 
-<Label horizontalAlignment="center"
-       marginTop="50%"
-       fontSize="20"
-       [text]="'No games'">
-</Label>
+    <Label horizontalAlignment="center"
+           marginTop="50%"
+           fontSize="20"
+           [text]="'No games'">
+    </Label>
+</StackLayout>

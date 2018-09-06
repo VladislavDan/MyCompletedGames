@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs/Observable";
-import 'rxjs/add/observable/dom/ajax'
+import {Observable} from "rxjs";
+import {ajax} from 'rxjs/ajax'
+import {map} from 'rxjs/operators'
+import {getString, setString} from "application-settings";
 
-import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "../common/Constants";
-import {GamesFileModel} from "../common/GamesFileModel";
-import appSettings = require("application-settings");
+import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "~/common/Constants";
+import {GamesFileModel} from "~/common/GamesFileModel";
 
 @Injectable()
 export class GoogleFileSyncService {
@@ -13,7 +14,7 @@ export class GoogleFileSyncService {
     }
 
     public getExistFiles(token: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files?q=name%20contains%20'" + FILE_NAME + "'",
                 headers: {
@@ -21,13 +22,15 @@ export class GoogleFileSyncService {
                 },
                 method: "GET"
             }
-        ).map((result) => {
-            return result.response.files;
-        });
+        ).pipe(
+            map((result) => {
+                return result.response.files;
+            })
+        );
     }
 
     public getExistFolder(token: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files?q=name%20contains%20'" + FOLDER_NAME + "'",
                 headers: {
@@ -35,13 +38,15 @@ export class GoogleFileSyncService {
                 },
                 method: "GET"
             }
-        ).map((result) => {
-            return result.response.files;
-        });
+        ).pipe(
+            map((result) => {
+                return result.response.files;
+            })
+        );
     }
 
     public deleteGamesFile(token: string, fileId: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files/" + fileId,
                 headers: {
@@ -54,7 +59,7 @@ export class GoogleFileSyncService {
     }
 
     public createCompletedGamesFile(token: string, id: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files",
                 headers: {
@@ -67,13 +72,15 @@ export class GoogleFileSyncService {
                 },
                 method: "POST"
             }
-        ).map((result) => {
-            return result.response.id;
-        });
+        ).pipe(
+            map((result) => {
+                return result.response.id;
+            })
+        );
     }
 
     public createCompletedGamesFolder(token: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files",
                 headers: {
@@ -86,13 +93,15 @@ export class GoogleFileSyncService {
                 },
                 method: "POST"
             }
-        ).map((result) => {
-            return result.response.id;
-        });
+        ).pipe(
+            map((result) => {
+                return result.response.id;
+            })
+        );
     }
 
     public requestLoadFile(token: string, fileId: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media",
                 headers: {
@@ -100,13 +109,15 @@ export class GoogleFileSyncService {
                 },
                 method: "GET"
             }
-        ).map((result) => {
-            return result.response;
-        });
+        ).pipe(
+            map((result) => {
+                return result.response;
+            })
+        );
     }
 
     public requestUploadFile(token: string, fileContent: GamesFileModel, fileId: string): Observable<any> {
-        return Observable.ajax(
+        return ajax(
             {
                 url: "https://www.googleapis.com/upload/drive/v3/files/" + fileId,
                 headers: {
@@ -116,16 +127,18 @@ export class GoogleFileSyncService {
                 responseType: 'text',
                 method: "PATCH"
             }
-        ).map((result) => {
-            return fileId;
-        });
+        ).pipe(
+            map((result) => {
+                return fileId;
+            })
+        );
     }
 
     public getFileIdFromStorage() {
-        return appSettings.getString(FILE_ID_KEY);
+        return getString(FILE_ID_KEY);
     }
 
     public setFileIdToStorage(fileId) {
-        appSettings.setString(FILE_ID_KEY, fileId);
+        setString(FILE_ID_KEY, fileId);
     }
 }
