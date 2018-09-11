@@ -2,7 +2,7 @@
     <RadCartesianChart>
         <RadCartesianChartGrid tkCartesianGrid verticalLinesVisible="true"></RadCartesianChartGrid>
         <CategoricalAxis tkCartesianVerticalAxis labelSize="8"></CategoricalAxis>
-        <LinearAxis tkCartesianHorizontalAxis labelSize="8"></LinearAxis>
+        <LinearAxis tkCartesianHorizontalAxis labelSize="8" labelFormat="%.0f"></LinearAxis>
         <BarSeries tkCartesianSeries
                    [items]="gamesChartData"
                    categoryProperty="console"
