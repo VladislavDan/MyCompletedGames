@@ -26,6 +26,7 @@
     "@angular/platform-browser": "~6.1.0",
     "@angular/platform-browser-dynamic": "~6.1.0",
     "@angular/router": "~6.1.0",
+    "htmlparser": "^1.7.7",
     "lodash": "4.17.4",
     "nativescript-angular": "^6.1.0",
     "nativescript-floatingactionbutton": "4.1.3",

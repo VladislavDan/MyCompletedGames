@@ -10,6 +10,7 @@ import {TabView} from "tns-core-modules/ui/tab-view";
 import {ObservableArray} from "tns-core-modules/data/observable-array";
 import {BackupComponent} from "../backup/backup.component";
 import {GamesListComponent} from "../gameslist/games-list.component";
+import {ImagesService} from "~/services/ImagesService";
 
 @Component({
     selector: "page-container",
@@ -35,7 +36,7 @@ export class PageContainerComponent extends BaseComponent {
 
     public countGames: number = 0;
 
-    constructor(private gamesFileService: GamesService) {
+    constructor(private gamesFileService: GamesService, private imageService: ImagesService) {
         super();
         this.gamesFileService.gamesChannel
             .subscribe(
