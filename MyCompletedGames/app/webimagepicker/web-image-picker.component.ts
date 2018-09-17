@@ -1,0 +1,88 @@
+import {Component} from "@angular/core";
+import * as _ from "lodash";
+
+import {BaseComponent} from "~/common/BaseComponent";
+import {MAX_IMAGE_COUNT} from "~/common/Constants";
+import {Image} from "~/typings/Image";
+import {ModalDialogParams} from "nativescript-angular";
+import {Page} from "tns-core-modules/ui/page";
+import {ImagesService} from "~/services/ImagesService";
+
+@Component({
+    selector: "image-chooser",
+    moduleId: module.id,
+    templateUrl: "./web-image-picker.component.html",
+    styleUrls: ['./web-image-picker.css']
+})
+export class WebImagePickerComponent extends BaseComponent {
+
+    public images: Array<Image> = [];
+
+    private selectedImages: Array<Image> = [];
+
+    private name: string;
+
+    private console: string;
+
+    constructor(private imagesService: ImagesService,
+                private params: ModalDialogParams,
+                private page: Page) {
+        super();
+
+        this.page.on("unloaded", () => {
+            this.params.closeCallback();
+        });
+    }
+
+    ngOnInit() {
+        this.name = this.params.context.name;
+        this.console = this.params.context.console;
+        let subscription = this.imagesService.getImages(this.name, this.console).subscribe(
+            (images) => {
+                if (images) {
+                    this.images = images;
+                }
+            },
+            (error) => {
+                this.showAlert({
+                    title: "Initialisation image chooser",
+                    message: error.message
+                });
+            }
+        );
+        this.subscriptions.push(subscription);
+    }
+
+    onItemTap(event, imageId) {
+        if (this.isSelected(imageId)) {
+            _.pull(this.selectedImages, _.find(this.images, (image: Image) => {
+                return image.id === imageId;
+            }));
+        } else {
+            if (this.selectedImages.length < MAX_IMAGE_COUNT) {
+                this.selectedImages.push(_.find(this.images, (image: Image) => {
+                    return image.id === imageId;
+                }));
+            } else {
+                this.showAlert({
+                    title: "Choosing image",
+                    message: "You chose more than " + MAX_IMAGE_COUNT + " images"
+                });
+            }
+        }
+    }
+
+    onSave(event) {
+        let images = [];
+        _.forEach(this.selectedImages, (item) => {
+            images.push(this.images[item].imageUrl)
+        });
+        this.params.closeCallback(images);
+    }
+
+    isSelected(imageId) {
+        return _.findIndex(this.selectedImages, (image: Image) => {
+            return image.id === imageId;
+        }) >= 0;
+    }
+}

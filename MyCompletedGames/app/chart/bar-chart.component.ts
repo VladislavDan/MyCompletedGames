@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {GamesChartPoint} from "../common/GamesChartData";
+import {GamesChartPoint} from "~/typings/GamesChartData";
 import {ObservableArray} from "tns-core-modules/data/observable-array";
 
 @Component({

@@ -17,7 +17,7 @@ export const MAX_IMAGE_COUNT = 3;
 
 export const ADD_NEW_FILE = "Add new file";
 
-export const VIDEO_GAME_CONSOLES: Array<String> = [
+export const VIDEO_GAME_CONSOLES: Array<string> = [
     "3DO",
     "CPS-1",
     "CPS-2",

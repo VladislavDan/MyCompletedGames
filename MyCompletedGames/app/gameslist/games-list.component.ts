@@ -3,10 +3,10 @@ import {SearchBar} from "tns-core-modules/ui/search-bar";
 import {isAndroid} from "tns-core-modules/platform";
 import {RouterExtensions} from "nativescript-angular";
 
-import {Game} from "~/common/Game";
+import {Game} from "~/typings/Game";
 import {GamesService} from "~/services/GamesService";
 import {DEFAULT_VALUE_FILTER, VIDEO_GAME_CONSOLES, WHO} from "~/common/Constants";
-import {Filter} from "~/common/Filter";
+import {Filter} from "~/typings/Filter";
 import {BaseComponent} from "~/common/BaseComponent";
 import {RadSideDrawerComponent} from "nativescript-pro-ui/sidedrawer/angular";
 import {RadSideDrawer} from "nativescript-pro-ui/sidedrawer";

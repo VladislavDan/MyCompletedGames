@@ -2,9 +2,9 @@ import {Component, ViewChild} from "@angular/core";
 import * as _ from "lodash";
 
 import {GamesService} from "../services/GamesService";
-import {GamesChartPoint} from "../common/GamesChartData";
+import {GamesChartPoint} from "../typings/GamesChartData";
 import {VIDEO_GAME_CONSOLES} from "../common/Constants";
-import {Game} from "../common/Game";
+import {Game} from "../typings/Game";
 import {BaseComponent} from "../common/BaseComponent";
 import {TabView} from "tns-core-modules/ui/tab-view";
 import {ObservableArray} from "tns-core-modules/data/observable-array";

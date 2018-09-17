@@ -1,5 +1,5 @@
 import {android as androidApp} from "application";
-import {Config} from "./Config";
+import {Config} from "~/typings/Config";
 
 const GOOGLE_SIGNIN_RESULT_CODE = 597965301;
 

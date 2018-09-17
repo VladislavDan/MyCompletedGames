@@ -13,7 +13,9 @@ import {NewGameModule} from "./newgame/new-game.module";
 import {PageContainerModule} from "./pagescontainer/page-container.module";
 
 import {registerElement} from "nativescript-angular/element-registry";
+import {NativeScriptHttpClientModule} from "nativescript-angular/http-client";
 import {ImagesService} from "~/services/ImagesService";
+
 
 registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
 
@@ -22,6 +24,7 @@ registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
         AppComponent
     ],
     imports: [
+        NativeScriptHttpClientModule,
         NativeScriptModule,
         AppRoutingModule,
         NewGameModule,

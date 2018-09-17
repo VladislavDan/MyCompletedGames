@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {Game} from "~/common/Game";
+import {Game} from "~/typings/Game";
 import {RouterExtensions} from "nativescript-angular";
 
 @Component({

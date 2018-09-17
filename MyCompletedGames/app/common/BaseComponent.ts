@@ -2,7 +2,7 @@ import {LoadingIndicator} from "nativescript-loading-indicator";
 import {Subscription} from "rxjs";
 import * as _ from "lodash";
 
-import {AlertMessage} from "./AlertMessage";
+import {AlertMessage} from "../typings/AlertMessage";
 import {OnDestroy} from "@angular/core";
 
 export class BaseComponent implements OnDestroy {

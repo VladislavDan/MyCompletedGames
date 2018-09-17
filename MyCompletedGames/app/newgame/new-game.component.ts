@@ -1,12 +1,14 @@
-import {Component} from "@angular/core";
-import {PageRoute, RouterExtensions} from "nativescript-angular";
+import {Component, NgZone, ViewContainerRef} from "@angular/core";
+import {ModalDialogOptions, ModalDialogService, PageRoute, RouterExtensions} from "nativescript-angular";
 import {ReplaySubject} from "rxjs";
 
 import {TOGETHER, VIDEO_GAME_CONSOLES, WHO} from "~/common/Constants";
 import {GamesService} from "~/services/GamesService";
 import {BaseComponent} from "~/common/BaseComponent";
+import {WebImagePickerComponent} from "~/webimagepicker/web-image-picker.component";
 
 import {switchMap} from 'rxjs/operators'
+import {Image} from "~/typings/Image";
 
 @Component({
     selector: "new-game",
@@ -16,30 +18,33 @@ import {switchMap} from 'rxjs/operators'
 })
 export class NewGameComponent extends BaseComponent {
 
-    public consoles: Array<String> = VIDEO_GAME_CONSOLES;
+    public consoles: Array<string> = VIDEO_GAME_CONSOLES;
 
-    public who: Array<String> = WHO;
+    public who: Array<string> = WHO;
 
-    public images: Array<String> = [];
+    public images: Array<Image> = [];
 
-    public what: String = "";
+    public what: string = "";
 
     public chosenConsoleIndex: number = 0;
 
     public chosenWhoIndex: number = 0;
 
-    public id: String = "";
+    public id: string = "";
 
     public title: string = "New game";
 
-    private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
+    private imageChooseChannel: ReplaySubject<Array<number>> = new ReplaySubject();
 
     constructor(private pageRoute: PageRoute,
                 private routerExtensions: RouterExtensions,
+                private modalService: ModalDialogService,
+                private vcRef: ViewContainerRef,
+                private zone: NgZone,
                 private gamesFileService: GamesService) {
         super();
-        this.imageChooseChannel.subscribe((images: Array<string>) => {
-            this.images = images;
+        this.imageChooseChannel.subscribe((images: Array<number>) => {
+            //TODO this.images = images;
         });
         let subscription = this.pageRoute.activatedRoute
 
@@ -54,6 +59,7 @@ export class NewGameComponent extends BaseComponent {
                     this.title = "Changing game";
                     this.chosenWhoIndex = game.isTogether ? 0 : 1;
                     this.chosenConsoleIndex = this.consoles.indexOf(game.console);
+                    this.images = null;
                     this.what = game.name;
                     this.id = game.id;
                 },
@@ -65,6 +71,21 @@ export class NewGameComponent extends BaseComponent {
                 }
             );
         this.subscriptions.push(subscription);
+    }
+
+    onChooseImage(event) {
+        this.showImagesChooser()
+            .then(result => {
+                if (result) {
+                    this.images = result;
+                } else {
+                    this.images = [];
+                }
+            })
+            .catch(error => this.showAlert({
+                title: "Choosing image",
+                message: error.message
+            }));
     }
 
     onChooseWhere(index: number) {
@@ -109,12 +130,25 @@ export class NewGameComponent extends BaseComponent {
         this.routerExtensions.backToPreviousPage();
     }
 
+    private showImagesChooser(): Promise<any> {
+        const options: ModalDialogOptions = {
+            viewContainerRef: this.vcRef,
+            fullscreen: true,
+            context: {
+                console: this.consoles[this.chosenConsoleIndex],
+                name: this.what
+            }
+        };
+        return this.modalService.showModal(WebImagePickerComponent, options);
+    }
+
     private addGame() {
         return this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
             console: this.consoles[this.chosenConsoleIndex],
             isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
+            images: null
         }).subscribe(
             () => {
                 //TODO hack for update list
@@ -138,7 +172,8 @@ export class NewGameComponent extends BaseComponent {
                 id: this.id,
                 name: this.what,
                 console: this.consoles[this.chosenConsoleIndex],
-                isTogether: this.who[this.chosenWhoIndex] === TOGETHER
+                isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
+                images: null
             }).subscribe(
                 () => {
                     //TODO hack for update list

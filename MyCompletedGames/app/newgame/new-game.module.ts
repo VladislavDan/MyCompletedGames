@@ -3,8 +3,10 @@ import {NativeScriptModule} from "nativescript-angular/nativescript.module";
 import {NativeScriptFormsModule} from "nativescript-angular/forms"
 
 import {NewGameComponent} from "./new-game.component";
-import {ChooserModule} from "../consolechooser/chooser.module";
-import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
+import {ChooserModule} from "~/consolechooser/chooser.module";
+import {GoogleFileSyncService} from "~/services/GoogleFileSyncService";
+import {WebImagePickerComponent} from "~/webimagepicker/web-image-picker.component";
+
 
 @NgModule({
     imports: [
@@ -13,8 +15,10 @@ import {GoogleFileSyncService} from "../services/GoogleFileSyncService";
         ChooserModule
     ],
     declarations: [
-        NewGameComponent
+        NewGameComponent,
+        WebImagePickerComponent
     ],
+    entryComponents: [WebImagePickerComponent],
     providers: [
         GoogleFileSyncService
     ],

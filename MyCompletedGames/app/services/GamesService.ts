@@ -5,9 +5,9 @@ import {concatMap, filter, first, flatMap, map, toArray} from 'rxjs/operators'
 import {getString, setString} from "application-settings";
 
 import {GAMES_KEY, ONLY_ME, TOGETHER} from "~/common/Constants";
-import {GamesFileModel} from "~/common/GamesFileModel";
-import {Game} from "~/common/Game";
-import {Filter} from "~/common/Filter";
+import {GamesFileModel} from "~/typings/GamesFileModel";
+import {Game} from "~/typings/Game";
+import {Filter} from "~/typings/Filter";
 
 
 @Injectable()

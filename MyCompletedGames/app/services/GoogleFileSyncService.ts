@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators'
 import {getString, setString} from "application-settings";
 
 import {FILE_ID_KEY, FILE_NAME, FOLDER_NAME} from "~/common/Constants";
-import {GamesFileModel} from "~/common/GamesFileModel";
+import {GamesFileModel} from "~/typings/GamesFileModel";
 
 @Injectable()
 export class GoogleFileSyncService {
