@@ -18,7 +18,7 @@ export class GamesService {
     constructor() {
     }
 
-    public getGames(name: string, filterParam: Filter) {
+    public getGames = (name: string, filterParam: Filter) => {
         of(this.getGamesFromSetting())
             .pipe(
                 map((gamesFileModel: GamesFileModel) => {
@@ -35,7 +35,7 @@ export class GamesService {
             .subscribe((games) => {
                 this.gamesChannel.next(games)
             });
-    }
+    };
 
     public getGamesById(id: String): Observable<Game> {
         this.getGames("", {who: "", console: ""});

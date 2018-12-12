@@ -1,37 +1,28 @@
-<ActionBar class="action-bar" title="Image chooser">
-
-    <ActionItem (tap)="onSave()"
-                ios.systemIcon="9" ios.position="left"
-                icon="res://ic_done_white_24dp"
-                android.position="actionBar">
-    </ActionItem>
-</ActionBar>
 <StackLayout class="image-chooser-container"
              orientation="vertical">
-
+    <Label class="image-chooser-container__title" text="Image chooser"></Label>
     <ListView class="image-chooser-container__images-list"
+              *ngIf="images.length!==0"
               [items]="images">
 
         <ng-template let-item="item" let-i="item.id">
-
-            <StackLayout orientation="horizontal" (tap)="onItemTap($event, i)">
-                <Image class="image-chooser-container__selected-indicator"
-                       [visibility]="isSelected(i) ? 'visible' : 'collapsed'">
-                </Image>
+            <FlexboxLayout class="image-chooser-container"
+                           flexDirection="column"
+                           justifyContent="space-around"
+                           alignItems="stretch"
+                           (tap)="onItemTap($event, i)"
+                           [ngClass]="{'image-chooser-container--bordered': isSelected(i)==true}">
                 <Image class="image-chooser-container__image"
                        decodeWidth="300"
                        decodeHeight="300"
                        src="{{item.imageUrl}}"
                        loadMode="async">
                 </Image>
-                <Label class="image-chooser-container__text"
-                       text="{{item.id}}">
-                </Label>
-            </StackLayout>
+            </FlexboxLayout>
         </ng-template>
     </ListView>
 
-    <Label class="image-chooser-container__no-image-text" *ngIf="images.length==0" text="No images"></Label>
+    <Label class="image-chooser-container__no-image-text" *ngIf="images.length===0" text="No images"></Label>
 
     <Button class="image-chooser-container__btn"
             text="Save"

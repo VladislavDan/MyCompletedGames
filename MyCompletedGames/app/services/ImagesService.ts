@@ -3,7 +3,6 @@ import {ajax} from 'rxjs/ajax'
 import {map} from 'rxjs/operators'
 import * as htmlparser from "htmlparser"
 import * as _ from "lodash";
-
 import {Image} from "~/typings/Image";
 
 @Injectable()
@@ -13,11 +12,13 @@ export class ImagesService {
     }
 
     getImages(name: string, gameConsole: string) {
+        let url = `https://www.google.ru/search?q=${name}+${gameConsole}&tbm=isch&tbs=isz:lt,islt:svga&source=lnms&biw=1750&bih=842`;
         return ajax({
-            url: `https://www.google.ru/search?&tbm=isch&&source=lnms&tbs=isz:lt,islt:svga&biw=1750&bih=842&q=${name}+${gameConsole}`,
-            method: "GET"
+            url: url,
+            method: "GET",
+            headers: {'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"}
         }).pipe(
-            map((result) => {
+            map((result): Array<Image> => {
                 this.getPreviewImages(result.response);
                 return this.getPreviewImages(result.response);
             })
@@ -32,9 +33,11 @@ export class ImagesService {
             let result = getObjects(dom, 'raw', 'div class="rg_meta notranslate"');
             _.forEach(result, (item) => {
                 let raw = JSON.parse(item.children[0].raw);
-                imagesLinks.push({
+                imagesLinks.push(<Image>{
                     imageUrl: raw.ou,
-                    id: getHashFromText(raw.ou)
+                    id: getHashFromText(raw.ou),
+                    cachedFilePath: "",
+                    base64: ""
                 });
             });
         });

@@ -59,7 +59,7 @@ export class NewGameComponent extends BaseComponent {
                     this.title = "Changing game";
                     this.chosenWhoIndex = game.isTogether ? 0 : 1;
                     this.chosenConsoleIndex = this.consoles.indexOf(game.console);
-                    this.images = null;
+                    this.images = [];
                     this.what = game.name;
                     this.id = game.id;
                 },
@@ -73,7 +73,7 @@ export class NewGameComponent extends BaseComponent {
         this.subscriptions.push(subscription);
     }
 
-    onChooseImage(event) {
+    onChooseImage = (event) => {
         this.showImagesChooser()
             .then(result => {
                 if (result) {
@@ -86,17 +86,17 @@ export class NewGameComponent extends BaseComponent {
                 title: "Choosing image",
                 message: error.message
             }));
-    }
+    };
 
-    onChooseWhere(index: number) {
+    onChooseWhere = (index: number) => {
         this.chosenConsoleIndex = index;
-    }
+    };
 
-    onChooseWho(index) {
+    onChooseWho = (index) => {
         this.chosenWhoIndex = index;
-    }
+    };
 
-    onSaveNewGame(event) {
+    onSaveNewGame = (event) => {
         this.showProgress();
         let subscription;
         if (!this.id) {
@@ -105,9 +105,9 @@ export class NewGameComponent extends BaseComponent {
             subscription = this.changeGame();
         }
         this.subscriptions.push(subscription);
-    }
+    };
 
-    onDeleteGame() {
+    onDeleteGame = () => {
         this.showProgress();
         this.gamesFileService.deleteGame(this.id.toString())
             .subscribe(
@@ -124,13 +124,13 @@ export class NewGameComponent extends BaseComponent {
                     })
                 }
             );
-    }
+    };
 
-    onBack() {
+    onBack = () => {
         this.routerExtensions.backToPreviousPage();
-    }
+    };
 
-    private showImagesChooser(): Promise<any> {
+    private showImagesChooser = (): Promise<any> => {
         const options: ModalDialogOptions = {
             viewContainerRef: this.vcRef,
             fullscreen: true,
@@ -140,9 +140,9 @@ export class NewGameComponent extends BaseComponent {
             }
         };
         return this.modalService.showModal(WebImagePickerComponent, options);
-    }
+    };
 
-    private addGame() {
+    private addGame = () => {
         return this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
@@ -164,9 +164,9 @@ export class NewGameComponent extends BaseComponent {
                 })
             }
         );
-    }
+    };
 
-    private changeGame() {
+    private changeGame = () => {
         return this.gamesFileService
             .changeGame({
                 id: this.id,

@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {initializeOnAngular} from "nativescript-web-image-cache";
 
 @Component({
     selector: "ns-app",
@@ -7,6 +8,7 @@ import {Component} from "@angular/core";
 export class AppComponent {
 
     constructor() {
+        initializeOnAngular();
     }
 
     ngOnInit() {

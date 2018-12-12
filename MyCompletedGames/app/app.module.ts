@@ -1,6 +1,5 @@
-import {NgModule, NgModuleFactoryLoader, NO_ERRORS_SCHEMA} from "@angular/core";
+import {NgModule, NO_ERRORS_SCHEMA} from "@angular/core";
 import {NativeScriptModule} from "nativescript-angular/nativescript.module";
-import {NSModuleFactoryLoader} from "nativescript-angular/router";
 import {HttpModule} from "@angular/http";
 
 import {AppRoutingModule} from "./app-routing.module";
@@ -15,6 +14,7 @@ import {PageContainerModule} from "./pagescontainer/page-container.module";
 import {registerElement} from "nativescript-angular/element-registry";
 import {NativeScriptHttpClientModule} from "nativescript-angular/http-client";
 import {ImagesService} from "~/services/ImagesService";
+import {NativeScriptCommonModule} from "nativescript-angular/common";
 
 
 registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
@@ -25,6 +25,7 @@ registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
     ],
     imports: [
         NativeScriptHttpClientModule,
+        NativeScriptCommonModule,
         NativeScriptModule,
         AppRoutingModule,
         NewGameModule,
@@ -39,8 +40,7 @@ registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
         ImagesService,
         GoogleAuthService,
         GoogleFileSyncService,
-        ModalDialogService,
-        {provide: NgModuleFactoryLoader, useClass: NSModuleFactoryLoader}
+        ModalDialogService
     ],
     schemas: [
         NO_ERRORS_SCHEMA

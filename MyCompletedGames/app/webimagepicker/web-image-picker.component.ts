@@ -7,6 +7,14 @@ import {Image} from "~/typings/Image";
 import {ModalDialogParams} from "nativescript-angular";
 import {Page} from "tns-core-modules/ui/page";
 import {ImagesService} from "~/services/ImagesService";
+import {fromUrl, ImageSource} from "tns-core-modules/image-source";
+
+import {fromPromise} from "rxjs/internal/observable/fromPromise";
+import {map, switchMap} from 'rxjs/operators'
+import {fromArray} from "rxjs/internal/observable/fromArray";
+
+import {knownFolders} from "tns-core-modules/file-system";
+import {toArray} from "rxjs/internal/operators";
 
 @Component({
     selector: "image-chooser",
@@ -73,9 +81,39 @@ export class WebImagePickerComponent extends BaseComponent {
     }
 
     onSave(event) {
-        let images = [];
+        let images: Array<Image> = [];
         _.forEach(this.selectedImages, (item) => {
-            images.push(this.images[item].imageUrl)
+            images.push({
+                imageUrl: item.imageUrl
+            })
+        });
+        fromArray(this.images).pipe(
+            switchMap((image: Image) => {
+                return fromPromise(fromUrl(image.imageUrl))
+            }),
+            map((imageSrc: ImageSource) => {
+                return imageSrc.toBase64String("jpg", 90);
+            }),
+            toArray()
+        ).subscribe((base64s: string[]) => {
+            _.forEach(images, (image: Image, index: number) => {
+                image.base64 = base64s[index];
+            });
+        });
+        fromArray(this.images).pipe(
+            switchMap((image: Image) => {
+                return fromPromise(fromUrl(image.imageUrl))
+            }),
+            map((imageSrc: ImageSource) => {
+                let path = knownFolders.temp().path + "/" + Date.now() + ".jpg";
+                imageSrc.saveToFile(path, "jpg");
+                return path;
+            }),
+            toArray()
+        ).subscribe((paths: string[]) => {
+            _.forEach(images, (image: Image, index: number) => {
+                image.cachedFilePath = paths[index];
+            });
         });
         this.params.closeCallback(images);
     }
