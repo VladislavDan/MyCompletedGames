@@ -9,6 +9,10 @@
     margin-top: 50px;
 }
 
+.image-chooser-container__image {
+    margin: 5px
+}
+
 .games-list-container__filters-container__btn {
     background-color: #3b56f4;
     color: white;

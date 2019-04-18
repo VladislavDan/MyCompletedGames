@@ -1,6 +1,6 @@
 export interface Image {
     id: number;
-    imageUrl: string;
+    imageUrl?: string;
     cachedFilePath: string;
     base64: string;
 }

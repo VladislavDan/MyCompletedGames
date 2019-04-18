@@ -10,11 +10,10 @@ import {ImagesService} from "~/services/ImagesService";
 import {fromUrl, ImageSource} from "tns-core-modules/image-source";
 
 import {fromPromise} from "rxjs/internal/observable/fromPromise";
-import {map, switchMap} from 'rxjs/operators'
+import {switchMap} from 'rxjs/operators'
 import {fromArray} from "rxjs/internal/observable/fromArray";
 
 import {knownFolders} from "tns-core-modules/file-system";
-import {toArray} from "rxjs/internal/operators";
 
 @Component({
     selector: "image-chooser",
@@ -25,6 +24,10 @@ import {toArray} from "rxjs/internal/operators";
 export class WebImagePickerComponent extends BaseComponent {
 
     public images: Array<Image> = [];
+
+    public isLoadImages: boolean = false;
+
+    public countOfImage: number = 30;
 
     private selectedImages: Array<Image> = [];
 
@@ -47,11 +50,41 @@ export class WebImagePickerComponent extends BaseComponent {
         this.console = this.params.context.console;
         let subscription = this.imagesService.getImages(this.name, this.console).subscribe(
             (images) => {
+                this.isLoadImages = true;
+                this.countOfImage = images.length;
                 if (images) {
-                    this.images = images;
+                    let index = 0;
+                    fromArray(images).pipe(
+                        switchMap((image: Image) => {
+                            return fromPromise(new Promise<Image[]>((resolve, reject) => {
+                                fromUrl(image.imageUrl).then((imageSource: ImageSource) => {
+                                    let path = knownFolders.temp().path + "/" + Date.now() + ".jpg";
+                                    imageSource.saveToFile(path, "jpg");
+                                    this.countOfImage--;
+                                    this.images.push({
+                                        id: index++,
+                                        cachedFilePath: path,
+                                        base64: imageSource.toBase64String("jpg", 90)
+                                    });
+                                    resolve(images)
+                                }).catch(error => console.log(error));
+                            }))
+                        })
+                    )
+                        .subscribe(
+                            (images: Image[]) => {
+                                this.isLoadImages = false;
+                                this.images = this.imagesService.images;
+                            },
+                            (error) => {
+                                this.isLoadImages = false;
+                                console.log(error);
+                            }
+                        );
                 }
             },
             (error) => {
+                this.isLoadImages = false;
                 this.showAlert({
                     title: "Initialisation image chooser",
                     message: error.message
@@ -81,41 +114,7 @@ export class WebImagePickerComponent extends BaseComponent {
     }
 
     onSave(event) {
-        let images: Array<Image> = [];
-        _.forEach(this.selectedImages, (item) => {
-            images.push({
-                imageUrl: item.imageUrl
-            })
-        });
-        fromArray(this.images).pipe(
-            switchMap((image: Image) => {
-                return fromPromise(fromUrl(image.imageUrl))
-            }),
-            map((imageSrc: ImageSource) => {
-                return imageSrc.toBase64String("jpg", 90);
-            }),
-            toArray()
-        ).subscribe((base64s: string[]) => {
-            _.forEach(images, (image: Image, index: number) => {
-                image.base64 = base64s[index];
-            });
-        });
-        fromArray(this.images).pipe(
-            switchMap((image: Image) => {
-                return fromPromise(fromUrl(image.imageUrl))
-            }),
-            map((imageSrc: ImageSource) => {
-                let path = knownFolders.temp().path + "/" + Date.now() + ".jpg";
-                imageSrc.saveToFile(path, "jpg");
-                return path;
-            }),
-            toArray()
-        ).subscribe((paths: string[]) => {
-            _.forEach(images, (image: Image, index: number) => {
-                image.cachedFilePath = paths[index];
-            });
-        });
-        this.params.closeCallback(images);
+        this.params.closeCallback(this.selectedImages[0]);
     }
 
     isSelected(imageId) {

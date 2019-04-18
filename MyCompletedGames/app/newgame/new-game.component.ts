@@ -9,6 +9,8 @@ import {WebImagePickerComponent} from "~/webimagepicker/web-image-picker.compone
 
 import {switchMap} from 'rxjs/operators'
 import {Image} from "~/typings/Image";
+import {knownFolders} from "tns-core-modules/file-system";
+import {fromBase64} from "tns-core-modules/image-source";
 
 @Component({
     selector: "new-game",
@@ -22,7 +24,7 @@ export class NewGameComponent extends BaseComponent {
 
     public who: Array<string> = WHO;
 
-    public images: Array<Image> = [];
+    public image: Image;
 
     public what: string = "";
 
@@ -59,7 +61,19 @@ export class NewGameComponent extends BaseComponent {
                     this.title = "Changing game";
                     this.chosenWhoIndex = game.isTogether ? 0 : 1;
                     this.chosenConsoleIndex = this.consoles.indexOf(game.console);
-                    this.images = [];
+                    let imageSource;
+                    let path;
+                    if (game.image) {
+                        imageSource = fromBase64(game.image);
+                        path = knownFolders.temp().path + "/" + Date.now() + ".jpg";
+                        imageSource.saveToFile(path, "jpg");
+                    }
+
+                    this.image = {
+                        id: new Date().getTime(),
+                        cachedFilePath: path,
+                        base64: game.image ? game.image : ''
+                    };
                     this.what = game.name;
                     this.id = game.id;
                 },
@@ -77,9 +91,9 @@ export class NewGameComponent extends BaseComponent {
         this.showImagesChooser()
             .then(result => {
                 if (result) {
-                    this.images = result;
+                    this.image = result;
                 } else {
-                    this.images = [];
+                    this.image = null;
                 }
             })
             .catch(error => this.showAlert({
@@ -143,12 +157,14 @@ export class NewGameComponent extends BaseComponent {
     };
 
     private addGame = () => {
+        let imagesStrings: string;
+        imagesStrings = this.image.base64;
         return this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
             console: this.consoles[this.chosenConsoleIndex],
             isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-            images: null
+            image: imagesStrings
         }).subscribe(
             () => {
                 //TODO hack for update list
@@ -167,13 +183,15 @@ export class NewGameComponent extends BaseComponent {
     };
 
     private changeGame = () => {
+        let imagesStrings: string;
+        imagesStrings = this.image.base64;
         return this.gamesFileService
             .changeGame({
                 id: this.id,
                 name: this.what,
                 console: this.consoles[this.chosenConsoleIndex],
                 isTogether: this.who[this.chosenWhoIndex] === TOGETHER,
-                images: null
+                image: imagesStrings
             }).subscribe(
                 () => {
                     //TODO hack for update list

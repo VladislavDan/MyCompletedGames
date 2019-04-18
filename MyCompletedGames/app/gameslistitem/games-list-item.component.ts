@@ -14,6 +14,7 @@ export class GamesListItemComponent {
     public game: Game;
 
     constructor(private routerExtensions: RouterExtensions) {
+
     }
 
     onItemTap(event) {

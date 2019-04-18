@@ -4,5 +4,5 @@ export interface Game {
     name: string;
     console: string;
     isTogether: boolean;
-    images: Array<number>
+    image: string
 }

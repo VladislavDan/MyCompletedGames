@@ -25,12 +25,12 @@
 }
 
 .chosen_images_container {
-    margin: 10px;
+    margin: 5px;
 }
 
 .chosen_images_container__image {
-    width: 200px;
-    height: 200px;
+    width: 500px;
+    height: 500px;
 }
 
 .new-game-container__btn-save {

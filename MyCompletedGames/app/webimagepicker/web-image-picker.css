@@ -3,15 +3,15 @@
 }
 
 .image-chooser-container__image {
-    height: 800px;
-    width: 800px;
+    height: 300px;
+    width: 300px;
     margin: 30px;
 }
 
 .image-chooser-container__no-image-text {
     text-align: center;
-    margin-top: 200px;
-    margin-bottom: 200px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .image-chooser-container__text {
@@ -27,8 +27,8 @@
 .image-chooser-container__title {
     font-size: 30px;
     margin-top: 80px;
-    border-width: 10px;
-    border-color: #82b83f;
+    border: 0;
+    border-bottom: 2px rgba(0, 0, 0, 0.51);
     text-align: center;
 }
 

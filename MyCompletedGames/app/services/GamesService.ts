@@ -55,6 +55,9 @@ export class GamesService {
         return of(this.getGamesFromSetting())
             .pipe(
                 flatMap((content: GamesFileModel) => {
+                    if (!content.games) {
+                        content = {dateChanged: "", games: []}
+                    }
                     content.games.push(game);
                     return this.updateGames(content);
                 })
@@ -73,6 +76,7 @@ export class GamesService {
                         value.name = game.name;
                         value.console = game.console;
                         value.isTogether = game.isTogether;
+                        value.image = game.image;
                     }
                     return this.updateGames(content);
                 })

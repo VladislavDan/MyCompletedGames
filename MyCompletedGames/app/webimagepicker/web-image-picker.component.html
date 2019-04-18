@@ -2,7 +2,7 @@
              orientation="vertical">
     <Label class="image-chooser-container__title" text="Image chooser"></Label>
     <ListView class="image-chooser-container__images-list"
-              *ngIf="images.length!==0"
+              *ngIf="images.length!==0 && !isLoadImages"
               [items]="images">
 
         <ng-template let-item="item" let-i="item.id">
@@ -15,18 +15,24 @@
                 <Image class="image-chooser-container__image"
                        decodeWidth="300"
                        decodeHeight="300"
-                       src="{{item.imageUrl}}"
+                       src="{{item.cachedFilePath}}"
                        loadMode="async">
                 </Image>
             </FlexboxLayout>
         </ng-template>
     </ListView>
 
-    <Label class="image-chooser-container__no-image-text" *ngIf="images.length===0" text="No images"></Label>
+    <Label class="image-chooser-container__no-image-text" *ngIf="images.length===0 && !isLoadImages"
+           text="No images"></Label>
 
     <Button class="image-chooser-container__btn"
             text="Save"
+            *ngIf="images.length!==0 && !isLoadImages"
             (tap)="onSave($event)">
     </Button>
+    <ActivityIndicator row="1" busy="{{isLoadImages}}" width="100" height="100"
+                       class="activity-indicator"></ActivityIndicator>
+    <Label class="image-chooser-container__no-image-text" *ngIf="isLoadImages"
+           text="Progress {{this.countOfImage}}"></Label>
 
 </StackLayout>

@@ -8,6 +8,8 @@ import {Image} from "~/typings/Image";
 @Injectable()
 export class ImagesService {
 
+    public images: Array<Image> = [];
+
     constructor() {
     }
 
@@ -43,7 +45,7 @@ export class ImagesService {
         });
         let parser = new htmlparser.Parser(handler);
         parser.parseComplete(html);
-        return imagesLinks;
+        return _.take(imagesLinks, 30);
     }
 
     getObjects = (obj, key, val) => {
