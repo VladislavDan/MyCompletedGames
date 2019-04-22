@@ -158,7 +158,7 @@ export class NewGameComponent extends BaseComponent {
 
     private addGame = () => {
         let imagesStrings: string;
-        imagesStrings = this.image.base64;
+        imagesStrings = this.image ? this.image.base64 : '';
         return this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
@@ -184,7 +184,7 @@ export class NewGameComponent extends BaseComponent {
 
     private changeGame = () => {
         let imagesStrings: string;
-        imagesStrings = this.image.base64;
+        imagesStrings = this.image ? this.image.base64 : '';
         return this.gamesFileService
             .changeGame({
                 id: this.id,

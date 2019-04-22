@@ -74,7 +74,6 @@ export class WebImagePickerComponent extends BaseComponent {
                         .subscribe(
                             (images: Image[]) => {
                                 this.isLoadImages = false;
-                                this.images = this.imagesService.images;
                             },
                             (error) => {
                                 this.isLoadImages = false;

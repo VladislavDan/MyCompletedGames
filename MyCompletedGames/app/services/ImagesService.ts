@@ -8,8 +8,6 @@ import {Image} from "~/typings/Image";
 @Injectable()
 export class ImagesService {
 
-    public images: Array<Image> = [];
-
     constructor() {
     }
 
