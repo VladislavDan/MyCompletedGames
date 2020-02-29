@@ -210,7 +210,6 @@ export class BackupComponent extends BaseComponent {
                     });
                 },
                 () => {
-                    console.log('complete');
                 }
             );
         this.subscriptions.push(subscription);

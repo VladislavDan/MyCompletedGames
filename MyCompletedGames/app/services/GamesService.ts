@@ -57,6 +57,9 @@ export class GamesService {
         return of(this.getGamesFromSetting())
             .pipe(
                 flatMap((content: GamesFileModel) => {
+                    if(!content.games){
+                        content.games = [game];
+                    }
                     content.games.push(game);
                     return this.updateGames(content);
                 })

@@ -14,7 +14,10 @@ import {PageContainerModule} from "./pagescontainer/page-container.module";
 
 import {registerElement} from "nativescript-angular/element-registry";
 
-registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
+registerElement(
+    'Fab',
+    () => require('@nstudio/nativescript-floatingactionbutton').Fab
+);
 
 @NgModule({
     bootstrap: [

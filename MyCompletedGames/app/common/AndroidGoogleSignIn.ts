@@ -1,7 +1,7 @@
 import {android as androidApp} from "application";
 import {Config} from "./Config";
 
-const GOOGLE_SIGNIN_RESULT_CODE = 597965301;
+const GOOGLE_SIGNIN_RESULT_CODE = 0xffff;
 
 declare var android: any;
 declare var com: any;
@@ -46,7 +46,7 @@ export class AndroidGoogleSignIn {
                 }
             }
             catch (error) {
-                throw error;
+                console.warn(error);
             }
         }
     }
@@ -73,7 +73,7 @@ export class AndroidGoogleSignIn {
             this.activity.runOnUiThread(uiAction);
         }
         catch (error) {
-            throw error;
+            console.warn(error);
         }
     }
 }

@@ -31,7 +31,7 @@ export class GamesListComponent extends BaseComponent implements AfterViewInit, 
 
     public chosenWhoIndex: number = 0;
 
-    @ViewChild(RadSideDrawerComponent)
+    @ViewChild(RadSideDrawerComponent, {static: false})
     public drawerComponent: RadSideDrawerComponent;
 
     private drawer: RadSideDrawer;

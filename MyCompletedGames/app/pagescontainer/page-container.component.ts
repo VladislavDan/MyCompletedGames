@@ -19,10 +19,10 @@ import {GamesListComponent} from "../gameslist/games-list.component";
 })
 export class PageContainerComponent extends BaseComponent {
 
-    @ViewChild('backup')
+    @ViewChild('backup', {static: false})
     public backup: BackupComponent;
 
-    @ViewChild('gamelist')
+    @ViewChild('gamelist', {static: false})
     public gamesList: GamesListComponent;
 
     public chartData: ObservableArray<GamesChartPoint>;

@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "144292527666",
+    "firebase_url": "https://mycompletedgame.firebaseio.com",
+    "project_id": "mycompletedgame",
+    "storage_bucket": "mycompletedgame.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144292527666:android:d7916724e02131c3",
+        "android_client_info": {
+          "package_name": "org.nativescript.MyCompletedGames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144292527666-qtiej8livr9h4v864vrj3h0l69f8n6fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nativescript.MyCompletedGames",
+            "certificate_hash": "5d02693e239c98e8c6ea7403ee92a7b16d29bab2"
+          }
+        },
+        {
+          "client_id": "144292527666-djcd71tmsss26gut29f795b5pi9nafh3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nativescript.MyCompletedGames",
+            "certificate_hash": "6de8097da3bc35ac5262807ce0ec0cc23a656757"
+          }
+        },
+        {
+          "client_id": "144292527666-aj1bo84rf2ae7tm8rrl0d41453b4io0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY6Cdo7Kxji1dfVgOsN7by6ecY-fzdEgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144292527666-aj1bo84rf2ae7tm8rrl0d41453b4io0p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

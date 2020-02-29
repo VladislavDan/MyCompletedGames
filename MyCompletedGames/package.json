@@ -10,43 +10,46 @@
   "nativescript": {
     "id": "org.nativescript.MyCompletedGames",
     "tns-ios": {
-      "version": "3.4.1"
+      "version": "6.4.0"
     },
     "tns-android": {
-      "version": "4.2.0"
+      "version": "6.4.1"
     }
   },
   "dependencies": {
-    "@angular/animations": "~6.1.0",
-    "@angular/common": "~6.1.0",
-    "@angular/compiler": "~6.1.0",
-    "@angular/core": "~6.1.0",
-    "@angular/forms": "~6.1.0",
-    "@angular/http": "~6.1.0",
-    "@angular/platform-browser": "~6.1.0",
-    "@angular/platform-browser-dynamic": "~6.1.0",
-    "@angular/router": "~6.1.0",
+    "@angular/animations": "8.0.0",
+    "@angular/common": "8.0.0",
+    "@angular/compiler": "8.0.0",
+    "@angular/core": "8.0.0",
+    "@angular/forms": "8.0.0",
+    "@angular/http": "8.0.0-beta.10",
+    "@angular/platform-browser": "8.0.0",
+    "@angular/platform-browser-dynamic": "8.0.0",
+    "@angular/router": "8.0.0",
+    "@nstudio/nativescript-floatingactionbutton": "^2.0.0",
     "lodash": "4.17.4",
-    "nativescript-angular": "^6.1.0",
-    "nativescript-floatingactionbutton": "4.1.3",
+    "nativescript-angular": "8.0.2",
+    "nativescript-google-login": "^1.3.3",
     "nativescript-loading-indicator": "2.4.0",
     "nativescript-pro-ui": "3.3.0",
     "nativescript-theme-core": "1.0.4",
     "reflect-metadata": "0.1.8",
     "rxjs": "^6.0.0",
-    "tns-core-modules": "^4.2.0",
-    "zone.js": "^0.8.26"
+    "tns-core-modules": "^6.5.0-next-2020-02-27-105236-02",
+    "zone.js": "0.9.1"
   },
   "devDependencies": {
-    "@angular/compiler-cli": "~6.1.0",
-    "@ngtools/webpack": "~6.2.0",
+    "@angular/compiler-cli": "8.0.0",
+    "@ngtools/webpack": "8.0.0",
     "babel-traverse": "6.4.5",
     "babel-types": "6.4.5",
     "babylon": "6.4.5",
     "lazy": "1.0.11",
-    "nativescript-dev-typescript": "^0.7.3",
-    "nativescript-dev-webpack": "^0.16.0",
-    "typescript": "~2.7.2",
+    "nativescript-dev-webpack": "^1.5.1",
+    "typescript": "3.4.5",
     "xmlhttprequest": "1.8.0"
+  },
+  "android": {
+    "markingMode": "none"
   }
 }
