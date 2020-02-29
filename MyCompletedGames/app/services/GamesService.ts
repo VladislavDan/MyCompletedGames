@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {BehaviorSubject, Observable, of, throwError} from "rxjs";
 import * as _ from "lodash";
-import {concatMap, filter, first, flatMap, map, toArray} from 'rxjs/operators'
+import {concatMap, filter, first, flatMap, map, switchMap, toArray} from 'rxjs/operators'
 import {getString, setString} from "application-settings";
 
 import {GAMES_KEY, ONLY_ME, TOGETHER} from "~/common/Constants";
@@ -34,6 +34,8 @@ export class GamesService {
             )
             .subscribe((games) => {
                 this.gamesChannel.next(games)
+            }, error => {
+                console.warn(error);
             });
     }
 
@@ -95,8 +97,14 @@ export class GamesService {
         setString(GAMES_KEY, JSON.stringify(gamesFileModel));
         return of(getString(GAMES_KEY))
             .pipe(
-                map(
-                    savedGames => JSON.parse(savedGames)
+                switchMap(
+                    (savedGames) => {
+                        try {
+                            return of(JSON.parse(savedGames))
+                        } catch (e) {
+                            return throwError(e);
+                        }
+                    }
                 )
             );
     }

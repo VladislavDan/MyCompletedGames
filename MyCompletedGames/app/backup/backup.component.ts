@@ -79,7 +79,6 @@ export class BackupComponent extends BaseComponent {
                     cancelButtonText: "No"
                 }).then((result) => {
                     if (result) {
-                        this.showProgress();
                         this.load(fileId);
                     }
                 });
@@ -196,7 +195,23 @@ export class BackupComponent extends BaseComponent {
                 })
             )
             .subscribe(
-                this.createGamesLoadingSubscriber()
+                () => {
+                    this.hideProgress();
+                    this.gamesService.getGames("", {
+                        console: "",
+                        who: ""
+                    });
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Loading games",
+                        message: error.message
+                    });
+                },
+                () => {
+                    console.log('complete');
+                }
             );
         this.subscriptions.push(subscription);
     }
@@ -210,26 +225,20 @@ export class BackupComponent extends BaseComponent {
                 this.gamesService.getGamesFromSetting(),
                 fileId
             )
-            .subscribe(this.createGamesLoadingSubscriber());
+            .subscribe(() => {
+                    this.hideProgress();
+                    this.gamesService.getGames("", {
+                        console: "",
+                        who: ""
+                    });
+                },
+                (error) => {
+                    this.hideProgress();
+                    this.showAlert({
+                        title: "Loading games",
+                        message: error.message
+                    });
+                });
         this.subscriptions.push(subscription);
-    }
-
-    private createGamesLoadingSubscriber(): Subscriber<any> {
-        return Subscriber.create(
-            () => {
-                this.hideProgress();
-                this.gamesService.getGames("", {
-                    console: "",
-                    who: ""
-                });
-            },
-            (error) => {
-                this.hideProgress();
-                this.showAlert({
-                    title: "Loading games",
-                    message: error.message
-                });
-            }
-        )
     }
 }

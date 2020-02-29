@@ -18,9 +18,9 @@ export class BaseComponent implements OnDestroy {
         this.loadingIndicator.show();
     }
 
-    hideProgress() {
+    hideProgress = () => {
         this.loadingIndicator.hide();
-    }
+    };
 
     showAlert(alertMessage: AlertMessage) {
         let options = {

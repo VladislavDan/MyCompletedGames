@@ -32,17 +32,11 @@ export class NewGameComponent extends BaseComponent {
 
     public title: string = "New game";
 
-    private imageChooseChannel: ReplaySubject<Array<string>> = new ReplaySubject();
-
     constructor(private pageRoute: PageRoute,
                 private routerExtensions: RouterExtensions,
                 private gamesFileService: GamesService) {
         super();
-        this.imageChooseChannel.subscribe((images: Array<string>) => {
-            this.images = images;
-        });
         let subscription = this.pageRoute.activatedRoute
-
             .pipe(
                 switchMap(activatedRoute => activatedRoute.params),
                 switchMap((params) => {
@@ -110,6 +104,7 @@ export class NewGameComponent extends BaseComponent {
     }
 
     private addGame() {
+        this.showProgress();
         return this.gamesFileService.addNewGame({
             id: Date.now().toString(),
             name: this.what,
@@ -133,6 +128,7 @@ export class NewGameComponent extends BaseComponent {
     }
 
     private changeGame() {
+        this.showProgress();
         return this.gamesFileService
             .changeGame({
                 id: this.id,

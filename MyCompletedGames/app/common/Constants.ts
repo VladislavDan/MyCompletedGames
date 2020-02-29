@@ -34,6 +34,7 @@ export const VIDEO_GAME_CONSOLES: Array<String> = [
     "Nintendo Switch",
     "Other Arcade Machine",
     "Personal Computer",
+    "PSVita",
     "Sega Dreamcast",
     "Sega Master System",
     "Sega Mega Drive & Sega 32x",
