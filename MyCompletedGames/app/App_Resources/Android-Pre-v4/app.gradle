@@ -1,0 +1,39 @@
+// Add your native dependencies here:
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.google.gms:google-services:3.1.1'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+dependencies {
+    compile 'com.google.android.gms:play-services-auth:11.6.0'
+    compile 'com.myhexaville:smart-image-picker:1.0'
+}
+
+android {  
+  defaultConfig {  
+    generatedDensities = []
+    applicationId = "org.nativescript.MyCompletedGames"  
+  }  
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }  
+}
+
+def settingsGradlePath = "$rootDir/../../app/App_Resources/Android/settings.gradle";
+def settingsGradleFile = new File(settingsGradlePath);
+if(settingsGradleFile.exists())
+{
+    apply from: settingsGradleFile;
+}
