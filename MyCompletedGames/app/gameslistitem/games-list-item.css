@@ -2,13 +2,13 @@
 
     flex-direction: row;
     justify-content: space-between;
-    height: 80px;
+    height: 125px;
 }
 
 .game-container__image {
 
-    height: 150px;
-    width: 150px;
+    height: 200px;
+    width: 250px;
     border: 2px #996b5b;
     margin-left: 30px;
     margin-top: 10px;
@@ -51,13 +51,13 @@
 .games-container__cooperative-information__image-coop {
 
     height: 50px;
-    width: 30px;
+    width: 50px;
     background-color: #5c687c;
 }
 
 .games-container__cooperative-information__image-single {
 
-    height: 50px;
-    width: 30px;
+    height: 100px;
+    width: 50px;
     background-color: #ed7368;
 }
