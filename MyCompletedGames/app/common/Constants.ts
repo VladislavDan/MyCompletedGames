@@ -46,6 +46,8 @@ export const VIDEO_GAME_CONSOLES: Array<String> = [
     "Sony Playstation One",
     "Sony Playstation Portable",
     "Super Nintendo",
+    "XBOX Original",
+    "XBOX360",
     "WiiU"
 ];
 
